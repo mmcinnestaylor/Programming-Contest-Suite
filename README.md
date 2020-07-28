@@ -4,6 +4,7 @@
 ## Resources
 - [Django](https://www.djangoproject.com/) - Python Web Framework
 - [MariaDB](https://mariadb.com) -  Relational Database Management System
+- [Bootstrap 4](https://getbootstrap.com) -  CSS Framework  
 - [DomJudge](https://www.domjudge.org/) - Contest judging platform
 - [Pipenv](https://pipenv.kennethreitz.org/en/latest/) - Environment virtualization
 - [Docker](https://www.docker.com/) - Software containerization
