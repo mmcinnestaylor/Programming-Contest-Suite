@@ -1,0 +1,56 @@
+html {
+	font-size: 1rem;
+}
+
+@include media-breakpoint-up(sm) {
+  html {
+    font-size: 1.2rem;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  html {
+    font-size: 1.4rem;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  html {
+    font-size: 1.6rem;
+  }
+}
+body {
+  background: rgb(80,80,80);
+  background: linear-gradient(5deg, rgba(80,80,80,1) 0%, rgba(120,47,64,1) 35%, rgba(206,184,136,1) 100%);
+}
+footer {
+  /*position: fixed;*/
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #808080;
+  color: white;
+  text-align: center;
+}
+
+footer i {
+  padding-top: 10px;
+  color: white;
+}
+
+footer ul {
+  list-style: none;
+}
+
+.footer-icon {
+  margin: 0 2px;
+}
+
+.footer-link {
+  color: darkred;
+  text-decoration: underline;
+}
+
+.logo {
+  margin-right: 10px;
+}

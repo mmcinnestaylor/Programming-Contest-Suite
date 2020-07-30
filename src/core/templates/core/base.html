@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" 
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" 
+          href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'core/css/base.css' %}"/>
+    <link rel="icon" type="image/x-icon" sizes="16x16 32x32 64x64"
+          href="{% static 'core/img/favicon.ico' %}"/>
+    <script src="https://kit.fontawesome.com/76b2c8cdbc.js" crossorigin="anonymous"></script>
+    {# Strict order: jQuery first, then Popper.js, then Bootstrap JS #}
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <title>ACM Programming Contest</title>
+  </head>
+  
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
+        <div class="logo">
+          <a href="https://www.acm.org" target="_blank" rel="no-follow"><img src="{% static 'core/img/logochapter.png' %}" width="50" height="50"></a>
+        </div>
+        <a class="navbar-brand" href="#">ACM Programming Contest</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">FAQ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Teams</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact Us</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                Resources
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">Contest Server</a>
+                <a class="dropdown-item" href="#">Practice Server</a>
+                <a class="dropdown-item" href="#">Programming Club</a>
+              </div>
+            </li>
+          </ul>
+          <ul class="navbar-nav ml-auto">
+            {# add link logic for faculty, admin, and student #}
+            {% if 'a_id' in request.session %}
+            <li class="nav-item">
+              <a class="nav-link" href="#">Manage</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Logout</a>
+            </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="#">Login</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="#">Register</a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <div class="container">
+      {% block content %}
+      {% endblock %}
+    </div>
+    
+    <footer>
+      <div class="row">
+        <div class="col-sm-4">
+          <ul>
+            <li><a class="footer-link" href="https://fsu.acm.org" target="_blank">ACM @ FSU</a></li>
+            <li><a class="footer-link" href="https://cs.fsu.edu" target="_blank">FSU Dept of Computer Science</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <a class="footer-icon" href="https://www.facebook.com/ACMatFSU/" target="_blank">
+            <i class="fab fa-facebook-square fa-lg"></i></a>
+          <a class="footer-icon" href="https://discord.gg/4z3hNMA" target="_blank">
+            <i class="fab fa-discord fa-lg"></i></a>
+          <a class="footer-icon" href="https://github.com/FSU-ACM" target="_blank">
+            <i class="fab fa-github fa-lg"></i></a>
+          <a class="footer-icon" href="mailto:contact@fsu.acm.org" target="_blank">
+            <i class="fas fa-envelope fa-lg"></i></a>
+          <br>
+          <span>Copyright © 2020 FSU ACM Student Chapter</span>
+        </div>
+        <div class="col-sm-4">
+          <strong>James J. Love Building</strong>
+          <br>
+          1017 Academic Way
+          <br>
+          Tallahassee, FL 32304
+        </div>
+      </div>       
+    </footer>
+  </body>
+</html>
