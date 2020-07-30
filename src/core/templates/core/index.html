@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block additionalStyles %}
+  <link rel="sytlesheet" href="{% static 'core/css/index.css' %}"/>
+{% endblock %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div class="jumbotron text-center" style="background-color: #787878; margin-top: 1em;">
+  <h1>Welcome to the ACM Programming Contest</h1>
+  <h3>Spring 2021 Date @ 9am</h3>
+</div>
+<h2 class="text-center">Our Sponsors</h2>
+
+
+{% endblock %}
