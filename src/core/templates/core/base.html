@@ -11,6 +11,7 @@
           href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
     <link rel="stylesheet" type="text/css"
           href="{% static 'core/css/base.css' %}"/>
+    {% block additionalStyles %}{% endblock %}
     <link rel="icon" type="image/x-icon" sizes="16x16 32x32 64x64"
           href="{% static 'core/img/favicon.ico' %}"/>
     <script src="https://kit.fontawesome.com/76b2c8cdbc.js" crossorigin="anonymous"></script>
@@ -21,32 +22,32 @@
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
             integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-    <title>ACM Programming Contest</title>
+    <title>{% block title %}{% endblock %} | ACM Programming Contest</title>
   </head>
   
   <body>
     <header>
-      <nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
+      <nav class="navbar navbar-expand-md bg-dark navbar-dark sticky-top">
         <div class="logo">
-          <a href="https://www.acm.org" target="_blank" rel="no-follow"><img src="{% static 'core/img/logochapter.png' %}" width="50" height="50"></a>
+          <a href="https://www.acm.org" target="_blank" rel="no-follow"><img src="{% static 'core/img/logochapter.png' %}" width="50" height="50" alt="Chapter Logo"></a>
         </div>
-        <a class="navbar-brand" href="#">ACM Programming Contest</a>
+        <a class="navbar-brand" href="{% url 'index' %}">ACM Programming Contest</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" href="#">About</a>
+              <a class="nav-link" href="{% url 'about' %}">About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">FAQ</a>
+              <a class="nav-link" href="{% url 'faq' %}">FAQ</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Teams</a>
+              <a class="nav-link" href="{% url 'teams' %}">Teams</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Contact Us</a>
+              <a class="nav-link" href="{% url 'contact' %}">Contact Us</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
@@ -62,11 +63,14 @@
           <ul class="navbar-nav ml-auto">
             {# add link logic for faculty, admin, and student #}
             {% if 'a_id' in request.session %}
-            <li class="nav-item">
-              <a class="nav-link" href="#">Manage</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Logout</a>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown">
+                Username goes here
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">Manage</a>
+                <a class="dropdown-item" href="#">Logout</a>
+              </div>
             </li>
             {% else %}
               <li class="nav-item">
