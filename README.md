@@ -13,3 +13,15 @@
 - [rpi-mariadb](https://hub.docker.com/r/jsurf/rpi-mariadb/) - MariaDB container for raspberrypi
 - [Contest Server v1](https://github.com/FSU-ACM/Contest-Server) - Flask implementation developed by [Andrew Sosa](https://github.com/andrewsosa)
 - [Contest Server v1.1](https://github.com/FSU-ACM/Programming-Contest-Suite-v1.1) - First Django implementation for CEN4020 SP'19
+
+# Database setup (dev only)
+	sudo apt install mariadb-server
+	sudo apt install libmariadbclient-dev
+	sudo apt install libmariadbclient-dev
+
+	sudo mysql -u root -p
+
+	CREATE DATABASE contestsuite CHARACTER SET utf8mb4;
+	CREATE USER dev@localhost IDENTIFIED BY 'seminoles';
+	GRANT ALL PRIVILEGES ON contestsuite.* TO dev@localhost;
+	FLUSH PRIVILEGES;
