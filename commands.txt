@@ -1,0 +1,3 @@
+run: python3 manage.py runserver
+
+update static files: python3 manage.py collectstatic
