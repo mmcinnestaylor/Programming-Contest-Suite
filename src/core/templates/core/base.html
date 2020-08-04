@@ -11,7 +11,7 @@
           href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
     <link rel="stylesheet" type="text/css"
           href="{% static 'core/css/base.css' %}"/>
-    {% block additionalStyles %}{% endblock %}
+    
     <link rel="icon" type="image/x-icon" sizes="16x16 32x32 64x64"
           href="{% static 'core/img/favicon.ico' %}"/>
     <script src="https://kit.fontawesome.com/76b2c8cdbc.js" crossorigin="anonymous"></script>
@@ -22,6 +22,7 @@
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
             integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    {% block additionalHead %}{% endblock %}
     <title>{% block title %}{% endblock %} | ACM Programming Contest</title>
   </head>
   
@@ -46,9 +47,6 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'teams' %}">Teams</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'contact' %}">Contact Us</a>
-            </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                 Resources
@@ -59,22 +57,23 @@
                 <a class="dropdown-item" href="#">Programming Club</a>
               </div>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'contact' %}">Contact Us</a>
+            </li>
           </ul>
           <ul class="navbar-nav ml-auto">
             {# add link logic for faculty, admin, and student #}
-            {% if 'a_id' in request.session %}
+            {% if user.is_authenticated %}
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown">
-                Username goes here
-              </a>
+              <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown">{{ user.first_name }}</a>
               <div class="dropdown-menu">
                 <a class="dropdown-item" href="#">Manage</a>
-                <a class="dropdown-item" href="#">Logout</a>
+                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
               </div>
             </li>
             {% else %}
               <li class="nav-item">
-                <a class="nav-link" href="#">Login</a>
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
               </li>
               <li class="nav-item active">
                 <a class="nav-link" href="#">Register</a>
