@@ -27,9 +27,10 @@
   </head>
   
   <body>
+    <!-- header -->
     <header>
-      <nav class="navbar navbar-expand-md bg-dark navbar-dark sticky-top">
-        <div class="logo">
+      <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+        <div class="d-none d-md-block" id="logo">
           <a href="https://www.acm.org" target="_blank" rel="no-follow"><img src="{% static 'core/img/logochapter.png' %}" width="50" height="50" alt="Chapter Logo"></a>
         </div>
         <a class="navbar-brand" href="{% url 'index' %}">ACM Programming Contest</a>
@@ -66,7 +67,10 @@
             {% if user.is_authenticated %}
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown">{{ user.first_name }}</a>
-              <div class="dropdown-menu">
+              <div class="dropdown-menu dropdown-menu-right">
+                {% if user.is_superuser %}
+                <a class="dropdown-item" href="#">Checkin</a>
+                {% endif %}
                 <a class="dropdown-item" href="#">Manage</a>
                 <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
               </div>
@@ -76,47 +80,76 @@
                 <a class="nav-link" href="{% url 'login' %}">Login</a>
               </li>
               <li class="nav-item active">
-                <a class="nav-link" href="#">Register</a>
+                <a class="nav-link" href="{% url 'register' %}">Register</a>
               </li>
             {% endif %}
           </ul>
         </div>
       </nav>
     </header>
-
+    <!-- end of header -->
+    
+    <!-- content -->
     <div class="container">
       {% block content %}
       {% endblock %}
     </div>
+    <!-- end of content -->
     
-    <footer>
-      <div class="row">
-        <div class="col-sm-4">
-          <ul>
-            <li><a class="footer-link" href="https://fsu.acm.org" target="_blank">ACM @ FSU</a></li>
-            <li><a class="footer-link" href="https://cs.fsu.edu" target="_blank">FSU Dept of Computer Science</a></li>
-          </ul>
+    <!-- footer -->
+    <footer style="background-color: #2c292f">
+      <div class="container">
+        <div class="row ">
+          <div class="col-md-4 text-center text-md-left ">
+    
+            <div class="py-0">
+              <h3 class="my-4 text-white">About<span class="mx-2 font-italic text-primary ">ACM at FSU</span></h3>
+    
+              <p class="footer-links font-weight-bold">
+                <a class="text-white" href="https://fsu.acm.org/" target="_blank">Home</a>
+                |
+                <a class="text-white" href="https://fsu.acm.org/about-us/" target="_blank">About</a>
+                |
+                <a class="text-white" href="https://fsu.acm.org/events/calendar/" target="_blank">Events</a>
+                |
+                <a class="text-white" href="https://fsu.acm.org/contact-us/" target="_blank">Contact</a>
+              </p>
+              <p class="text-light py-4 mb-4">&copy;2020 FSU ACM Student Chapter</p>
+            </div>
+          </div>
+    
+          <div class="col-md-4 text-white text-center text-md-left ">
+            <div class="py-2 my-4">
+              <div>
+                <p class="text-white"> <i class="fa fa-map-marker mx-2 "></i>
+                  James J. Love Building,
+                  1017 Academic Way,
+                  Tallahassee, FL 32304</p>
+              </div>
+    
+              <div>
+                <p><i class="fa fa-envelope  mx-2"></i><a href="mailto:contest@fsu.acm.org">contest@fsu.acm.org</a></p>
+              </div>
+
+              <div>
+                <a class="text-danger" href="https://cs.fsu.edu" target="_blank">FSU Dept of Computer Science</a>
+              </div>
+            </div>
+          </div>
+    
+          <div class="col-md-4 text-white my-4 text-center text-md-left ">
+            <span class=" font-weight-bold ">About the Contest</span>
+            <p class="text-warning my-2">The ACM Programming Contest is a coding competition that emphasizes problem solving executed in code.</p>
+            <div class="py-2">
+              <a href="https://www.facebook.com/ACMatFSU/" target="_blank"><i class="fab fa-facebook fa-2x text-white mx-3"></i></a>
+              <a href="https://discord.gg/4z3hNMA" target="_blank"><i class="fab fa-discord fa-2x text-white mx-3"></i></a>
+              <a href="https://twitter.com/ACMatFSU" target="_blank"><i class="fab fa-twitter fa-2x text-white mx-3"></i></a>
+              <a href="https://github.com/FSU-ACM" target="_blank"><i class="fab fa-github fa-2x text-white mx-3"></i></a>
+            </div>
+          </div>
         </div>
-        <div class="col-sm-4">
-          <a class="footer-icon" href="https://www.facebook.com/ACMatFSU/" target="_blank">
-            <i class="fab fa-facebook-square fa-lg"></i></a>
-          <a class="footer-icon" href="https://discord.gg/4z3hNMA" target="_blank">
-            <i class="fab fa-discord fa-lg"></i></a>
-          <a class="footer-icon" href="https://github.com/FSU-ACM" target="_blank">
-            <i class="fab fa-github fa-lg"></i></a>
-          <a class="footer-icon" href="mailto:contact@fsu.acm.org" target="_blank">
-            <i class="fas fa-envelope fa-lg"></i></a>
-          <br>
-          <span>Copyright © 2020 FSU ACM Student Chapter</span>
-        </div>
-        <div class="col-sm-4">
-          <strong>James J. Love Building</strong>
-          <br>
-          1017 Academic Way
-          <br>
-          Tallahassee, FL 32304
-        </div>
-      </div>       
+      </div>
     </footer>
+    <!-- end of footer -->
   </body>
 </html>
