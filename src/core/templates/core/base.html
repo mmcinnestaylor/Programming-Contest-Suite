@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    {% block head %}{% endblock %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" 
@@ -22,7 +23,6 @@
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
             integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-    {% block additionalHead %}{% endblock %}
     <title>{% block title %}{% endblock %} | ACM Programming Contest</title>
   </head>
   
@@ -68,7 +68,7 @@
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown">{{ user.first_name }}</a>
               <div class="dropdown-menu dropdown-menu-right">
-                {% if user.is_superuser %}
+                {% if user.is_staff %}
                 <a class="dropdown-item" href="#">Checkin</a>
                 {% endif %}
                 <a class="dropdown-item" href="#">Manage</a>
@@ -111,8 +111,6 @@
                 <a class="text-white" href="https://fsu.acm.org/about-us/" target="_blank">About</a>
                 |
                 <a class="text-white" href="https://fsu.acm.org/events/calendar/" target="_blank">Events</a>
-                |
-                <a class="text-white" href="https://fsu.acm.org/contact-us/" target="_blank">Contact</a>
               </p>
               <p class="text-light py-4 mb-4">&copy;2020 FSU ACM Student Chapter</p>
             </div>
