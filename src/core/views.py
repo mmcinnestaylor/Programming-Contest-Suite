@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from register.models import Team, Profile
+from register.models import Team
+from manager.models import Profile
 
 # Create your views here.
 
