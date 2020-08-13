@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core.apps.CoreConfig',
     'register.apps.RegisterConfig',
+    'manager.apps.ManagerConfig',
     'crispy_forms',
     'django_mysql',
 ]
@@ -82,7 +83,6 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'contestsuite',
         'OPTIONS': {
-            # Tell MySQLdb to connect with 'utf8mb4' character set
             'charset': 'utf8mb4',
         },
         'USER': 'dev',
