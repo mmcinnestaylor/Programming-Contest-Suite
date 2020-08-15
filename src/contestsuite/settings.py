@@ -25,7 +25,7 @@ SECRET_KEY = '86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'contest.local', '[::1]']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'contest.local', '192.168.10.12','[::1]']
 
 
 # Application definition
