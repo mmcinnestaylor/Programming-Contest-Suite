@@ -98,6 +98,15 @@ DATABASES = {
 }
 
 
+# Cache
+# https://docs.djangoproject.com/en/2.2/ref/settings/#caches
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+
+
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
