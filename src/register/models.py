@@ -14,10 +14,12 @@ class Team(models.Model):
         (1, 'Upper Division'),
         (2, 'Lower Division')
     )
-    id = models.CharField(max_length=7, primary_key=True)
-    name = models.CharField(max_length=30, unique=True, blank=True)
+    
+    contest_id = models.CharField(max_length=7, blank=True)
+    name = models.CharField(max_length=30, unique=True)
     division = models.PositiveSmallIntegerField(choices=DIVISION)
     password = models.CharField(max_length=10, unique=True)
+    pin = models.CharField(max_length=4)
     members = ListTextField(base_field=models.CharField(max_length=181), size=3, max_length=(181 * 3), default=[])
     num_members = models.PositiveSmallIntegerField(default=1)
 
