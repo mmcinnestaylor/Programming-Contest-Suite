@@ -1,0 +1,16 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block head %}
+<meta http-equiv="refresh" content="3; URL={% url 'index' %}" />
+{% endblock %}
+
+{% block title %}Logged out{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+	<img src="{% static 'core/img/hal.png' %}" width="30%" alt=" HAL goodbye">
+	<h5 class="text-monospace">Goodbye Dave. Thank you for participating in the Programming Contest. Redirecting you home...</h5>
+</div>
+
+{% endblock %}

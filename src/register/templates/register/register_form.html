@@ -1,0 +1,34 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+	<h1>{{ heading }} Registeration</h1>
+</div>
+<div class="row justify-content-center">
+	<div class="col col-sm-4">
+		<form method="post">
+			{% csrf_token %}
+			{% for field in form %}
+			<p>
+				<h5>{{ field.label_tag }}</h5>
+				{{ field }}<br>				
+				<small class="form-text text-muted">
+					{% for error in field.errors %}
+					<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
+					{% endfor %}
+
+					{% if field.help_text %}
+					{{ field.help_text }}
+					{% endif %}
+				</small>				
+			</p>
+			{% endfor %}
+			<button class="btn btn-primary" type="submit">Submit</button>
+		</form>
+	</div>
+</div>
+<br>
+{% endblock %}

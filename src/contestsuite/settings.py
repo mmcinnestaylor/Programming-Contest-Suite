@@ -25,7 +25,7 @@ SECRET_KEY = '86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'contest.local', '[::1]']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'contest.local', '192.168.10.12','[::1]']
 
 
 # Application definition
@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core.apps.CoreConfig',
+    'register.apps.RegisterConfig',
+    'manager.apps.ManagerConfig',
     'crispy_forms',
     'django_mysql',
 ]
@@ -57,7 +59,7 @@ ROOT_URLCONF = 'contestsuite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'auth_templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,7 +83,6 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'contestsuite',
         'OPTIONS': {
-            # Tell MySQLdb to connect with 'utf8mb4' character set
             'charset': 'utf8mb4',
         },
         'USER': 'dev',
@@ -92,6 +93,19 @@ DATABASES = {
         'TEST': {
             'CHARSET': 'utf8mb4',
             'COLLATION': 'utf8mb4_unicode_ci',
+        }
+    }
+}
+
+
+# Cache
+# https://docs.djangoproject.com/en/2.2/ref/settings/#caches
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
 }
@@ -139,15 +153,21 @@ STATIC_URL = '/static/'
 
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/manage/'
+
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Email settings
-'''EMAIL_HOST = ''
+'''
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  
+EMAIL_HOST = ''
 EMAIL_PORT = 
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'ACM Dev <webmaster@fsu.acm.org>' '''
+DEFAULT_FROM_EMAIL = 'ACM Dev <webmaster@fsu.acm.org>' 
+'''

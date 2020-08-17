@@ -18,6 +18,16 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('account/', include('django.contrib.auth.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('', include('core.urls')),
+    path('register/', include('register.urls')),
+    path('manage/', include('manager.urls')),
 ]
+
+
+# Bad request
+handler400 = 'core.views.error400'
+# Permission denied
+handler403 = 'core.views.error403'
+# Page not found
+handler404 = 'core.views.error404'

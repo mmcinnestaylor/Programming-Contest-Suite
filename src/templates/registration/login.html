@@ -1,15 +1,19 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block additionalHead %}
-{% endblock %}
-
 {% block title %}Login{% endblock %}
 
 {% block content %}
 
+<div class="row justify-content-center">
+	<h1>Login</h1>
+</div>
+
 {% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
+<div class="row justify-content-center">
+	<p>Your username and password didn't match. Please try again.</p>
+</div>
+
 {% endif %}
 
 {% if next %}
@@ -37,6 +41,6 @@
 	<input type="hidden" name="next" value="{{ next }}" />
 </form>
 
-<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+<a class="text-sm" href="{% url 'password_reset' %}">Lost password?</a>
 
 {% endblock %}
