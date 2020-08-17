@@ -23,3 +23,11 @@ urlpatterns = [
     path('register/', include('register.urls')),
     path('manage/', include('manager.urls')),
 ]
+
+
+# Bad request
+handler400 = 'core.views.error400'
+# Permission denied
+handler403 = 'core.views.error403'
+# Page not found
+handler404 = 'core.views.error404'
