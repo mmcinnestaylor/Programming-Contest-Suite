@@ -4,7 +4,6 @@ from manager.models import Profile
 
 # Create your views here.
 
-
 def index(request):
     return render(request, 'core/index.html')
 
@@ -27,22 +26,37 @@ def teams(request):
     teams_set = Team.objects.all()
     participants_set = Profile.objects.all()
 
-    upper_teams_set = teams_set.filter(division=2)
+    upper_teams_set = teams_set.filter(division=1)
     context['upper_teams'] = upper_teams_set
 
     num_upper_teams = upper_teams_set.count()
     context['num_upper_teams'] = num_upper_teams
 
-    num_upper_participants = participants_set.filter(team__division=2).count()
+    num_upper_participants = participants_set.filter(team__division=1).count()
     context['num_upper_participants'] = num_upper_participants
 
-    lower_teams_set = teams_set.filter(division=1)
+    lower_teams_set = teams_set.filter(division=2)
     context['lower_teams'] = lower_teams_set
 
     num_lower_teams = lower_teams_set.count()
     context['num_lower_teams'] = num_lower_teams
 
-    num_lower_participants = participants_set.filter(team__division=1).count()
+    num_lower_participants = participants_set.filter(team__division=2).count()
     context['num_lower_participants'] = num_lower_participants
 
     return render(request, 'core/teams.html', context)
+
+
+def error400(request, exception):
+    context = {}
+    return render(request, 'core/error.html', context)
+
+
+def error403(request, exception):
+    context = {}
+    return render(request, 'core/error.html', context)
+
+
+def error404(request, exception):
+    context = {}
+    return render(request, 'core/error.html', context)
