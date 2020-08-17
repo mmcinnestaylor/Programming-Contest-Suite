@@ -8,9 +8,11 @@ Django = "*"
 django-crispy-forms = "*"
 mysqlclient = "==1.4.*"
 django-mysql = "*"
-django-redis-cache = "*"
+django-redis = "*"
 
 [dev-packages]
+pylint = "*"
+autopep8 = "*"
 
 [requires]
 python_version = "3.7"
