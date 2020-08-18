@@ -17,21 +17,22 @@
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item"><span class="font-weight-bolder">First name:</span> {{ user.first_name }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">Last name:</span> {{ user.last_name }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">FSU ID:</span> {{ profile.fsu_id }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">FSU Number:</span> {{ profile.fsu_num }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">FSU ID:</span> {{ user.profile.fsu_id }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">FSU Number:</span> {{ user.profile.fsu_num }}</li>
 				</ul>
 			</div>
 			<div class="card-footer">
 				<a class="btn btn-danger btn-sm" href="#" role="button">Edit</a>
 			</div>
 		</div>
+		<!-- Profile card end -->
 		<!-- Courses card -->
 		<div class="card mt-4">
 			<div class="card-header font-weight-bold">
 				Extra Credit Courses
 			</div>
 			<div class="card-body">
-				{% if profile.has_courses %}
+				{% if user.profile.has_courses %}
 					<table class="table table-striped overflow-auto">
 						<thead>
 							<tr>
@@ -57,30 +58,31 @@
 				{% endif %}
 			</div>
 			<div class="card-footer">
-				{% if profile.has_courses %}
-					<a class="btn btn-danger btn-sm" href="#" role="button">Edit</a>
+				{% if user.profile.has_courses %}
+					<a class="btn btn-danger btn-sm" href="{% url 'manage_profile' %}" role="button">Edit</a>
 				{% else %}
 					<a class="btn btn-danger btn-sm disabled" href="#" role="button">Edit</a>
 				{% endif %}
 			</div>
 		</div>
+		<!-- Courses card end -->
 		<!-- Team card -->
 		<div class="card mt-4">
 			<div class="card-header font-weight-bold">
 				Team
 			</div>
 			<div class="card-body">
-				{% if profile.has_team %}
+				{% if user.profile.has_team %}
 					<ul class="list-group list-group-flush">
-						<li class="list-group-item"><span class="font-weight-bolder">Name:</span> {{ profile.team.name }}</li>
-						{% if profile.team.division == 1 %}
+						<li class="list-group-item"><span class="font-weight-bolder">Name:</span> {{ user.profile.team.name }}</li>
+						{% if user.profile.team.division == 1 %}
 							<li class="list-group-item"><span class="font-weight-bolder">Division:</span> Upper</li>
 						{% else %}
 							<li class="list-group-item"><span class="font-weight-bolder">Division:</span> Lower</li>
 						{% endif %}
 						<li class="list-group-item">
 							<span class="font-weight-bolder">Members:</span>
-							{% for member in profile.team.members %}
+							{% for member in user.profile.team.members %}
 								{{ member }}&emsp;
 							{% endfor %}
 						</li>
@@ -89,13 +91,13 @@
 					<div class="row justify-content-center">
 						<a class="btn btn-outline-info btn-sm" href="#" role="button">Join registered team</a>
 						&emsp;or&emsp;
-						<a class="btn btn-outline-info btn-sm" href="#" role="button">Create new team</a>
+						<a class="btn btn-outline-info btn-sm" href="{% url 'register_team' %}" role="button">Create new team</a>
 					</div>
 				{% endif %}
 			</div>
 			<div class="card-footer">
-				{% if profile.has_team %}
-					{% if profile.is_admin %}
+				{% if user.profile.has_team %}
+					{% if user.profile.team_admin %}
 						<a class="btn btn-danger btn-sm" href="#" role="button">Manage</a>
 					{% else %}
 						<a class="btn btn-danger btn-sm" href="#" role="button">Leave</a>
@@ -105,15 +107,15 @@
 				{% endif %}
 			</div>
 		</div>
+		<!-- Team card end -->
 	</div>
 	<div class="row justify-content-center">
 		<div class="jumbotron mt-4">
-			<h1 class="display-4">Hello, {{ user.first_name }} !</h1>
-			<p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to
-				featured content or information.</p>
+			<h1 class="display-4">Recent Announcements</h1>
+			<p class="lead">Updates about the contest, extra credit courses, and more...</p>
 			<hr class="my-4">
 			<p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-			<a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+			<a class="btn btn-primary " href="#" role="button">More</a>
 		</div>
 	</div> 
 {% endblock %}
