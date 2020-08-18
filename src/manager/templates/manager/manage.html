@@ -1,10 +1,119 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}Manage Account{% endblock %}
+{% block title %}Manage{% endblock %}
 
 {% block content %}
-
-hello from manage
-
+	<div class="row justify-content-center">
+		<h1>My Account</h1>
+	</div>
+	<!-- Profile card -->
+	<div class="card-deck">
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Profile
+			</div>
+			<div class="card-body">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item"><span class="font-weight-bolder">First name:</span> {{ user.first_name }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Last name:</span> {{ user.last_name }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">FSU ID:</span> {{ profile.fsu_id }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">FSU Number:</span> {{ profile.fsu_num }}</li>
+				</ul>
+			</div>
+			<div class="card-footer">
+				<a class="btn btn-danger btn-sm" href="#" role="button">Edit</a>
+			</div>
+		</div>
+		<!-- Courses card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Extra Credit Courses
+			</div>
+			<div class="card-body">
+				{% if profile.has_courses %}
+					<table class="table table-striped overflow-auto">
+						<thead>
+							<tr>
+								<th scope="col">Code</th>
+								<th scope="col">Sections</th>
+								<th scope="col">Instructor</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for course in courses %}
+							<tr>
+								<td>{{ course.code }}</td>
+								<td>{{ course.sections }}</td>
+								<td>{{ course.instructor.last_name }}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				{% else %}
+					<div class="row justify-content-center">
+						<a class="btn btn-outline-info btn-sm" href="#" role="button">Add</a>
+					</div>
+				{% endif %}
+			</div>
+			<div class="card-footer">
+				{% if profile.has_courses %}
+					<a class="btn btn-danger btn-sm" href="#" role="button">Edit</a>
+				{% else %}
+					<a class="btn btn-danger btn-sm disabled" href="#" role="button">Edit</a>
+				{% endif %}
+			</div>
+		</div>
+		<!-- Team card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Team
+			</div>
+			<div class="card-body">
+				{% if profile.has_team %}
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item"><span class="font-weight-bolder">Name:</span> {{ profile.team.name }}</li>
+						{% if profile.team.division == 1 %}
+							<li class="list-group-item"><span class="font-weight-bolder">Division:</span> Upper</li>
+						{% else %}
+							<li class="list-group-item"><span class="font-weight-bolder">Division:</span> Lower</li>
+						{% endif %}
+						<li class="list-group-item">
+							<span class="font-weight-bolder">Members:</span>
+							{% for member in profile.team.members %}
+								{{ member }}&emsp;
+							{% endfor %}
+						</li>
+					</ul>
+				{% else %}
+					<div class="row justify-content-center">
+						<a class="btn btn-outline-info btn-sm" href="#" role="button">Join registered team</a>
+						&emsp;or&emsp;
+						<a class="btn btn-outline-info btn-sm" href="#" role="button">Create new team</a>
+					</div>
+				{% endif %}
+			</div>
+			<div class="card-footer">
+				{% if profile.has_team %}
+					{% if profile.is_admin %}
+						<a class="btn btn-danger btn-sm" href="#" role="button">Manage</a>
+					{% else %}
+						<a class="btn btn-danger btn-sm" href="#" role="button">Leave</a>
+					{% endif %}
+				{% else %}
+					<a class="btn btn-danger btn-sm disabled" href="#" role="button">Leave</a>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="row justify-content-center">
+		<div class="jumbotron mt-4">
+			<h1 class="display-4">Hello, {{ user.first_name }} !</h1>
+			<p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to
+				featured content or information.</p>
+			<hr class="my-4">
+			<p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+			<a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+		</div>
+	</div> 
 {% endblock %}
