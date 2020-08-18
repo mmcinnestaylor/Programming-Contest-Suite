@@ -50,7 +50,7 @@ class Profile(models.Model):
     """
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True)
+    team = models.ForeignKey(Team, related_name='profile_team', on_delete=models.SET_NULL, null=True)
     team_admin = models.BooleanField(default=False)
     fsu_id = models.CharField(max_length=8, unique=True, blank=True, null=True)
     fsu_num = models.CharField(max_length=8, unique=True, blank=True, null=True)
@@ -59,3 +59,13 @@ class Profile(models.Model):
     
     def __str__(self):
         return (str(self.user.first_name) + ' ' + str(self.user.last_name))
+
+    def has_team(self):
+        if self.team is None:
+            return False
+        return True
+
+    def has_courses(self):
+        if self.courses.count() == 0:
+            return False
+        return True
