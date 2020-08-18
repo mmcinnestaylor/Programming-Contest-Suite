@@ -26,9 +26,7 @@ def account(request):
         if request.method == 'POST':
             form = forms.ExtendedUserCreationForm(request.POST)
             if form.is_valid():
-                newUser = form.save()
-                profile = Profile(user=newUser)
-                profile.save()
+                form.save()
                 return redirect('login')
         else:
             form = forms.ExtendedUserCreationForm()
@@ -38,25 +36,23 @@ def account(request):
 @login_required
 @transaction.atomic
 def team(request):
-    userProfile = Profile.objects.get(pk=request.user)
-
-    if userProfile.has_team():
+    if request.user.profile.has_team():
         return redirect('manage_base')
     else:
         if request.method == 'POST':
             form = forms.TeamForm(request.POST)
             if form.is_valid():
                 newTeam = form.save(commit=False)
-                newTeam.password = User.objects.make_random_password()
+                newTeam.password = User.objects.make_random_password(length=10)
                 newTeam.pin = User.objects.make_random_password(length=4)
-                memberName = request.user.first_name + ' ' + request.user.last_name
+                memberName = request.user.get_full_name()
                 newTeam.members.append(memberName)
                 newTeam.save()
 
-                userProfile.team = newTeam
-                userProfile.team_admin = True
-                userProfile.save()
-
+                request.user.profile.team = newTeam
+                request.user.profile.team_admin = True
+                request.user.profile.save()
+                
                 return redirect('manage_base')
         else:
             form = forms.TeamForm()
