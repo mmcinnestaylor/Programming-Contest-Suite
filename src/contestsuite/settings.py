@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'register.apps.RegisterConfig',
     'manager.apps.ManagerConfig',
-    'crispy_forms',
     'django_mysql',
 ]
 
