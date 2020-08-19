@@ -26,6 +26,9 @@
 	GRANT ALL PRIVILEGES ON contestsuite.* TO dev@localhost;
 	FLUSH PRIVILEGES;
 
+# Reset DB
+	DROP DATABASE contestsuite;
+	
 # Useful commands
 	//run testserver
 	python3 manage.py runserver 0:8000
@@ -37,8 +40,18 @@
 	redis-server --daemonize yes
 
 # Test DB Users
+	python3 manage.py createsuperuser
+
 	dev seminoles1!
 	rflack softly1!
 	dsummer hotstuff1!
 	hsolo hyperfuel1!
 	lvandross	myfather1!
+
+# Clear migrations
+	find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+	find . -path "*/migrations/*.pyc"  -delete
+
+# Migraitons
+	python3 manage.py makemigrations
+	python3 manage.py migrate
