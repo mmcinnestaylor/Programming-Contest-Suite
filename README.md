@@ -4,6 +4,7 @@
 ## Resources
 - [Django](https://www.djangoproject.com/) - Python Web Framework
 - [MariaDB](https://mariadb.com) -  Relational Database Management System
+- [Redis](https://redis.io) -  Cache broker
 - [Bootstrap 4](https://getbootstrap.com) -  CSS Framework
 - [Font Awesome](https://fontawesome.com) -  Site Icons  
 - [DomJudge](https://www.domjudge.org/) - Contest judging platform
@@ -17,7 +18,6 @@
 # Database setup (dev only)
 	sudo apt install mariadb-server
 	sudo apt install libmariadbclient-dev
-	sudo apt install libmariadbclient-dev
 
 	sudo mysql -u root -p
 
@@ -25,3 +25,20 @@
 	CREATE USER dev@localhost IDENTIFIED BY 'seminoles';
 	GRANT ALL PRIVILEGES ON contestsuite.* TO dev@localhost;
 	FLUSH PRIVILEGES;
+
+# Useful commands
+	//run testserver
+	python3 manage.py runserver 0:8000
+	//register new static files to serve 
+	python3 manage.py collectstatic
+	//interactive shell
+	python3 manage.py shell
+
+	redis-server --daemonize yes
+
+# Test DB Users
+	dev seminoles1!
+	rflack softly1!
+	dsummer hotstuff1!
+	hsolo hyperfuel1!
+	lvandross	myfather1!
