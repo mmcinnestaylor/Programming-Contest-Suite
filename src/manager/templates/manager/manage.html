@@ -1,39 +1,87 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
+{% block head %}
+	<script>
+		function confirmLeave() {
+			var r = confirm("Are you sure you want to leave: {{ user.profile.team.name }} ?");
+			if (r == true) {
+				location.href = "/manage/team/leave/"
+
+			} 
+		}
+		function confirmDelete() {
+				var r = confirm("Are you sure you want to delete: {{ user.profile.team.name }} ?");
+				if (r == true) {
+					location.href = "/manage/team/delete/"
+
+				}
+			}
+	</script>
+
+{% endblock %}
 {% block title %}Manage{% endblock %}
 
 {% block content %}
 	<div class="row justify-content-center">
 		<h1>My Account</h1>
 	</div>
-	<!-- Profile card -->
+	<!-- Messages -->
+	{% if messages %}
+		{% for message in messages %}
+			{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+				<div class="alert alert-danger alert-dismissible fade show mt-3">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+				</div>
+			{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+				<div class="alert alert-warning alert-dismissible fade show mt-3">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+				</div>
+			{% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+				<div class="alert alert-success alert-dismissible fade show mt-3">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+				</div>
+			{% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+				<div class="alert alert-info alert-dismissible fade show mt-3">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+	<!-- End Messages -->
+	<p id="demo"></p>
+	<!-- Card deck -->
 	<div class="card-deck">
+		<!-- Profile card -->
 		<div class="card mt-4">
 			<div class="card-header font-weight-bold">
 				Profile
 			</div>
-			<div class="card-body">
+			<div class="card-body overflow-auto">
 				<ul class="list-group list-group-flush">
-					<li class="list-group-item"><span class="font-weight-bolder">First name:</span> {{ user.first_name }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Last name:</span> {{ user.last_name }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Name:</span> {{ user.get_full_name }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Email:</span> {{ user.email }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">FSU ID:</span> {{ user.profile.fsu_id }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">FSU Number:</span> {{ user.profile.fsu_num }}</li>
 				</ul>
 			</div>
 			<div class="card-footer">
-				<a class="btn btn-danger btn-sm" href="#" role="button">Edit</a>
+				<a class="btn btn-info btn-sm" href="{% url 'manage_profile' %}" role="button">Edit</a>
 			</div>
 		</div>
 		<!-- Profile card end -->
 		<!-- Courses card -->
 		<div class="card mt-4">
 			<div class="card-header font-weight-bold">
-				Extra Credit Courses
+				Courses
 			</div>
-			<div class="card-body">
+			<div class="card-body overflow-auto">
 				{% if user.profile.has_courses %}
-					<table class="table table-striped overflow-auto">
+					<table class="table table-striped">
 						<thead>
 							<tr>
 								<th scope="col">Code</th>
@@ -59,9 +107,9 @@
 			</div>
 			<div class="card-footer">
 				{% if user.profile.has_courses %}
-					<a class="btn btn-danger btn-sm" href="{% url 'manage_profile' %}" role="button">Edit</a>
+					<a class="btn btn-info btn-sm" href="#" role="button">Edit</a>
 				{% else %}
-					<a class="btn btn-danger btn-sm disabled" href="#" role="button">Edit</a>
+					<button type="button" class="btn btn-info btn-sm disabled">Edit</button>
 				{% endif %}
 			</div>
 		</div>
@@ -71,7 +119,7 @@
 			<div class="card-header font-weight-bold">
 				Team
 			</div>
-			<div class="card-body">
+			<div class="card-body overflow-auto">
 				{% if user.profile.has_team %}
 					<ul class="list-group list-group-flush">
 						<li class="list-group-item"><span class="font-weight-bolder">Name:</span> {{ user.profile.team.name }}</li>
@@ -86,11 +134,19 @@
 								{{ member }}&emsp;
 							{% endfor %}
 						</li>
+						{% if user.profile.team_admin %}
+							<li class="list-group-item"><span class="font-weight-bolder">Admin:</span> Yes</li>
+							<li class="list-group-item"><span class="font-weight-bolder">PIN:</span> {{ user.profile.team.pin}}</li>
+						{% else %}
+							<li class="list-group-item"><span class="font-weight-bolder">Admin:</span> No</li>
+						{% endif %}
 					</ul>
 				{% else %}
 					<div class="row justify-content-center">
-						<a class="btn btn-outline-info btn-sm" href="#" role="button">Join registered team</a>
-						&emsp;or&emsp;
+						<a class="btn btn-outline-info btn-sm" href="{% url 'join_team' %}" role="button">Join registered team</a>
+					</div>
+					<hr>
+					<div class="row justify-content-center">
 						<a class="btn btn-outline-info btn-sm" href="{% url 'register_team' %}" role="button">Create new team</a>
 					</div>
 				{% endif %}
@@ -98,20 +154,23 @@
 			<div class="card-footer">
 				{% if user.profile.has_team %}
 					{% if user.profile.team_admin %}
-						<a class="btn btn-danger btn-sm" href="#" role="button">Manage</a>
+						<a class="btn btn-info btn-sm" href="{% url 'manage_team' %}" role="button">Manage</a>
+						<button type="button" class="btn btn-warning btn-sm" onclick="confirmLeave()">Leave</button>
+						<button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete()">Delete</button>
 					{% else %}
-						<a class="btn btn-danger btn-sm" href="#" role="button">Leave</a>
+						<button type="button" class="btn btn-warning btn-sm" onclick="confirmLeave()">Leave</button>
 					{% endif %}
 				{% else %}
-					<a class="btn btn-danger btn-sm disabled" href="#" role="button">Leave</a>
+					<button type="button" class="btn btn-warning btn-sm disabled">Leave</button>
 				{% endif %}
 			</div>
 		</div>
 		<!-- Team card end -->
 	</div>
+	<!-- End Card deck -->
 	<div class="row justify-content-center">
 		<div class="jumbotron mt-4">
-			<h1 class="display-4">Recent Announcements</h1>
+			<h2 >Recent Announcements</h2>
 			<p class="lead">Updates about the contest, extra credit courses, and more...</p>
 			<hr class="my-4">
 			<p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
