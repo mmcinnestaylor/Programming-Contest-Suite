@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'register.apps.RegisterConfig',
     'manager.apps.ManagerConfig',
     'django_mysql',
+    'import_export',
 ]
 
 MIDDLEWARE = [

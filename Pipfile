@@ -8,6 +8,7 @@ Django = "*"
 mysqlclient = "==1.4.*"
 django-mysql = "*"
 django-redis = "*"
+django-import-export = "*"
 
 [dev-packages]
 pylint = "*"
