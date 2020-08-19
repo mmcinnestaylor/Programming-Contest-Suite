@@ -24,7 +24,6 @@ urlpatterns = [
     path('manage/', include('manager.urls')),
 ]
 
-
 # Bad request
 handler400 = 'core.views.error400'
 # Permission denied
