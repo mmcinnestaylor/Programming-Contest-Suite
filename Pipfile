@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 Django = "*"
-django-crispy-forms = "*"
 mysqlclient = "==1.4.*"
 django-mysql = "*"
 django-redis = "*"
