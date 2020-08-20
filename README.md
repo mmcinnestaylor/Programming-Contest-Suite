@@ -55,3 +55,7 @@
 # Migraitons
 	python3 manage.py makemigrations
 	python3 manage.py migrate
+
+# Updating requirements
+	pipenv lock -r > requirements.txt
+	pipenv lock -r --dev > dev-requirements.txt
