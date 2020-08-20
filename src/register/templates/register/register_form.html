@@ -7,6 +7,16 @@
 <div class="row justify-content-center">
 	<h1>{{ heading }} Registeration</h1>
 </div>
+{% if messages %}
+	{% for message in messages %}
+		{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+			<div class="alert alert-danger alert-dismissible fade show mt-3">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+			</div>
+		{% endif %}
+	{% endfor %}
+{% endif %}
 <div class="row justify-content-center">
 	<div class="col col-sm-4">
 		<form method="post">

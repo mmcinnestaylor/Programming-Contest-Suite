@@ -9,8 +9,9 @@
 	</div>
 
 	{% if form.errors %}
-	<div class="row justify-content-center">
-		<p>Your username and password didn't match. Please try again.</p>
+	<div class="alert alert-danger alert-dismissible fade show mt-3">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		<strong>error</strong> Your username and password didn't match. Please try again.
 	</div>
 	{% endif %}
 
