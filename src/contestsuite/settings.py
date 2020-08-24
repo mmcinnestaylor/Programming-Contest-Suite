@@ -10,22 +10,31 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
-import os
+import environ
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Build paths inside the project & load environment vars
+
+root = environ.Path(__file__) - 2
+env = environ.Env()
+environ.Env.read_env()
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz'
+# Raises django's ImproperlyConfigured exception if SECRET_KEY not in os.environ
+
+SECRET_KEY = env.str('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# False if not in os.environ
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'contest.local', '192.168.10.12','[::1]']
+DEBUG = env.bool('DEBUG', default=False)
+
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'contest.local', '192.168.10.12', '[::1]']
 
 
 # Application definition
@@ -59,7 +68,7 @@ ROOT_URLCONF = 'contestsuite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [root('templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,37 +87,16 @@ WSGI_APPLICATION = 'contestsuite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'contestsuite',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-        },
-        'USER': 'dev',
-        'PASSWORD': 'seminoles',
-        'HOST': 'localhost',
-        'PORT': '',
-        # Tell Django to build the test database with the 'utf8mb4' character set
-        'TEST': {
-            'CHARSET': 'utf8mb4',
-            'COLLATION': 'utf8mb4_unicode_ci',
-        }
-    }
-}
+# Parse database connection url strings like psql://user:pass@127.0.0.1:8458/db
+# read os.environ['DATABASE_URL'] and raises ImproperlyConfigured exception if not found
+
+DATABASES = {'default': env.db('DATABASE_URL')}
 
 
 # Cache
 # https://docs.djangoproject.com/en/2.2/ref/settings/#caches
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}
+
+CACHES = {'default': env.cache('REDIS_CACHE_URL')}
 
 
 # Password validation
@@ -147,9 +135,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = root('static')
 
-STATIC_URL = '/static/'
+STATIC_URL = env.str('STATIC_URL', default='/static/')
 
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
@@ -166,15 +154,7 @@ SESSION_SAVE_EVERY_REQUEST = True
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 
+# Email settings
+
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# Email settings
-'''
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  
-EMAIL_HOST = ''
-EMAIL_PORT = 
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'ACM Dev <webmaster@fsu.acm.org>' 
-'''
