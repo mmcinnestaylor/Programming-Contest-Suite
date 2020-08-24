@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.db import transaction
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import User
 
 from . import forms
 from .utils import team_admin, has_no_team, has_team
@@ -14,6 +15,7 @@ from register.models import Team
 def base(request):
     context = {}
     context['courses'] = request.user.profile.courses.all()
+    context['team_members'] = User.objects.all().filter(profile__team=request.user.profile.team)
 
     # Generate account some useful account notifications
     if not request.user.profile.has_team():
@@ -40,6 +42,7 @@ def profile(request):
         # Forms for both user and profile models
         user_form = forms.UserForm(request.POST, instance=request.user)
         profile_form = forms.ProfileForm(request.POST, instance=request.user.profile)
+
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
@@ -55,6 +58,21 @@ def profile(request):
         'user_form': user_form,
         'profile_form': profile_form
     })
+
+
+def courses(request):
+    if request.method == 'POST':
+        form = forms.CourseForm(request.POST, instance=request.user.profile)
+        if form.is_valid():
+            request.user.profile.courses.set(form.cleaned_data['courses'])
+            request.user.save()
+
+            messages.success(
+                request, 'Your courses were successfully updated!', fail_silently=True)
+            return redirect('manage_base')
+    else:
+        form = forms.CourseForm(instance=request.user.profile)
+    return render(request, 'manager/course_form.html', {'form': form})
 
 
 # Only team admin can access view
@@ -83,6 +101,7 @@ def team(request):
 def join_team(request):
     if request.method == 'POST':
         form = forms.JoinForm(request.POST)
+
         if form.is_valid():
             # Check team is not full
             if form.cleaned_data['team'].num_members <= 2:

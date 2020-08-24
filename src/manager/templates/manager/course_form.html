@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block title %}Manage Profile{% endblock %}
+
+{% block content %}
+	<div class="row justify-content-center">
+		<h1>My Courses</h1>
+	</div>
+	{% if messages %}
+		{% for message in messages %}
+			{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+				<div class="alert alert-danger alert-dismissible fade show mt-3">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+	<div class="row justify-content-center">
+				<form method="post" class="mt-3">
+					{% csrf_token %}
+					{% for field in form %}
+					<p>
+					{{ field }}<br>
+					<small class="form-text text-muted">
+						{% for error in field.errors %}
+						<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
+						{% endfor %}
+						{% if field.help_text %}
+						{{ field.help_text }}
+						{% endif %}
+					</small>
+					</p>
+					{% endfor %}
+					
+		<button class="btn btn-primary btn-sm" type="submit" value="submit">Select</button>
+		<a class="btn btn-secondary btn-sm" href="{% url 'manage_base' %}" role="button">Cancel</a>
+		</form>
+	</div>
+{% endblock %}
