@@ -60,6 +60,8 @@ def profile(request):
     })
 
 
+@login_required
+@transaction.atomic
 def courses(request):
     if request.method == 'POST':
         form = forms.CourseForm(request.POST, instance=request.user.profile)
@@ -73,6 +75,18 @@ def courses(request):
     else:
         form = forms.CourseForm(instance=request.user.profile)
     return render(request, 'manager/course_form.html', {'form': form})
+
+
+# Remove all courses user has selected for extra credit
+@login_required
+@transaction.atomic
+def clear_courses(request):
+    request.user.profile.courses.clear()
+    request.user.save()
+
+    messages.success(
+        request, 'Your courses were successfully cleared!', fail_silently=True)
+    return redirect('manage_base')
 
 
 # Only team admin can access view
