@@ -16,10 +16,17 @@
 					location.href = "/manage/team/delete/"
 
 				}
-			}
-	</script>
+		}
+		function confirmClear() {
+				var r = confirm("Are you sure you want to clear your courses?");
+				if (r == true) {
+					location.href = "/manage/courses/clear/"
 
+				}
+		}
+	</script>
 {% endblock %}
+
 {% block title %}Manage{% endblock %}
 
 {% block content %}
@@ -53,8 +60,7 @@
 		{% endfor %}
 	{% endif %}
 	<!-- End Messages -->
-	<p id="demo"></p>
-	<!-- Card deck -->
+	<!-- User Card deck -->
 	<div class="card-deck">
 		<!-- Profile card -->
 		<div class="card mt-4">
@@ -81,7 +87,7 @@
 			</div>
 			<div class="card-body overflow-auto">
 				{% if user.profile.has_courses %}
-					<table class="table table-striped">
+					<table class="table table-sm">
 						<thead>
 							<tr>
 								<th scope="col">Code</th>
@@ -101,19 +107,25 @@
 					</table>
 				{% else %}
 					<div class="row justify-content-center">
-						<a class="btn btn-outline-info btn-sm" href="#" role="button">Add</a>
+						<a class="btn btn-outline-info btn-sm" href="{% url 'manage_courses' %}" role="button">Add</a>
 					</div>
 				{% endif %}
 			</div>
 			<div class="card-footer">
 				{% if user.profile.has_courses %}
-					<a class="btn btn-info btn-sm" href="#" role="button">Edit</a>
+					<a class="btn btn-info btn-sm" href="{% url 'manage_courses' %}" role="button">Edit</a>
+					<button type="button" class="btn btn-danger btn-sm" onclick="confirmClear()">Clear</button>
 				{% else %}
 					<button type="button" class="btn btn-info btn-sm disabled">Edit</button>
+					<button type="button" class="btn btn-danger btn-sm disabled">Clear</button>
 				{% endif %}
 			</div>
 		</div>
-		<!-- Courses card end -->
+		<!-- Courses card end -->		
+	</div>
+	<!-- User Card deck end -->
+	<!-- Team Card deck -->
+	<div class="card-deck">
 		<!-- Team card -->
 		<div class="card mt-4">
 			<div class="card-header font-weight-bold">
@@ -128,12 +140,6 @@
 						{% else %}
 							<li class="list-group-item"><span class="font-weight-bolder">Division:</span> Lower</li>
 						{% endif %}
-						<li class="list-group-item">
-							<span class="font-weight-bolder">Members:</span>
-							{% for member in user.profile.team.members %}
-								{{ member }}&emsp;
-							{% endfor %}
-						</li>
 						{% if user.profile.team_admin %}
 							<li class="list-group-item"><span class="font-weight-bolder">Admin:</span> Yes</li>
 							<li class="list-group-item"><span class="font-weight-bolder">PIN:</span> {{ user.profile.team.pin}}</li>
@@ -142,13 +148,13 @@
 						{% endif %}
 					</ul>
 				{% else %}
-					<div class="row justify-content-center">
-						<a class="btn btn-outline-info btn-sm" href="{% url 'join_team' %}" role="button">Join registered team</a>
-					</div>
-					<hr>
-					<div class="row justify-content-center">
-						<a class="btn btn-outline-info btn-sm" href="{% url 'register_team' %}" role="button">Create new team</a>
-					</div>
+				<div class="row justify-content-center">
+					<a class="btn btn-outline-info btn-sm" href="{% url 'join_team' %}" role="button">Join registered team</a>
+				</div>
+				<hr>
+				<div class="row justify-content-center">
+					<a class="btn btn-outline-info btn-sm" href="{% url 'register_team' %}" role="button">Create new team</a>
+				</div>
 				{% endif %}
 			</div>
 			<div class="card-footer">
@@ -166,8 +172,49 @@
 			</div>
 		</div>
 		<!-- Team card end -->
+		<!-- Team Members card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Team Members
+			</div>
+			<div class="card-body overflow-auto">
+				{% if user.profile.has_team %}
+					<table class="table table-sm">
+						<thead>
+							<tr>
+								<th scope="col">First name</th>
+								<th scope="col">Last name</th>
+								<th scope="col">Checked in</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for member in team_members %}
+							<tr>
+								<td>{{ member.first_name }}</td>
+								<td>{{ member.last_name }}</td>
+								{% if member.profile.checked_in %}
+									<td>Yes</td>
+								{% else %}
+									<td>No</td>
+								{% endif %}
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				{% else %}
+				<div class="row justify-content-center">
+					<a class="btn btn-outline-info btn-sm" href="{% url 'join_team' %}" role="button">Join registered team</a>
+				</div>
+				<hr>
+				<div class="row justify-content-center">
+					<a class="btn btn-outline-info btn-sm" href="{% url 'register_team' %}" role="button">Create new team</a>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+		<!-- Team Members card end -->
 	</div>
-	<!-- End Card deck -->
+	<!-- Team Card deck end -->
 	<div class="row justify-content-center">
 		<div class="jumbotron mt-4">
 			<h2 >Recent Announcements</h2>
