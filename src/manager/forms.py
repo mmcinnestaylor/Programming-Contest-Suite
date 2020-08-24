@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.contrib.admin.widgets import FilteredSelectMultiple
 
-from .models import Profile
+
+from .models import Profile, Course
 from register.models import Team
 
 
@@ -27,6 +29,16 @@ class ProfileForm(forms.ModelForm):
         help_texts = {
             'fsu_id': 'Excluding @my.fsu.edu',
             'fsu_num': 'Last 8 numbers. Exclude spaces.',
+        }
+
+
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('courses',)
+        widgets = {'courses': FilteredSelectMultiple('', is_stacked=True)}
+        help_texts = {
+            'courses': 'Hold the SHIFT key to select multiple courses.',
         }
 
 
