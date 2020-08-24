@@ -65,16 +65,16 @@
           <ul class="navbar-nav ml-auto">
             {# add link logic for faculty, admin, and student #}
             {% if user.is_authenticated %}
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown">{{ user.first_name }}</a>
-              <div class="dropdown-menu dropdown-menu-right">
-                {% if user.is_staff %}
-                <a class="dropdown-item" href="#">Checkin</a>
-                {% endif %}
-                <a class="dropdown-item" href="{% url 'manage_base' %}">Manage</a>
-                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-              </div>
-            </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown">{{ user.first_name }}</a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  {% if user.is_staff %}
+                    <a class="dropdown-item" href="#">Checkin</a>
+                  {% endif %}
+                  <a class="dropdown-item" href="{% url 'manage_base' %}">Manage</a>
+                  <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                </div>
+              </li>
             {% else %}
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'login' %}">Login</a>
