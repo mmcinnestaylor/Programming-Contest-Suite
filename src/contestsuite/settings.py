@@ -37,6 +37,13 @@ DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'contest.local', '192.168.10.12', '[::1]']
 
 
+if DEBUG:
+    INTERNAL_IPS = [
+        '0.0.0.0',
+        '127.0.0.1',
+    ]
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -53,6 +60,9 @@ INSTALLED_APPS = [
     'import_export',
 ]
 
+if DEBUG:
+    INSTALLED_APPS.append('debug_toolbar')
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -62,6 +72,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG:
+    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
 
 ROOT_URLCONF = 'contestsuite.urls'
 
