@@ -26,16 +26,16 @@ class Course(models.Model):
     Course Model
     - Courses added manually at the this point in time
     - code = 'COP3014'
+    - name = 'Programming I'
     - sections = [1, 2, 3, 4, 5]
     """
 
     code = models.CharField(max_length=8, blank=False)
     name = models.CharField(max_length=50, blank=False)
-    sections = ListTextField(base_field=models.IntegerField(), size=10, blank=False)
     instructor = models.ForeignKey(Faculty, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return (str(self.code) + ' ' + str(self.sections) + ' ' + str(self.instructor.last_name))
+        return (str(self.code) + ' : ' + str(self.name) + ' - ' + str(self.instructor.last_name) + ', ' + str(self.instructor.first_name)[0])
 
 
 class Profile(models.Model):
