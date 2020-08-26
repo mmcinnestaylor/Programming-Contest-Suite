@@ -1,8 +1,9 @@
 from django.contrib import messages
-from django.shortcuts import redirect, render
-from django.db import transaction
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
+from django.db import transaction
+from django.shortcuts import redirect, render
+from django.views.decorators.cache import cache_page
 
 from . import forms
 from .utils import team_admin, has_no_team, has_team
