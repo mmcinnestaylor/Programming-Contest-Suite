@@ -3,6 +3,7 @@ from django.db import transaction
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
+# from django.forms import formset_factory
 
 from . import forms
 from . import models
@@ -31,6 +32,43 @@ def account(request):
     else:
         form = forms.ExtendedUserCreationForm()
     return render(request, 'register/register_form.html', {'page_title': 'Contest Registration', 'heading' : 'Contest', 'form': form})
+
+
+# key error on password1, more research required
+# https://stackoverflow.com/questions/34962398/keyerror-at-registration-value-password1/34963664
+
+'''def group(request):
+    context = {}
+    UserFormSet = formset_factory(forms.ExtendedUserCreationForm, extra=3)
+    
+    if request.method == 'POST':
+        formset = UserFormSet(request.POST)
+        if formset.is_valid():
+            for form in formset:
+                if form.is_valid():
+                    new_user = User(
+                        first_name=form.cleaned_data['first_name'], 
+                        last_name=form.cleaned_data['last_name'],
+                        username=form.cleaned_data['username'],
+                        email=form.cleaned_data['email'],
+                        password=form.cleaned_data['password1']
+                    )
+                    # new_user = form.save(commit=False)
+                    # new_user.password = form.cleaned_data['password1']
+                    new_user.save()
+            
+            messages.success(
+                request, 'Accounts registered!')
+            return redirect('index')
+        
+        messages.error(
+            request, 'Please correct the error(s) below.', fail_silently=True)
+    else:
+        formset = UserFormSet()
+
+    context['formset'] = formset
+    return render(request, 'register/group_register_form.html', {'formset': formset})'''
+
 
 
 # Limit view to those are not on a team. Others redirected to manage.
