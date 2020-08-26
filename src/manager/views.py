@@ -1,9 +1,10 @@
 from django.contrib import messages
+from django.shortcuts import redirect, render
+from django.db import transaction
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.db import transaction
-from django.shortcuts import redirect, render
-from django.views.decorators.cache import cache_page
+from django.shortcuts import get_object_or_404, redirect, render
 
 from . import forms
 from .utils import team_admin, has_no_team, has_team
@@ -106,7 +107,9 @@ def team(request):
             messages.error(request, 'Please correct the error(s) below.', fail_silently=True)
     else:
         form = forms.TeamForm(instance=request.user.profile.team)
-    return render(request, 'manager/team_form.html', {'form': form})
+        team_members = Profile.objects.filter(team=request.user.profile.team).exclude(user=request.user)
+
+    return render(request, 'manager/team_form.html', {'form': form, 'team_members':team_members})
 
 
 # Only person not on a team can access view
@@ -164,7 +167,7 @@ def leave_team(request):
             return redirect('manage_base')
         # If admin leaves a team with 2 or more people, then reassign admin credential first
         else:
-            members = Profile.objects.all().filter(team=request.user.profile.team)
+            members = Profile.objects.filter(team=request.user.profile.team)
 
             # Find first non admin and assign them admin credential
             for member in members:
@@ -213,4 +216,11 @@ def delete_team(request):
 
     messages.success(
         request, 'You have deleted the team!', fail_silently=True)
+    return redirect('manage_base')
+
+
+def remove_member(request, username):
+    member = get_object_or_404(User, username=username)
+
+    messages.success(request, str(member.username), fail_silently=True)
     return redirect('manage_base')
