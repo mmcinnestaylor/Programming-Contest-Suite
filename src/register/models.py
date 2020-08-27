@@ -6,20 +6,24 @@ from django_mysql.models import ListTextField
 class Team(models.Model):
     """
     Team Model
-    - Each team name is unique and has a one-to-one relation to the account that created it
-    - Members field will be seperated by '\n' for DOMJudge
-    team password (domjudge login) - User.objects.make_random_password(length=10)
+    - name attribute is unique but not primary key
+    - division is the contest division
+    - pin used to allow nonmembers to join team
+    - contest_id used by domjudge as team login username
+    - contest_password used by domjudge as team login password
+    - members simple string list to avoid extra DB queries
+    - num_members used to avoid extra DB queries
     """
     DIVISION = (
         (1, 'Upper Division'),
         (2, 'Lower Division')
     )
     
-    contest_id = models.CharField(max_length=7, blank=True)
     name = models.CharField(max_length=30, unique=True)
     division = models.PositiveSmallIntegerField(choices=DIVISION)
-    password = models.CharField(max_length=10, unique=True)
-    pin = models.CharField(max_length=4)
+    pin = models.CharField(max_length=4, unique=True)
+    contest_id = models.CharField(max_length=7, unique=True, blank=True, null=True)
+    contest_password = models.CharField(max_length=10, unique=True, blank=True, null=True)
     members = ListTextField(base_field=models.CharField(max_length=181), size=3, max_length=(181 * 3), default=[])
     num_members = models.PositiveSmallIntegerField(default=1)
 

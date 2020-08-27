@@ -1,10 +1,268 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}Manage Account{% endblock %}
+{% block title %}Manage{% endblock %}
 
 {% block content %}
-
-hello from manage
-
+	<div class="row justify-content-center">
+		<h1>My Account</h1>
+	</div>
+	<!-- Messages -->
+	{% if messages %}
+		{% for message in messages %}
+			{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+				<div class="alert alert-danger alert-dismissible fade show mt-3">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+				</div>
+			{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+				<div class="alert alert-warning alert-dismissible fade show mt-3">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+				</div>
+			{% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+				<div class="alert alert-success alert-dismissible fade show mt-3">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+				</div>
+			{% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+				<div class="alert alert-info alert-dismissible fade show mt-3">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+	<!-- End Messages -->
+	<!-- User Card deck -->
+	<div class="card-deck">
+		<!-- Profile card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Profile
+			</div>
+			<div class="card-body overflow-auto">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item"><span class="font-weight-bolder">Name:</span> {{ user.get_full_name }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Email:</span> {{ user.email }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">FSU ID:</span> {{ user.profile.fsu_id }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">FSU Number:</span> {{ user.profile.fsu_num }}</li>
+				</ul>
+			</div>
+			<div class="card-footer">
+				<a class="btn btn-info btn-sm" href="{% url 'manage_profile' %}" role="button">Edit</a>
+			</div>
+		</div>
+		<!-- Profile card end -->
+		<!-- Courses card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Courses
+			</div>
+			<div class="card-body overflow-auto">
+				{% if user.profile.has_courses %}
+					<table class="table table-sm">
+						<thead>
+							<tr>
+								<th scope="col">Code</th>
+								<th scope="col">Name</th>
+								<th scope="col">Instructor</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for course in courses %}
+							<tr>
+								<td>{{ course.code }}</td>
+								<td>{{ course.name }}</td>
+								<td>{{ course.instructor.last_name }}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				{% else %}
+					<div class="row justify-content-center">
+						<a class="btn btn-outline-info btn-sm" href="{% url 'manage_courses' %}" role="button">Add</a>
+					</div>
+				{% endif %}
+			</div>
+			<div class="card-footer">
+				{% if user.profile.has_courses %}
+					<a class="btn btn-info btn-sm" href="{% url 'manage_courses' %}" role="button">Edit</a>
+					<button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+						data-target="#confirmClearModal">Clear</button>
+				{% else %}
+					<button type="button" class="btn btn-info btn-sm disabled">Edit</button>
+					<button type="button" class="btn btn-danger btn-sm disabled">Clear</button>
+				{% endif %}
+			</div>
+		</div>
+		<!-- Courses card end -->		
+	</div>
+	<!-- User Card deck end -->
+	<!-- Team Card deck -->
+	<div class="card-deck">
+		<!-- Team card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Team
+			</div>
+			<div class="card-body overflow-auto">
+				{% if user.profile.has_team %}
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item"><span class="font-weight-bolder">Name:</span> {{ user.profile.team.name }}</li>
+						{% if user.profile.team.division == 1 %}
+							<li class="list-group-item"><span class="font-weight-bolder">Division:</span> Upper</li>
+						{% else %}
+							<li class="list-group-item"><span class="font-weight-bolder">Division:</span> Lower</li>
+						{% endif %}
+						{% if user.profile.team_admin %}
+							<li class="list-group-item"><span class="font-weight-bolder">Admin:</span> Yes</li>
+							<li class="list-group-item"><span class="font-weight-bolder">PIN:</span> {{ user.profile.team.pin}}</li>
+						{% else %}
+							<li class="list-group-item"><span class="font-weight-bolder">Admin:</span> No</li>
+						{% endif %}
+					</ul>
+				{% else %}
+				<div class="row justify-content-center">
+					<a class="btn btn-outline-info btn-sm" href="{% url 'join_team' %}" role="button">Join registered team</a>
+				</div>
+				<hr>
+				<div class="row justify-content-center">
+					<a class="btn btn-outline-info btn-sm" href="{% url 'register_team' %}" role="button">Create new team</a>
+				</div>
+				{% endif %}
+			</div>
+			<div class="card-footer">
+				{% if user.profile.has_team %}
+					{% if user.profile.team_admin %}
+						<a class="btn btn-info btn-sm" href="{% url 'manage_team' %}" role="button">Manage</a>
+						<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#confirmLeaveModal">Leave</button>
+						<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmDeleteModal">Delete</button>
+					{% else %}
+						<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#confirmLeaveModal">Leave</button>
+					{% endif %}
+				{% else %}
+					<button type="button" class="btn btn-warning btn-sm disabled">Leave</button>
+				{% endif %}
+			</div>
+		</div>
+		<!-- Team card end -->
+		<!-- Team Members card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Team Members
+			</div>
+			<div class="card-body overflow-auto">
+				{% if user.profile.has_team %}
+					<table class="table table-sm">
+						<thead>
+							<tr>
+								<th scope="col">First name</th>
+								<th scope="col">Last name</th>
+								<th scope="col">Checked in</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for member in team_members %}
+							<tr>
+								<td>{{ member.first_name }}</td>
+								<td>{{ member.last_name }}</td>
+								{% if member.profile.checked_in %}
+									<td>Yes</td>
+								{% else %}
+									<td>No</td>
+								{% endif %}
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				{% else %}
+				<div class="row justify-content-center">
+					<a class="btn btn-outline-info btn-sm" href="{% url 'join_team' %}" role="button">Join registered team</a>
+				</div>
+				<hr>
+				<div class="row justify-content-center">
+					<a class="btn btn-outline-info btn-sm" href="{% url 'register_team' %}" role="button">Create new team</a>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+		<!-- Team Members card end -->
+	</div>
+	<!-- Team Card deck end -->
+	<div class="row justify-content-center">
+		<div class="jumbotron mt-4">
+			<h2 >Recent Announcements</h2>
+			<p class="lead">Updates about the contest, extra credit courses, and more...</p>
+			<hr class="my-4">
+			<p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+			<a class="btn btn-primary " href="#" role="button">More</a>
+		</div>
+	</div> 
+	<!-- Confirm Clear Modal -->
+	<div class="modal fade" id="confirmClearModal" tabindex="-1" role="dialog"
+		aria-labelledby="confirmClearModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmClearModalLongTitle">Clear courses</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>Are you sure you want to clear your courses?</p>
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-primary" href="{% url 'clear_courses' %}" role="button">Confirm</a>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Confirm Clear Modal -->
+	<!-- Confirm Leave Modal -->
+	<div class="modal fade" id="confirmLeaveModal" tabindex="-1" role="dialog"
+		aria-labelledby="confirmLeaveModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmLeaveModalLongTitle">Leave team</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>Are you sure you want to leave {{ request.user.profile.team.name }} ?</p>
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-primary" href="{% url 'leave_team' %}" role="button">Confirm</a>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Confirm Leave Modal -->
+	<!-- Confirm Delete Modal -->
+	<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"
+		aria-labelledby="confirmDeleteModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmDeleteModalLongTitle">Delete team</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>Are you sure you want to delete {{ request.user.profile.team.name }} ?</p>
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-primary" href="{% url 'delete_team' %}" role="button">Confirm</a>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Confirm Delete Modal -->
 {% endblock %}

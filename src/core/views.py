@@ -48,15 +48,12 @@ def teams(request):
 
 
 def error400(request, exception):
-    context = {}
-    return render(request, 'core/error.html', context)
+    return render(request, 'core/400.html')
 
 
 def error403(request, exception):
-    context = {}
-    return render(request, 'core/error.html', context)
+    return render(request, 'core/403.html')
 
 
 def error404(request, exception):
-    context = {}
-    return render(request, 'core/error.html', context)
+    return render(request, 'core/404.html')

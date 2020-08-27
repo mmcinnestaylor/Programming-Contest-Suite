@@ -26,15 +26,16 @@ class Course(models.Model):
     Course Model
     - Courses added manually at the this point in time
     - code = 'COP3014'
+    - name = 'Programming I'
     - sections = [1, 2, 3, 4, 5]
     """
 
     code = models.CharField(max_length=8, blank=False)
-    sections = ListTextField(base_field=models.IntegerField(), size=10, blank=False)
+    name = models.CharField(max_length=50, blank=False)
     instructor = models.ForeignKey(Faculty, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return (str(self.code) + ' ' + str(self.sections))
+        return (str(self.code) + ' : ' + str(self.name) + ' - ' + str(self.instructor.last_name) + ', ' + str(self.instructor.first_name)[0])
 
 
 class Profile(models.Model):
@@ -50,7 +51,7 @@ class Profile(models.Model):
     """
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True)
+    team = models.ForeignKey(Team, related_name='profile_team', on_delete=models.SET_NULL, null=True)
     team_admin = models.BooleanField(default=False)
     fsu_id = models.CharField(max_length=8, unique=True, blank=True, null=True)
     fsu_num = models.CharField(max_length=8, unique=True, blank=True, null=True)
@@ -59,3 +60,13 @@ class Profile(models.Model):
     
     def __str__(self):
         return (str(self.user.first_name) + ' ' + str(self.user.last_name))
+
+    def has_team(self):
+        if self.team is None:
+            return False
+        return True
+
+    def has_courses(self):
+        if self.courses.count() == 0:
+            return False
+        return True

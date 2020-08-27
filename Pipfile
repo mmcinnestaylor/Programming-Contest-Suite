@@ -5,14 +5,16 @@ name = "pypi"
 
 [packages]
 Django = "*"
-django-crispy-forms = "*"
 mysqlclient = "==1.4.*"
 django-mysql = "*"
 django-redis = "*"
+django-import-export = "*"
+django-environ = "*"
 
 [dev-packages]
 pylint = "*"
 autopep8 = "*"
+django-debug-toolbar = "*"
 
 [requires]
 python_version = "3.7"

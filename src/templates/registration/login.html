@@ -4,43 +4,49 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
+	<div class="row justify-content-center">
+		<h1>Login</h1>
+	</div>
 
-<div class="row justify-content-center">
-	<h1>Login</h1>
-</div>
+	{% if form.errors %}
+	<div class="alert alert-danger alert-dismissible fade show mt-3">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		<strong>error</strong> Your username and password didn't match. Please try again.
+	</div>
+	{% endif %}
 
-{% if form.errors %}
-<div class="row justify-content-center">
-	<p>Your username and password didn't match. Please try again.</p>
-</div>
+	{% if messages %}
+		{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+			<div class="alert alert-success alert-dismissible fade show mt-3">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+			</div>
+		{% endif %}
+	{% endif %}
 
-{% endif %}
 
-{% if next %}
-{% if user.is_authenticated %}
-<p>Your account doesn't have access to this page. To proceed,
-	please login with an account that has access.</p>
-{% else %}
-<p>Please login to see this page.</p>
-{% endif %}
-{% endif %}
+	{% if user.is_authenticated %}
+		<div class="alert alert-info alert-dismissible fade show mt-3">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<strong>info</strong> You have already logged in.
+		</div>
+	{% else %}
+		<form method="post" action="{% url 'login' %}">
+			{% csrf_token %}
+			<table>
+				<tr>
+					<td>{{ form.username.label_tag }}</td>
+					<td>{{ form.username }}</td>
+				</tr>
+				<tr>
+					<td>{{ form.password.label_tag }}</td>
+					<td>{{ form.password }}</td>
+				</tr>
+			</table>
+			<input type="submit" value="login" />
+			<input type="hidden" name="next" value="{{ next }}" />
+		</form>
 
-<form method="post" action="{% url 'login' %}">
-	{% csrf_token %}
-	<table>
-		<tr>
-			<td>{{ form.username.label_tag }}</td>
-			<td>{{ form.username }}</td>
-		</tr>
-		<tr>
-			<td>{{ form.password.label_tag }}</td>
-			<td>{{ form.password }}</td>
-		</tr>
-	</table>
-	<input type="submit" value="login" />
-	<input type="hidden" name="next" value="{{ next }}" />
-</form>
-
-<a class="text-sm" href="{% url 'password_reset' %}">Lost password?</a>
-
+		<a class="text-sm" href="{% url 'password_reset' %}">Lost password?</a>
+	{% endif %}
 {% endblock %}
