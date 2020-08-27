@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'register.apps.RegisterConfig',
     'manager.apps.ManagerConfig',
+    'checkin.apps.CheckinConfig',
     'django_mysql',
     'import_export',
 ]
