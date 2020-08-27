@@ -17,7 +17,7 @@ from register.models import Team
 def base(request):
     context = {}
     context['courses'] = request.user.profile.courses.all()
-    context['team_members'] = User.objects.all().filter(profile__team=request.user.profile.team)
+    context['team_members'] = User.objects.filter(profile__team=request.user.profile.team)
 
     # Generate account some useful account notifications
     if not request.user.profile.has_team():
@@ -36,10 +36,11 @@ def base(request):
     return render(request, 'manager/manage.html', context)
 
 
-
 @login_required
 @transaction.atomic
 def profile(request):
+    context = {}
+
     if request.method == 'POST':
         # Forms for both user and profile models
         user_form = forms.UserForm(request.POST, instance=request.user)
@@ -56,15 +57,17 @@ def profile(request):
     else:
         user_form = forms.UserForm(instance=request.user)
         profile_form = forms.ProfileForm(instance=request.user.profile)
-    return render(request, 'manager/profile_form.html', {
-        'user_form': user_form,
-        'profile_form': profile_form
-    })
+
+    context['user_form'] = user_form
+    context['profile_form'] = profile_form
+    return render(request, 'manager/profile_form.html', context)
 
 
 @login_required
 @transaction.atomic
 def courses(request):
+    context = {}
+
     if request.method == 'POST':
         form = forms.CourseForm(request.POST, instance=request.user.profile)
         if form.is_valid():
@@ -76,7 +79,9 @@ def courses(request):
             return redirect('manage_base')
     else:
         form = forms.CourseForm(instance=request.user.profile)
-    return render(request, 'manager/course_form.html', {'form': form})
+
+    context['form'] = form
+    return render(request, 'manager/course_form.html', context)
 
 
 # Remove all courses user has selected for extra credit
@@ -87,7 +92,7 @@ def clear_courses(request):
     request.user.save()
 
     messages.success(
-        request, 'Your courses were successfully cleared!', fail_silently=True)
+        request, 'Your courses were successfully cleared.', fail_silently=True)
     return redirect('manage_base')
 
 
@@ -96,6 +101,8 @@ def clear_courses(request):
 @user_passes_test(team_admin, login_url='/manage/')
 @transaction.atomic
 def team(request):
+    context = {}
+
     if request.method == 'POST':
         form = forms.TeamForm(request.POST, instance=request.user.profile.team)
         if form.is_valid():
@@ -107,9 +114,12 @@ def team(request):
             messages.error(request, 'Please correct the error(s) below.', fail_silently=True)
     else:
         form = forms.TeamForm(instance=request.user.profile.team)
-        team_members = Profile.objects.filter(team=request.user.profile.team).exclude(user=request.user)
+        team_members = User.objects.filter(
+            profile__team=request.user.profile.team).exclude(username=request.user.username)
 
-    return render(request, 'manager/team_form.html', {'form': form, 'team_members':team_members})
+    context['form'] = form
+    context['team_members'] = team_members
+    return render(request, 'manager/team_form.html', context)
 
 
 # Only person not on a team can access view
@@ -117,6 +127,8 @@ def team(request):
 @user_passes_test(has_no_team, login_url='/manage/')
 @transaction.atomic
 def join_team(request):
+    context = {}
+
     if request.method == 'POST':
         form = forms.JoinForm(request.POST)
 
@@ -146,7 +158,9 @@ def join_team(request):
                     request, 'The team you have selected is full. Please select another team, or create your own.', fail_silently=True)
     else:
         form = forms.JoinForm()
-    return render(request, 'manager/join_form.html', {'form': form})
+
+    context['form'] = form
+    return render(request, 'manager/join_form.html', context)
 
 
 # Only person on a team can access view.
@@ -161,10 +175,6 @@ def leave_team(request):
             request.user.profile.team = None
             request.user.profile.team_admin = False
             request.user.save()
-
-            messages.success(
-                request, 'You have left the team!', fail_silently=True)
-            return redirect('manage_base')
         # If admin leaves a team with 2 or more people, then reassign admin credential first
         else:
             members = Profile.objects.filter(team=request.user.profile.team)
@@ -186,12 +196,8 @@ def leave_team(request):
             request.user.profile.team_admin = False
             request.user.profile.team = None
             request.user.profile.save()
-
-            messages.success(
-                request, 'You have left the team!', fail_silently=True)
-            return redirect('manage_base')
+    # If user only a team member, then simply leave the team
     else:
-        # If user only a team member, then simply leave the team
         request.user.profile.team.num_members -= 1
         request.user.profile.team.members.remove(request.user.get_full_name())
         request.user.profile.team.save()
@@ -199,9 +205,9 @@ def leave_team(request):
         request.user.profile.team = None
         request.user.save()
 
-        messages.success(
-            request, 'You have left the team!', fail_silently=True)
-        return redirect('manage_base')
+    messages.success(
+        request, 'You have left the team.', fail_silently=True)
+    return redirect('manage_base')
 
 
 # Only team admin can access delete view
@@ -215,12 +221,25 @@ def delete_team(request):
     request.user.save()
 
     messages.success(
-        request, 'You have deleted the team!', fail_silently=True)
+        request, 'You have deleted the team.', fail_silently=True)
     return redirect('manage_base')
 
 
+# Only team admin can access remove view
+@login_required
+@user_passes_test(team_admin, login_url='/manage/')
+@transaction.atomic
 def remove_member(request, username):
     member = get_object_or_404(User, username=username)
 
-    messages.success(request, str(member.username), fail_silently=True)
+    # Update team    
+    member.profile.team.num_members -= 1
+    member.profile.team.members.remove(member.get_full_name())
+    member.profile.team.save()
+
+    #Update user being removed
+    member.profile.team = None
+    member.profile.save()
+    
+    messages.success(request, str(member.get_full_name()) + ' removed from the team.', fail_silently=True)
     return redirect('manage_base')
