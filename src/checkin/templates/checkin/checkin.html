@@ -1,0 +1,116 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block head %}
+	<script src="{% static 'checkin/js/common.js' %}"></script>
+{% endblock %}
+
+{% block title %}Contest Checkin{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+	<h1>Contest Checkin</h1>
+</div>
+
+{% if messages %}
+	{% for message in messages %}
+		{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+			<div class="alert alert-danger alert-dismissible fade show mt-3">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+			</div>
+		{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+			<div class="alert alert-warning alert-dismissible fade show mt-3">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+			</div>
+		{% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+			<div class="alert alert-success alert-dismissible fade show mt-3">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+			</div>
+		{% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+			<div class="alert alert-info alert-dismissible fade show mt-3">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+			</div>
+		{% endif %}
+	{% endfor %}
+{% endif %}
+
+<div class="jumbotron text-center mt-4" style="background-color: #787878; margin-top: 1em;">
+	<h2 class="text-warning">Swipe your FSU Card or select Email checkin</h2>
+	<br>
+	<a class="btn btn-light btn-lg" href="{% url 'checkin' %}" role="button">Refresh form</a>
+	<button type="button" class="btn btn-primary btn-lg" onclick="swapForm()">Email checkin</button>
+</div>
+
+<div id="swipeDiv">
+	<div class="row justify-content-center">
+		<form method="post" id="swipeForm">
+			{% csrf_token %}
+			{% for field in swipe_form %}
+				<p>
+					{{ field }}<br>
+					<small class="form-text text-muted">
+						{% for error in field.errors %}
+						<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
+						{% endfor %}
+						{% if field.help_text %}
+						{{ field.help_text }}
+						{% endif %}
+					</small>
+				</p>
+			{% endfor %}
+		</form>
+	</div>
+</div>
+
+<div id="emailDiv" style="display:none">
+	<div class="row justify-content-center">
+		<div class="card mt-4">
+			<form method="post" id="emailForm">
+				{% csrf_token %}
+				<div class="card-body overflow-auto">		
+					{% for field in email_form %}
+						<p>
+						{{ field }}<br>
+						<small class="form-text text-muted">
+							{% for error in field.errors %}
+							<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
+							{% endfor %}
+							{% if field.help_text %}
+							{{ field.help_text }}
+							{% endif %}
+						</small>
+						</p>
+					{% endfor %}								
+				</div>
+				<div class="card-footer">
+					<button class="btn btn-primary" type="submit">Submit</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+	var textarea = document.getElementById("id_fsu_num");
+
+	textarea.addEventListener("input", function () {
+		// replace with logic to check for end of swipe
+		// waiting on card reader
+
+		var maxlength = 8;
+		var currentLength = this.value.length;
+
+		if (currentLength >= maxlength) {
+			document.getElementById("swipeForm").submit();
+			//window.location.replace("http://www.w3schools.com");
+		} else {
+			console.log(maxlength - currentLength + " chars left");
+		}
+	});
+</script>
+{% endblock %}
