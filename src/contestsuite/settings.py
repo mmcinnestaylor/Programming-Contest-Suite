@@ -172,3 +172,14 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+
+# Celery Settings
+# https://docs.celeryproject.org/en/stable/getting-started/first-steps-with-celery.html#configuration
+ 
+CELERY_BROKER_URL = 'pyamqp://'
+CELERY_RESULT_BACKEND = 'rpc://'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TIMEZONE = 'America/New_York'
+CELERY_ENABLE_UTC = True
