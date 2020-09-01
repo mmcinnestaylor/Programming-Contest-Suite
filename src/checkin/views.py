@@ -1,5 +1,7 @@
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
+from django.db import transaction
 from django.shortcuts import render, redirect
 
 from . import forms
@@ -8,6 +10,8 @@ from .tasks import send_credentials
 # Create your views here.
 
 
+@staff_member_required
+@transaction.atomic
 def checkin(request):
 	context = {}
 
@@ -27,7 +31,7 @@ def checkin(request):
 						user.save()
 						send_credentials.delay(user.username)
 						messages.success(request, str(user.first_name) + ', you are checked in!', fail_silently=True)
-						messages.info(request, 'Check your registered email for DOMJudge credentials.', fail_silently=True)
+						messages.info(request, 'Check your registered email or account dashboard for DOMJudge credentials.', fail_silently=True)
 				except:
 					messages.error(request, 'Checkin failed. Email address not found.', fail_silently=True)
 
@@ -45,7 +49,7 @@ def checkin(request):
 							user.profile.checked_in = True
 							user.save()
 							messages.success(request, str(user.first_name) + ', you are checked in!', fail_silently=True)
-							messages.info(request, 'Check your registered email for DOMJudge credentials.', fail_silently=True)
+							messages.info(request, 'Check your registered email or account dashboard for DOMJudge credentials.', fail_silently=True)
 					except:
 						messages.error(request, 'Checkin failed. FSU number not found.', fail_silently=True)
 
@@ -63,5 +67,6 @@ def checkin(request):
 	return render(request, 'checkin/checkin.html', context)
 
 
+@staff_member_required
 def checkin_result(request):
 	return render(request, 'checkin/checkin_result.html')
