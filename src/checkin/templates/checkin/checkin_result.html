@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block head %}
-	<meta http-equiv="refresh" content="3; URL={% url 'checkin' %}" />
+	<meta http-equiv="refresh" content="5; URL={% url 'checkin' %}" />
 {% endblock %}
 
 {% block title %}Checkin result{% endblock %}
@@ -17,6 +17,16 @@
 		</div>
 	{% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
 		<div class="alert alert-success alert-dismissible fade show mt-5">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<h1 class="display-3 text-center">{{ message }}</h1>
+		</div>
+	{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+		<div class="alert alert-warning alert-dismissible fade show mt-5">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<h1 class="display-3 text-center">{{ message }}</h1>
+		</div>
+	{% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+		<div class="alert alert-info alert-dismissible fade show mt-5">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			<h1 class="display-3 text-center">{{ message }}</h1>
 		</div>
