@@ -107,8 +107,23 @@ WSGI_APPLICATION = 'contestsuite.wsgi.application'
 # Parse database connection url strings like psql://user:pass@127.0.0.1:8458/db
 # read os.environ['DATABASE_URL'] and raises ImproperlyConfigured exception if not found
 
-DATABASES = {'default': env.db('DATABASE_URL')}
-
+# DATABASES = {'default': env.db('DATABASE_URL')}
+DATABASES = {'default': {'ATOMIC_REQUESTS': False,
+             'AUTOCOMMIT': True,
+             'CONN_MAX_AGE': 0,
+             'ENGINE': 'django.db.backends.mysql',
+             'HOST': env.str('DATABASE_URL'),
+             'NAME': env.str('DATABASE_NAME'),
+             'OPTIONS': {'charset': 'utf8mb4'},
+             'PASSWORD': env.str('DATABASE_PASSWORD'),
+             'PORT': 3306,
+             'TEST': {'CHARSET': 'utf8mb4',
+                      'COLLATION': None,
+                      'MIGRATE': True,
+                      'MIRROR': None,
+                      'NAME': None},
+             'TIME_ZONE': 'America/New_York',
+             'USER': env.str('DATABASE_USER')}}
 
 
 # Cache
