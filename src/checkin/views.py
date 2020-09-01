@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
 
 from . import forms
+from .tasks import send_credentials
 
 # Create your views here.
 
@@ -18,12 +19,17 @@ def checkin(request):
 			if email_form.cleaned_data['email']:
 				try:
 					user = User.objects.get(email=email_form.cleaned_data['email'])
-					# user.profile.checked_in = True
-					# user.save()
 
-					messages.success(request, str(user.first_name) + ', you are checked in!', fail_silently=True)
+					if user.profile.checked_in:
+						messages.info(request, 'You are already checked in.', fail_silently=True)
+					else:
+						user.profile.checked_in = True
+						user.save()
+						send_credentials.delay(user.username)
+						messages.success(request, str(user.first_name) + ', you are checked in!', fail_silently=True)
+						messages.info(request, 'Check your registered email for DOMJudge credentials.', fail_silently=True)
 				except:
-					messages.error(request, 'Checkin failed', fail_silently=True)
+					messages.error(request, 'Checkin failed. Email address not found.', fail_silently=True)
 
 				return redirect('checkin_result')
 			elif swipe_form.cleaned_data['fsu_num']:
@@ -32,17 +38,22 @@ def checkin(request):
 					fsu_num = swipe_form.cleaned_data['fsu_num']
 					try:
 						user = User.objects.get(profile__fsu_num=fsu_num)
-						# user.profile.checked_in = True
-						# user.save()
 
-						messages.success(request, str(user.first_name) +
-										', you are checked in!', fail_silently=True)
+						if user.profile.checked_in:
+							messages.info(request, 'You are already checked in.', fail_silently=True)
+						else:
+							user.profile.checked_in = True
+							user.save()
+							messages.success(request, str(user.first_name) + ', you are checked in!', fail_silently=True)
+							messages.info(request, 'Check your registered email for DOMJudge credentials.', fail_silently=True)
 					except:
-						messages.error(request, 'Checkin failed', fail_silently=True)
+						messages.error(request, 'Checkin failed. FSU number not found.', fail_silently=True)
 
 					return redirect('checkin_result')
 				else:
-					messages.error(request, 'Invalid card read', fail_silently=True)
+					messages.error(request, 'Invalid card read. Try swiping again.', fail_silently=True)
+			else:
+				messages.error(request, 'Invalid form submission. Try refreshing the form.', fail_silently=True)
 	else:
 		email_form = forms.EmailCheckinForm()
 		swipe_form = forms.SwipeCheckinForm()
@@ -54,4 +65,3 @@ def checkin(request):
 
 def checkin_result(request):
 	return render(request, 'checkin/checkin_result.html')
-
