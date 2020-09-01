@@ -1,11 +1,14 @@
 function swapForm() {
-	var x = document.getElementById("emailDiv");
-	var y = document.getElementById("swipeDiv");
-	if (x.style.display === "none") {
-		y.style.display = "none";
-		x.style.display = "block";
+	var email = document.getElementById("emailDiv");
+	var swipe = document.getElementById("swipeDiv");
+	var button = document.getElementById("formSwap");
+	if (email.style.display === "none") {
+		swipe.style.display = "none";
+		email.style.display = "block";
+		button.innerHTML = "Swipe checkin";
 	} else {
-		y.style.display = "block";
-		x.style.display = "none";
+		swipe.style.display = "block";
+		email.style.display = "none";
+		button.innerHTML = "Email checkin";
 	}
 }
