@@ -42,39 +42,12 @@
 <div class="jumbotron text-center mt-4" style="background-color: #787878; margin-top: 1em;">
 	<h2 class="text-warning">Swipe your FSU Card or select Email checkin</h2>
 	<br>
-	<a class="btn btn-light btn-lg" href="{% url 'checkin' %}" role="button">Refresh form</a>
-	<button type="button" class="btn btn-primary btn-lg" onclick="swapForm()">Email checkin</button>
-</div>
-
-<div id="swipeDiv">
-	<div class="row justify-content-center">
-		<form method="post" id="swipeForm">
-			{% csrf_token %}
-			{% for field in swipe_form %}
-				<p>
-					{{ field }}<br>
-					<small class="form-text text-muted">
-						{% for error in field.errors %}
-						<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
-						{% endfor %}
-						{% if field.help_text %}
-						{{ field.help_text }}
-						{% endif %}
-					</small>
-				</p>
-			{% endfor %}
-		</form>
-	</div>
-</div>
-
-<div id="emailDiv" style="display:none">
-	<div class="row justify-content-center">
-		<div class="card mt-4">
-			<form method="post" id="emailForm">
+	<div id="swipeDiv">
+		<div class="row justify-content-center">
+			<form method="post" id="swipeForm">
 				{% csrf_token %}
-				<div class="card-body overflow-auto">		
-					{% for field in email_form %}
-						<p>
+				{% for field in swipe_form %}
+					<p>
 						{{ field }}<br>
 						<small class="form-text text-muted">
 							{% for error in field.errors %}
@@ -84,16 +57,45 @@
 							{{ field.help_text }}
 							{% endif %}
 						</small>
-						</p>
-					{% endfor %}								
-				</div>
-				<div class="card-footer">
-					<button class="btn btn-primary" type="submit">Submit</button>
-				</div>
+					</p>
+				{% endfor %}
 			</form>
 		</div>
 	</div>
+	
+	<div id="emailDiv" style="display:none">
+		<div class="row justify-content-center">
+			<div class="card mt-4">
+				<form method="post" id="emailForm">
+					{% csrf_token %}
+					<div class="card-body overflow-auto">		
+						{% for field in email_form %}
+							<p>
+							{{ field }}<br>
+							<small class="form-text text-muted">
+								{% for error in field.errors %}
+								<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
+								{% endfor %}
+								{% if field.help_text %}
+								{{ field.help_text }}
+								{% endif %}
+							</small>
+							</p>
+						{% endfor %}								
+					</div>
+					<div class="card-footer">
+						<button class="btn btn-primary" type="submit">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<br>
+	<a class="btn btn-light btn-lg" href="{% url 'checkin' %}" role="button">Refresh form</a>
+	<button type="button" class="btn btn-primary btn-lg" id="formSwap"onclick="swapForm()">Email checkin</button>
 </div>
+
+
 
 <script>
 	var textarea = document.getElementById("id_fsu_num");
