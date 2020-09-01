@@ -3,7 +3,7 @@ from django import forms
 
 class EmailCheckinForm(forms.Form):
 	email = forms.EmailField(widget=forms.EmailInput(
-            attrs={'placeholder': 'Email'}),
+            attrs={'placeholder': 'Enter you registered email'}),
 			required=False,
 	)
 
