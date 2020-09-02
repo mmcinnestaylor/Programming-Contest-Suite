@@ -204,7 +204,6 @@ DEFAULT_FROM_EMAIL = 'ACM Dev <webmaster@fsu.acm.org>'
 # https://docs.celeryproject.org/en/stable/getting-started/first-steps-with-celery.html#configuration
  
 CELERY_BROKER_URL = env.str('CELERY_BROKER_URL')
-# CELERY_CACHE_BACKEND = 'default'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_RESULT_BACKEND = env.str('CELERY_RESULT_BACKEND')
 CELERY_TASK_SERIALIZER = 'json'
@@ -212,4 +211,3 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TIMEZONE = 'America/New_York'
 CELERY_ENABLE_UTC = True
-CELERY_ALWAYS_EAGER = True
