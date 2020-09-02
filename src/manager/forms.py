@@ -56,5 +56,5 @@ class JoinForm(forms.Form):
     team = forms.ModelChoiceField(queryset=Team.objects.all(
     ), label='Registered Teams', help_text='Teamname : Division where UPPER = 1 and LOWER = 2')
     pin = forms.CharField(
-        max_length=4, label='PIN', help_text='Excluding @my.fsu.edu')
+        max_length=4, label='PIN', help_text='Ask team admin for PIN')
 
