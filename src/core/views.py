@@ -28,32 +28,12 @@ def teams(request):
 
     upper_teams_set = teams_set.filter(division=1)
     context['upper_teams'] = upper_teams_set
-
-    num_upper_teams = upper_teams_set.count()
-    context['num_upper_teams'] = num_upper_teams
-
-    num_upper_participants = participants_set.filter(team__division=1).count()
-    context['num_upper_participants'] = num_upper_participants
+    context['num_upper_teams'] = upper_teams_set.count()
+    context['num_upper_participants'] = participants_set.filter(team__division=1).count()
 
     lower_teams_set = teams_set.filter(division=2)
     context['lower_teams'] = lower_teams_set
-
-    num_lower_teams = lower_teams_set.count()
-    context['num_lower_teams'] = num_lower_teams
-
-    num_lower_participants = participants_set.filter(team__division=2).count()
-    context['num_lower_participants'] = num_lower_participants
+    context['num_lower_teams'] = lower_teams_set.count()
+    context['num_lower_participants'] = participants_set.filter(team__division=2).count()
 
     return render(request, 'core/teams.html', context)
-
-
-def error400(request, exception):
-    return render(request, 'core/400.html')
-
-
-def error403(request, exception):
-    return render(request, 'core/403.html')
-
-
-def error404(request, exception):
-    return render(request, 'core/404.html')
