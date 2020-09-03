@@ -71,7 +71,7 @@
                   {% if user.is_staff %}
                     <a class="dropdown-item" href="{% url 'checkin' %}">Checkin</a>
                   {% endif %}
-                  <a class="dropdown-item" href="{% url 'manage_base' %}">Manage</a>
+                  <a class="dropdown-item" href="{% url 'manage_dashboard' %}">Manage</a>
                   <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                 </div>
               </li>
@@ -103,7 +103,7 @@
           <div class="col-md-4 text-center text-md-left ">
     
             <div class="py-0">
-              <h3 class="my-4 text-white">About<span class="mx-2 font-italic text-primary ">ACM at FSU</span></h3>
+              <h3 class="my-4 text-white"><span class="mx-2 font-italic text-primary ">ACM at FSU</span></h3>
     
               <p class="footer-links font-weight-bold">
                 <a class="text-white" href="https://fsu.acm.org/" target="_blank">Home</a>
