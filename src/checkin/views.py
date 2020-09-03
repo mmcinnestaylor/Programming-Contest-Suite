@@ -49,7 +49,7 @@ def checkin(request):
 							user.profile.checked_in = True
 							user.save()
 							messages.success(request, str(user.first_name) + ', you are checked in!', fail_silently=True)
-							messages.info(request, 'Check your registered email or account dashboard for DOMJudge credentials.', fail_silently=True)
+							messages.info(request, 'Check your registered email or account dashboard for your DOMJudge credentials.', fail_silently=True)
 					except:
 						messages.error(request, 'Checkin failed. FSU number not found.', fail_silently=True)
 
