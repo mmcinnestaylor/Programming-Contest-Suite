@@ -10,6 +10,8 @@ django-mysql = "*"
 django-redis = "*"
 django-import-export = "*"
 django-environ = "*"
+celery = "*"
+django-celery-beat = "*"
 
 [dev-packages]
 pylint = "*"

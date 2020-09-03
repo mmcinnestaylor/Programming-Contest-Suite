@@ -69,7 +69,7 @@
                 <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown">{{ user.first_name }}</a>
                 <div class="dropdown-menu dropdown-menu-right">
                   {% if user.is_staff %}
-                    <a class="dropdown-item" href="#">Checkin</a>
+                    <a class="dropdown-item" href="{% url 'checkin' %}">Checkin</a>
                   {% endif %}
                   <a class="dropdown-item" href="{% url 'manage_base' %}">Manage</a>
                   <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>

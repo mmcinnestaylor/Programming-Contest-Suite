@@ -38,6 +38,8 @@
 	python3 manage.py shell
 
 	redis-server --daemonize yes
+	celery -A contestsuite beat -l info
+	celery -A contestsuite worker -l info
 
 # Test DB Users
 	python3 manage.py createsuperuser

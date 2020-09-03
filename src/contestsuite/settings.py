@@ -37,6 +37,8 @@ DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'contest.local', '192.168.10.12', '[::1]']
 
 
+# Debug Toolbar Access 
+
 if DEBUG:
     INTERNAL_IPS = [
         '0.0.0.0',
@@ -56,8 +58,10 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'register.apps.RegisterConfig',
     'manager.apps.ManagerConfig',
+    'checkin.apps.CheckinConfig',
     'django_mysql',
     'import_export',
+    'django_celery_beat',
 ]
 
 if DEBUG:
@@ -103,7 +107,23 @@ WSGI_APPLICATION = 'contestsuite.wsgi.application'
 # Parse database connection url strings like psql://user:pass@127.0.0.1:8458/db
 # read os.environ['DATABASE_URL'] and raises ImproperlyConfigured exception if not found
 
-DATABASES = {'default': env.db('DATABASE_URL')}
+# DATABASES = {'default': env.db('DATABASE_URL')}
+DATABASES = {'default': {'ATOMIC_REQUESTS': False,
+             'AUTOCOMMIT': True,
+             'CONN_MAX_AGE': 0,
+             'ENGINE': 'django.db.backends.mysql',
+             'HOST': env.str('DATABASE_URL'),
+             'NAME': env.str('DATABASE_NAME'),
+             'OPTIONS': {'charset': 'utf8mb4'},
+             'PASSWORD': env.str('DATABASE_PASSWORD'),
+             'PORT': 3306,
+             'TEST': {'CHARSET': 'utf8mb4',
+                      'COLLATION': None,
+                      'MIGRATE': True,
+                      'MIRROR': None,
+                      'NAME': None},
+             'TIME_ZONE': 'America/New_York',
+             'USER': env.str('DATABASE_USER')}}
 
 
 # Cache
@@ -170,4 +190,24 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 # Email settings
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  
+# EMAIL_HOST = ''
+# EMAIL_PORT = 
+# EMAIL_HOST_USER = ''
+# EMAIL_HOST_PASSWORD = ''
+# EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'ACM Programming Contest <contest@fsu.acm.org>' 
 
+
+
+# Celery Settings
+# https://docs.celeryproject.org/en/stable/getting-started/first-steps-with-celery.html#configuration
+ 
+CELERY_BROKER_URL = env.str('CELERY_BROKER_URL')
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_RESULT_BACKEND = env.str('CELERY_RESULT_BACKEND')
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TIMEZONE = 'America/New_York'
+CELERY_ENABLE_UTC = True

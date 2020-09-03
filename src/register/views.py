@@ -70,7 +70,6 @@ def account(request):
     return render(request, 'register/group_register_form.html', {'formset': formset})'''
 
 
-
 # Limit view to those are not on a team. Others redirected to manage.
 @login_required
 @user_passes_test(has_no_team, login_url='/manage/')
