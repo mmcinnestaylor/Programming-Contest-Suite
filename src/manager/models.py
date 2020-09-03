@@ -34,6 +34,9 @@ class Course(models.Model):
     name = models.CharField(max_length=50, blank=False)
     instructor = models.ForeignKey(Faculty, on_delete=models.SET_NULL, null=True)
 
+    class Meta:
+        ordering = ['code']
+
     def __str__(self):
         return (str(self.code) + ' : ' + str(self.name) + ' - ' + str(self.instructor.last_name) + ', ' + str(self.instructor.first_name)[0])
 
