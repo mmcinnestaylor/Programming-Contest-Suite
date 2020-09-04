@@ -36,9 +36,9 @@ class CourseForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('courses',)
-        widgets = {'courses': FilteredSelectMultiple('', is_stacked=True)}
+        widgets = {'courses': forms.CheckboxSelectMultiple()}
         help_texts = {
-            'courses': 'Hold the SHIFT key to select multiple courses.',
+            'courses': 'Select any course above in which you are currently registered.',
         }
 
 
