@@ -43,6 +43,9 @@
               <a class="nav-link" href="{% url 'about' %}">About</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="{% url 'announcements' %}">Announcements</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="{% url 'faq' %}">FAQ</a>
             </li>
             <li class="nav-item">
@@ -71,7 +74,7 @@
                   {% if user.is_staff %}
                     <a class="dropdown-item" href="{% url 'checkin' %}">Checkin</a>
                   {% endif %}
-                  <a class="dropdown-item" href="{% url 'manage_dashboard' %}">Manage</a>
+                  <a class="dropdown-item" href="{% url 'manage_dashboard' %}">Dashboard</a>
                   <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                 </div>
               </li>
@@ -141,8 +144,8 @@
             <div class="py-2">
               <a href="https://www.facebook.com/ACMatFSU/" target="_blank"><i class="fab fa-facebook fa-2x text-white mx-3"></i></a>
               <a href="https://discord.gg/4z3hNMA" target="_blank"><i class="fab fa-discord fa-2x text-white mx-3"></i></a>
-              <a href="https://twitter.com/ACMatFSU" target="_blank"><i class="fab fa-twitter fa-2x text-white mx-3"></i></a>
               <a href="https://github.com/FSU-ACM" target="_blank"><i class="fab fa-github fa-2x text-white mx-3"></i></a>
+              <a href="{% url 'announcements_feed' %}"><i class="fa fa-rss fa-2x text-white mx-3"></i></a>
             </div>
           </div>
         </div>

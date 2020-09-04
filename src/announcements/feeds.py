@@ -1,0 +1,20 @@
+from django.contrib.syndication.views import Feed
+from django.template.defaultfilters import truncatewords
+from django.urls import reverse
+
+from . import models
+
+
+class LatestAnnouncementsFeed(Feed):
+    title = "ACM Programming Contest Announcements"
+    link = "/announcements/"
+    description = "Latest announcments from The Programming Contest Team."
+
+    def items(self):
+        return models.Announcement.objects.filter(status=1)
+
+    def item_title(self, item):
+        return item.title
+
+    def item_description(self, item):
+        return truncatewords(item.content, 30)

@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %} 
+{% load static %}
+
+{% block title %}{{ object.title }}{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-md-10 card mb-3 mt-3 shadow">
+      <div class="card-body">
+        <h2 class="card-title">{{ object.title }}</h2>
+        <p class="card-text text-muted h6">{{ object.author.first_name }} | {{ object.created_on }}</p>
+        {% if announcement.created_on < announcement.updated_on %}
+          <p class="card-text text-muted h6">Updated on: {{ announcement.updated_on}} </p>
+        {% endif %}
+        <p class="card-text ">{{ object.content | safe }}</p>
+        <a href="{% url 'announcements' %}" class="btn btn-primary btn-sm">&larr; Back</a>
+      </div> 
+    </div>
+  </div>
+{% endblock content %}
