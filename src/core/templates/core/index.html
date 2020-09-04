@@ -1,6 +1,15 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
+{% block head %}
+<style>
+  .fakeimg {
+    height: 200px;
+    background: #aaa;
+  }
+  </style>
+{% endblock %}
+
 {% block title %}Home{% endblock %}
 
 {% block content %}
@@ -31,11 +40,33 @@
   {% endfor %}
 {% endif %}
 
-<div class="jumbotron text-center" style="background-color: #787878; margin-top: 1em;">
-  <h1>Welcome to the ACM Programming Contest</h1>
+<div class="jumbotron text-center mt-3" style="background-color: #787878;">
+  <h1>Welcome to the ACM at FSU Programming Contest</h1>
   <h3>Spring 2021 Date @ 9am</h3>
 </div>
+<p class="lead text-center">An <a href="https://icpc.global" target="_blank">ICPC</a> style contest hosted semesterly by the Association for Computing Machinery Florida State University Student Chapter.</p>
+<hr>
 <h2 class="text-center">Our Sponsors</h2>
-
+<div class="card-deck">
+  <div class="card mt-3 shadow">
+    <div class="card-header fakeimg">Fake Image</div>
+    <div class="card-body">
+      <h3 class="card-title">Sponsor 1</h3>
+    </div>
+  </div>
+  <div class="card mt-3 shadow">
+    <div class="card-header fakeimg">Fake Image</div>
+    <div class="card-body">
+      <h3 class="card-title">Sponsor 2</h3>
+    </div>
+  </div>
+    <div class="card mt-3 shadow">
+      <div class="card-header fakeimg">Fake Image</div>
+      <div class="card-body">
+        <h3 class="card-title">Sponsor 3</h3>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
