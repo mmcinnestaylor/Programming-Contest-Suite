@@ -1,0 +1,46 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Announcements{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <h1>Contest Announcements</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 mt-3 left">
+            {% for announcement in object_list %}
+                {% if announcement.status == 1 %}
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h3 class="card-title">{{ announcement.title }}</h3>
+                            <p class="card-text text-muted h6">{{ announcement.author.first_name }} | {{ announcement.created_on}} </p>
+                            {% if announcement.created_on < announcement.updated_on %}
+                                <p class="card-text text-muted h6">Updated on: {{ announcement.updated_on}} </p>
+                            {% endif %}
+                            {% if announcement.content|length > 140 %}
+                                <p class="card-text lead">{{announcement.content|slice:":140" }}...</p>
+                                <a href="{% url 'announcement_detail' announcement.slug  %}" class="btn btn-primary btn-sm">Read More</a>
+                            {% else %}
+                                <p class="card-text lead">{{announcement.content }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% empty %}
+                No announcements yet.
+            {% endfor %}
+        </div>
+        <!-- Sidebar Widgets Column -->
+        <div class="col-md-4 float-right ">
+            <div class="card my-5 shadow-sm">
+                    <h5 class="card-header">Widget</h5>
+                <div class="card-body">
+                    <p class="card-text">This will potentially show announcment tags or filters by time period</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

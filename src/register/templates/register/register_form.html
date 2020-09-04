@@ -14,6 +14,21 @@
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
 			</div>
+		{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+			<div class="alert alert-warning alert-dismissible fade show mt-3">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+			</div>
+		{% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+			<div class="alert alert-success alert-dismissible fade show mt-3">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+			</div>
+		{% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+			<div class="alert alert-info alert-dismissible fade show mt-3">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+			</div>
 		{% endif %}
 	{% endfor %}
 {% endif %}
@@ -36,7 +51,8 @@
 				</small>				
 			</p>
 			{% endfor %}
-			<button class="btn btn-primary" type="submit">Submit</button>
+			<button class="btn btn-sm btn-primary" type="submit">Submit</button>
+			<a class="btn btn-secondary btn-sm" href="{% url 'manage_dashboard' %}" role="button">Cancel</a>
 		</form>
 	</div>
 </div>

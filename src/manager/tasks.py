@@ -17,10 +17,12 @@ def create_walkin_teams(**kwargs):
     logger.info('Starting walk-in team creation')
 
     for i in range(kwargs['total']):
-        name = 'Walk-in-' + str(i+1).zfill(3)
+        if kwargs['division'] == 1:
+            name = 'Walk-in-U-' + str(i+1).zfill(3)
+        else:
+            name = 'Walk-in-L-' + str(i+1).zfill(3)
         pin = User.objects.make_random_password(length=4)
-        division = kwargs['division']
-        Team.objects.create(name=name, division=division, pin=pin)
+        Team.objects.create(name=name, division=kwargs['division'], pin=pin)
         logger.info('Created walk-in team %d' % (i+1))
 
 

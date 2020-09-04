@@ -19,12 +19,13 @@ from django.urls import include, path
 from .settings import DEBUG
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/', include('django.contrib.auth.urls')),
     path('', include('core.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('admin/', admin.site.urls),
+    path('announcements/', include('announcements.urls')),
     path('checkin/', include('checkin.urls')),
-    path('register/', include('register.urls')),
     path('manage/', include('manager.urls')),
+    path('register/', include('register.urls')),
 ]
 
 if DEBUG:
@@ -32,11 +33,3 @@ if DEBUG:
     urlpatterns = [
         path('__debug__/', include(debug_toolbar.urls)),
     ] + urlpatterns
-
-
-# Bad request
-handler400 = 'core.views.error400'
-# Permission denied
-handler403 = 'core.views.error403'
-# Page not found
-handler404 = 'core.views.error404'

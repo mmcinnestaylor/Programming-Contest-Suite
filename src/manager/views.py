@@ -24,16 +24,16 @@ def base(request):
         messages.warning(
             request, 'You are not a member of a registered team. You must be a team member in order to compete. Check out the FAQ for more information.')
     if not request.user.profile.has_courses():
-        messages.warning(
+        messages.info(
             request, 'You have not added any extra credit courses. You must add them to your profile in order to receive credit. Check out the FAQ for more information.')
     if request.user.profile.fsu_id is None or request.user.profile.fsu_id == '':
-        messages.warning(
+        messages.info(
             request, 'Your FSU ID is blank. You must add it to your profile in order to receive extra credit. Check out the FAQ for more information.')
     if request.user.profile.fsu_num is None or request.user.profile.fsu_num == '':
         messages.info(
             request, 'Your FSU number is blank. You must add it to your profile in order to swipe check in on contest day. Check out the FAQ for more information.')
 
-    return render(request, 'manager/manage.html', context)
+    return render(request, 'manager/dashboard.html', context)
 
 
 @login_required
@@ -51,7 +51,7 @@ def profile(request):
             profile_form.save()
             
             messages.success(request, 'Your profile was successfully updated!', fail_silently=True)
-            return redirect('manage_base')
+            return redirect('manage_dashboard')
         else:
             messages.error(request, 'Please correct the error(s) below.')
     else:
@@ -76,7 +76,7 @@ def courses(request):
 
             messages.success(
                 request, 'Your courses were successfully updated!', fail_silently=True)
-            return redirect('manage_base')
+            return redirect('manage_dashboard')
     else:
         form = forms.CourseForm(instance=request.user.profile)
 
@@ -93,7 +93,7 @@ def clear_courses(request):
 
     messages.success(
         request, 'Your courses were successfully cleared.', fail_silently=True)
-    return redirect('manage_base')
+    return redirect('manage_dashboard')
 
 
 # Only team admin can access view
@@ -109,7 +109,7 @@ def team(request):
             form.save()
             messages.success(
                 request, 'Your team was successfully updated!', fail_silently=True)
-            return redirect('manage_base')
+            return redirect('manage_dashboard')
         else:
             messages.error(request, 'Please correct the error(s) below.', fail_silently=True)
     else:
@@ -149,7 +149,7 @@ def join_team(request):
 
                     messages.success(
                         request, 'You have joined the team!', fail_silently=True)
-                    return redirect('manage_base')
+                    return redirect('manage_dashboard')
                 else:
                     messages.error(
                         request, 'The PIN you entered is incorrect. Please try again', fail_silently=True)
@@ -207,7 +207,7 @@ def leave_team(request):
 
     messages.success(
         request, 'You have left the team.', fail_silently=True)
-    return redirect('manage_base')
+    return redirect('manage_dashboard')
 
 
 # Only team admin can access delete view
@@ -222,7 +222,7 @@ def delete_team(request):
 
     messages.success(
         request, 'You have deleted the team.', fail_silently=True)
-    return redirect('manage_base')
+    return redirect('manage_dashboard')
 
 
 # Only team admin can access remove view
@@ -242,4 +242,4 @@ def remove_member(request, username):
     member.profile.save()
     
     messages.success(request, str(member.get_full_name()) + ' removed from the team.', fail_silently=True)
-    return redirect('manage_base')
+    return redirect('manage_dashboard')
