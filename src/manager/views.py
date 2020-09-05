@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from . import forms
 from .utils import team_admin, has_no_team, has_team
 from .models import Profile
+from announcements.models import Announcement
 from register.models import Team 
 
 # Create your views here.
@@ -18,6 +19,11 @@ def base(request):
     context = {}
     context['courses'] = request.user.profile.courses.all()
     context['team_members'] = User.objects.filter(profile__team=request.user.profile.team)
+    try:
+        #queryset = Announcement.objects.all()
+        context['announcements'] = (Announcement.objects.filter(status=1))[:3]
+    except:
+        context['announcements'] = []
 
     # Generate account some useful account notifications
     if not request.user.profile.has_team():
@@ -215,13 +221,15 @@ def leave_team(request):
 @user_passes_test(team_admin, login_url='/manage/')
 @transaction.atomic
 def delete_team(request):
-    request.user.profile.team.delete()
-    request.user.profile.team = None
-    request.user.profile.team_admin = False
-    request.user.save()
+    try:
+        request.user.profile.team.delete()
+        request.user.profile.team = None
+        request.user.profile.team_admin = False
+        request.user.save()
 
-    messages.success(
-        request, 'You have deleted the team.', fail_silently=True)
+        messages.success(request, 'You have deleted the team.', fail_silently=True)
+    except:
+        messages.error(request, 'Unable to delete team. Please try again later.', fail_silently=True)
     return redirect('manage_dashboard')
 
 
@@ -230,16 +238,20 @@ def delete_team(request):
 @user_passes_test(team_admin, login_url='/manage/')
 @transaction.atomic
 def remove_member(request, username):
-    member = get_object_or_404(User, username=username)
+    try:
+        #member = get_object_or_404(User, username=username)
+        member = User.objects.get(username=username)
+        
+        # Update team    
+        member.profile.team.num_members -= 1
+        member.profile.team.members.remove(member.get_full_name())
+        member.profile.team.save()
 
-    # Update team    
-    member.profile.team.num_members -= 1
-    member.profile.team.members.remove(member.get_full_name())
-    member.profile.team.save()
-
-    #Update user being removed
-    member.profile.team = None
-    member.profile.save()
-    
-    messages.success(request, str(member.get_full_name()) + ' removed from the team.', fail_silently=True)
+        #Update user being removed
+        member.profile.team = None
+        member.profile.save()
+        
+        messages.success(request, str(member.get_full_name()) + ' removed from the team.', fail_silently=True)
+    except:
+        messages.error(request, 'Unable to remove member from the team. Please try again later.', fail_silently=True)
     return redirect('manage_dashboard')
