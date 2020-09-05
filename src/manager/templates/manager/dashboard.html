@@ -194,15 +194,34 @@
 		<!-- Team Members card end -->
 	</div>
 	<!-- Team Card deck end -->
+	<!-- Announcements Display -->
 	<div class="row justify-content-center">
 		<div class="jumbotron mt-4">
 			<h2 >Recent Announcements</h2>
-			<p class="lead">Updates about the contest, extra credit courses, and more...</p>
 			<hr class="my-4">
-			<p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-			<a class="btn btn-primary " href="#" role="button">More</a>
+			{% for announcement in announcements %}
+				<div class="card mb-4 shadow-sm">
+					<div class="card-body">
+						<h3 class="card-title">{{ announcement.title }}</h3>
+						<p class="card-text text-muted h6">{{ announcement.author.first_name }} | {{ announcement.created_on}} </p>
+						{% if announcement.created_on < announcement.updated_on %}
+							<p class="card-text text-muted h6">Updated on: {{ announcement.updated_on}} </p>
+						{% endif %}
+						{% if announcement.content|length > 140 %}
+							<p class="card-text lead">{{announcement.content|slice:":140" }}...</p>
+							<a href="{% url 'announcement_detail' announcement.slug  %}" class="btn btn-primary btn-sm">Read More</a>
+						{% else %}
+							<p class="card-text lead">{{announcement.content }}</p>
+						{% endif %}
+					</div>
+				</div>
+			{% empty %}
+				<p class="lead">No announcements yet.</p>
+			{% endfor %}
+			<a class="btn btn-primary " href="{% url 'announcements' %}" role="button">Announcements &rarr;</a>
 		</div>
-	</div> 
+	</div>
+	<!-- End Announcements Display --> 
 	<!-- Confirm Clear Modal -->
 	<div class="modal fade" id="confirmClearModal" tabindex="-1" role="dialog"
 		aria-labelledby="confirmClearModalCenterTitle" aria-hidden="true">
