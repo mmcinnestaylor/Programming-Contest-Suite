@@ -173,6 +173,8 @@ STATIC_ROOT = root('static')
 
 STATIC_URL = env.str('STATIC_URL', default='/static/')
 
+MEDIA_ROOT = root('media')
+
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/manage/'
