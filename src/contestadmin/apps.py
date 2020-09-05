@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class ContestadminConfig(AppConfig):
+class ContestAdminConfig(AppConfig):
     name = 'contestadmin'
