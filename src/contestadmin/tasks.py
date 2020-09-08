@@ -8,6 +8,7 @@ from celery import shared_task
 from celery.utils.log import get_task_logger
 
 from contestadmin.models import Contest
+from manager.models import Course, Faculty
 from register.models import Team
 
 
@@ -58,5 +59,30 @@ def process_contest_results():
                 team = Team.objects.get(contest_id=row[0])
                 team.questions_answered = row[3]
                 team.save()
+                total += 1
             else:
                 pass
+        
+        logger.info('Processed contest results for %d teams' % total)
+
+@shared_task
+def generate_ec_forms():
+    total = 0
+    faculty_members = Faculty.objects.all()
+
+    for faculty in faculty_members:
+        courses = Course.objects.filter(instructor=faculty)
+
+        for course in courses:
+            students = User.objects.filter(profile__courses=course)
+            filename = 'media/ec_files/'+faculty.last_name+'-'+(faculty.first_name)[0]+'-'+course.code+'.csv'
+            
+            with open(filename,'w', newline='') as csvfile:
+                writer = csv.writer(csvfile, quoting=csv.QUOTE_MINIMAL)
+                writer.writerow(['fsu_id', 'last_name', 'first_name', 'questions_answered'])
+                for student in students:
+                    writer.writerow([student.profile.fsu_id, student.last_name, student.first_name, student.profile.team.questions_answered])
+            
+            total += 1
+    
+    logger.info(logger.info('Processed extra credit files for %d courses' % total))
