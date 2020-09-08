@@ -24,6 +24,7 @@ class Team(models.Model):
     pin = models.CharField(max_length=4, unique=True)
     contest_id = models.CharField(max_length=7, unique=True, blank=True, null=True)
     contest_password = models.CharField(max_length=6, unique=True, blank=True, null=True)
+    questions_answered = models.PositiveSmallIntegerField(default=0)
     members = ListTextField(base_field=models.CharField(max_length=181), size=3, max_length=(181 * 3), default=[])
     num_members = models.PositiveSmallIntegerField(default=1)
 
