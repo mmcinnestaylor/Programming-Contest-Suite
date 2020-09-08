@@ -202,7 +202,7 @@
 			{% for announcement in announcements %}
 				<div class="card mb-4 shadow-sm">
 					<div class="card-body">
-						<h3 class="card-title">{{ announcement.title }}</h3>
+						<h4 class="card-title">{{ announcement.title }}</h4>
 						<p class="card-text text-muted h6">{{ announcement.author.first_name }} | {{ announcement.created_on}} </p>
 						{% if announcement.created_on < announcement.updated_on %}
 							<p class="card-text text-muted h6">Updated on: {{ announcement.updated_on}} </p>
