@@ -1,3 +1,5 @@
+import csv
+
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.db import transaction
@@ -5,6 +7,7 @@ from django.db import transaction
 from celery import shared_task
 from celery.utils.log import get_task_logger
 
+from contestadmin.models import Contest
 from register.models import Team
 
 
@@ -40,3 +43,20 @@ def generate_team_credentials():
         team.save()
         count+=1
         logger.info('Created credentials for %s' % team.contest_id)
+
+
+@shared_task
+@transaction.atomic
+def process_contest_results():
+    total = 0
+    contest = Contest.objects.all().first()
+
+    with open(contest.results.path) as fd:
+        rd = csv.reader(fd, delimiter="\t", quotechar='"')
+        for row in rd:
+            if 'acm-' in row[0]:
+                team = Team.objects.get(contest_id=row[0])
+                team.questions_answered = row[3]
+                team.save()
+            else:
+                pass
