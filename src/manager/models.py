@@ -14,8 +14,8 @@ class Faculty(models.Model):
     """
 
     email = models.EmailField(max_length=50, primary_key=True)
-    first_name = models.CharField(max_length=50, blank=False)
-    last_name = models.CharField(max_length=50, blank=False)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
         
     def __str__(self):
         return (str(self.first_name) + ' ' + str(self.last_name))
@@ -30,8 +30,8 @@ class Course(models.Model):
     - sections = [1, 2, 3, 4, 5]
     """
 
-    code = models.CharField(max_length=8, blank=False)
-    name = models.CharField(max_length=50, blank=False)
+    code = models.CharField(max_length=8)
+    name = models.CharField(max_length=50)
     instructor = models.ForeignKey(Faculty, on_delete=models.SET_NULL, null=True)
 
     class Meta:
