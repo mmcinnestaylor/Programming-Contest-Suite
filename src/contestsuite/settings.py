@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     # User defined
     'announcements.apps.AnnouncementsConfig',
     'checkin.apps.CheckinConfig',
-    'contestadmin.apps.ContestAdminConfig'
+    'contestadmin.apps.ContestAdminConfig',
     'core.apps.CoreConfig',
     'manager.apps.ManagerConfig',
     'register.apps.RegisterConfig',
