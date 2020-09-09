@@ -74,7 +74,7 @@ def generate_ec_forms():
         courses = Course.objects.filter(instructor=faculty)
 
         for course in courses:
-            students = User.objects.filter(profile__courses=course)
+            students = User.objects.filter(profile__checked_in=True).filter(profile__courses=course)
             filename = 'media/ec_files/'+faculty.last_name+'-'+(faculty.first_name)[0]+'-'+course.code+'.csv'
             
             with open(filename,'w', newline='') as csvfile:
