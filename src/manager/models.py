@@ -56,11 +56,12 @@ class Profile(models.Model):
     ROLES = (
         (1, 'Contestant'),
         (2, 'Proctor'),
-        (3, 'Question Writer')
+        (3, 'Question Writer'),
+        (4, 'Organizer')
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    role = division = models.PositiveSmallIntegerField(choices=ROLES, default=1)
+    role = models.PositiveSmallIntegerField(choices=ROLES, default=1)
     team = models.ForeignKey(Team, related_name='profile_team', on_delete=models.SET_NULL, blank=True, null=True)
     team_admin = models.BooleanField(default=False)
     fsu_id = models.CharField(max_length=8, unique=True, blank=True, null=True)
