@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     # contest suite homepage
-    path('', views.base, name='manage_dashboard'),
+    path('', views.dashboard, name='manage_dashboard'),
     path('courses/', views.courses, name='manage_courses'),
     path('courses/clear/', views.clear_courses, name='clear_courses'),
     path('profile/', views.profile, name='manage_profile'),

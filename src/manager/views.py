@@ -15,12 +15,11 @@ from register.models import Team
 # Create your views here.
 
 @login_required
-def base(request):
+def dashboard(request):
     context = {}
     context['courses'] = request.user.profile.courses.all()
     context['team_members'] = User.objects.filter(profile__team=request.user.profile.team)
     try:
-        #queryset = Announcement.objects.all()
         context['announcements'] = (Announcement.objects.filter(status=1))[:3]
     except:
         context['announcements'] = []
