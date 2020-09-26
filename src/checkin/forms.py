@@ -23,3 +23,13 @@ class SwipeCheckinForm(forms.Form):
     # returns last 8 numbers of fsu number
     def parse(self):
         return self.cleaned_data['fsu_num'][10:18]
+
+
+class WalkinForm(forms.Form):
+    # iterable
+    DIVISIONS = (
+        ("1", "Upper"),
+        ("2", "Lower"),
+    )
+    
+    division = forms.ChoiceField(choices=DIVISIONS, widget=forms.RadioSelect(), required=False)

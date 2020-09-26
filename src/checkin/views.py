@@ -5,12 +5,12 @@ from django.db import transaction
 from django.shortcuts import render, redirect
 
 from . import forms
-from .tasks import send_credentials
+from . import tasks
 
 # Create your views here.
 
 
-@staff_member_required
+#@staff_member_required
 @transaction.atomic
 def checkin(request):
 	context = {}
@@ -18,22 +18,45 @@ def checkin(request):
 	if request.method == 'POST':
 		email_form = forms.EmailCheckinForm(request.POST)
 		swipe_form = forms.SwipeCheckinForm(request.POST)
+		walkin_form = forms.WalkinForm(request.POST)
+		is_walkin = False
 
-		if email_form.is_valid() and swipe_form.is_valid():
+		if email_form.is_valid() and swipe_form.is_valid() and walkin_form.is_valid():
+			if walkin_form.cleaned_data['division']:
+				try:
+					if walkin_form.cleaned_data['division'] == 1:
+						walk_in_team = Team.objects.filter(name__contains='Walk-in-U-').filter(num_members=0).first()
+					else:
+						walk_in_team = Team.objects.filter(name__contains='Walk-in-L-').filter(num_members=0).first()
+				except:
+					messages.error(request, 'Walk-in team assignment failed. Please reattempt check-in.', fail_silently=True)
+					return redirect('checkin_result')
+				else:
+					is_walkin = True
 			if email_form.cleaned_data['email']:
 				try:
 					user = User.objects.get(email=email_form.cleaned_data['email'])
-
+				except:
+					messages.error(
+						request, 'Checkin failed. Email address not found.', fail_silently=True)
+				else:
 					if user.profile.checked_in:
 						messages.info(request, 'You are already checked in.', fail_silently=True)
 					else:
 						user.profile.checked_in = True
-						user.save()
-						send_credentials.delay(user.username)
+						if is_walkin == True:
+							# update user
+							user.profile.team = walk_in_team
+							user.save()
+
+							#update team
+							walk_in_team.num_members += 1
+							walk_in_team.members.append(user.get_full_name())
+							walk_in_team.save()
+
+						tasks.send_credentials.delay(user.username)
 						messages.success(request, str(user.first_name) + ', you are checked in!', fail_silently=True)
 						messages.info(request, 'Check your registered email or account dashboard for DOMJudge credentials.', fail_silently=True)
-				except:
-					messages.error(request, 'Checkin failed. Email address not found.', fail_silently=True)
 
 				return redirect('checkin_result')
 			elif swipe_form.cleaned_data['fsu_num']:
@@ -61,9 +84,11 @@ def checkin(request):
 	else:
 		email_form = forms.EmailCheckinForm()
 		swipe_form = forms.SwipeCheckinForm()
+		walkin_form = forms.WalkinForm()
 
 	context['email_form'] = email_form
 	context['swipe_form'] = swipe_form
+	context['walkin_form'] = walkin_form
 	return render(request, 'checkin/checkin.html', context)
 
 

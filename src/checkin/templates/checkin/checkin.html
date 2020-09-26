@@ -3,6 +3,11 @@
 
 {% block head %}
 	<script src="{% static 'checkin/js/common.js' %}"></script>
+
+	<style>
+		ul {list-style-type: none; display:inline-block; margin-left: 0;}
+		ul li {display:inline;}
+	</style>
 {% endblock %}
 
 {% block title %}Contest Checkin{% endblock %}
@@ -40,13 +45,25 @@
 {% endif %}
 
 <div class="jumbotron text-center mt-4" style="background-color: #787878; margin-top: 1em;">
-	<h2 class="text-warning">Swipe your FSU Card or select Email checkin</h2>
-	<br>
-	<div id="swipeDiv">
-		<div class="row justify-content-center">
-			<form method="post" id="swipeForm">
-				{% csrf_token %}
-				{% for field in swipe_form %}
+	<div id="walkin_prompt">
+		<h2 class="text-warning">Are you a walk-in contestant?</h2>
+		<button type="button" class="btn btn-light btn-lg mx-1" id="formSwap" onclick="walkin_prompt(false)">No</button>
+		<button type="button" class="btn btn-primary btn-lg mx-1" id="formSwap" onclick="walkin_prompt(true)">Yes</button>
+	</div>
+	<div id="checkin_form" style="display:none">
+		<h2 class="text-warning">Swipe your FSU Card or select Email checkin</h2>
+		<div id="walkinDiv" style="display:none">
+			<span class="h5">Walk-in:</span>
+			{% for field in walkin_form %}
+				{{ field }}
+			{% endfor %}
+		</div>
+
+		<div id="swipeDiv">
+			<div class="row justify-content-center">
+				<form method="post" id="swipeForm">
+					{% csrf_token %}
+					{% for field in swipe_form %}
 					<p>
 						{{ field }}<br>
 						<small class="form-text text-muted">
@@ -58,46 +75,49 @@
 							{% endif %}
 						</small>
 					</p>
-				{% endfor %}
-			</form>
-		</div>
-	</div>
-	
-	<div id="emailDiv" style="display:none">
-		<div class="row justify-content-center">
-			<div class="card mt-4">
-				<form method="post" id="emailForm">
-					{% csrf_token %}
-					<div class="card-body overflow-auto">		
-						{% for field in email_form %}
-							<p>
-							{{ field }}<br>
-							<small class="form-text text-muted">
-								{% for error in field.errors %}
-								<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
-								{% endfor %}
-								{% if field.help_text %}
-								{{ field.help_text }}
-								{% endif %}
-							</small>
-							</p>
-						{% endfor %}								
-					</div>
-					<div class="card-footer">
-						<button class="btn btn-primary" type="submit">Submit</button>
-					</div>
+					{% endfor %}
 				</form>
 			</div>
 		</div>
+		
+		<div id="emailDiv" style="display:none">
+			<div class="row justify-content-center">
+				<div class="card mt-4">
+					<form method="post" id="emailForm">
+						{% csrf_token %}
+						<div class="card-body overflow-auto">
+							{% for field in email_form %}
+							<p>
+								{{ field }}<br>
+								<small class="form-text text-muted">
+									{% for error in field.errors %}
+									<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
+									{% endfor %}
+									{% if field.help_text %}
+									{{ field.help_text }}
+									{% endif %}
+								</small>
+							</p>
+							{% endfor %}
+						</div>
+						<div class="card-footer">
+							<button class="btn btn-primary" type="submit">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<br>
+		<a class="btn btn-light btn-lg" href="{% url 'checkin' %}" role="button">Refresh form</a>
+		<button type="button" class="btn btn-primary btn-lg" id="formSwap" onclick="swap_form()">Email checkin</button>
 	</div>
-	<br>
-	<a class="btn btn-light btn-lg" href="{% url 'checkin' %}" role="button">Refresh form</a>
-	<button type="button" class="btn btn-primary btn-lg" id="formSwap"onclick="swapForm()">Email checkin</button>
+	
 </div>
 
 
 
 <script>
+	
 	var textarea = document.getElementById("id_fsu_num");
 
 	textarea.addEventListener("input", function () {
