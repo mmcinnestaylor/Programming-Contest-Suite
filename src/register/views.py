@@ -127,6 +127,7 @@ def team(request):
             newTeam.pin = User.objects.make_random_password(length=4)
             memberName = request.user.get_full_name()
             newTeam.members.append(memberName)
+            newTeam.num_members += 1
             newTeam.save()
 
             # Update user profile with new team
