@@ -49,6 +49,8 @@ def base(request):
 @user_passes_test(not_registered, login_url='/manage/')
 @transaction.atomic
 def account(request):
+    context = {}
+
     if request.method == 'POST':
         form = forms.ExtendedUserCreationForm(request.POST)
         if form.is_valid():
@@ -67,7 +69,11 @@ def account(request):
             request, 'Please correct the error(s) below.', fail_silently=True)
     else:
         form = forms.ExtendedUserCreationForm()
-    return render(request, 'register/register_form.html', {'page_title': 'Contest Registration', 'heading' : 'Contest', 'form': form})
+
+    context['page_title'] = 'Contest Registration'
+    context['heading'] = 'Contest'
+    context['form'] = form
+    return render(request, 'register/register_form.html', context)
 
 
 # key error on password1, more research required
@@ -111,6 +117,8 @@ def account(request):
 @user_passes_test(has_no_team, login_url='/manage/')
 @transaction.atomic
 def team(request):
+    context = {}
+
     if request.method == 'POST':
         form = forms.TeamForm(request.POST)
         if form.is_valid():
@@ -134,4 +142,8 @@ def team(request):
             request, 'Please correct the error(s) below.', fail_silently=True)
     else:
         form = forms.TeamForm()
-    return render(request, 'register/register_form.html', {'page_title': 'Team Registration', 'heading': 'Team', 'form': form})
+
+    context['page_title'] = 'Team Registration'
+    context['heding'] = 'Team'
+    context['form'] = form
+    return render(request, 'register/register_form.html', context)
