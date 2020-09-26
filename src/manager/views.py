@@ -43,7 +43,7 @@ def dashboard(request):
 
 @login_required
 @transaction.atomic
-def profile(request):
+def manage_profile(request):
     context = {}
 
     if request.method == 'POST':
@@ -70,7 +70,7 @@ def profile(request):
 
 @login_required
 @transaction.atomic
-def courses(request):
+def manage_courses(request):
     context = {}
 
     if request.method == 'POST':
@@ -105,7 +105,7 @@ def clear_courses(request):
 @login_required
 @user_passes_test(team_admin, login_url='/manage/')
 @transaction.atomic
-def team(request):
+def manage_team(request):
     context = {}
 
     if request.method == 'POST':
