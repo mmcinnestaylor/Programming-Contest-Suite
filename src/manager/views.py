@@ -148,8 +148,7 @@ def join_team(request):
 
                     # Update team
                     request.user.profile.team.num_members += 1
-                    member_name = request.user.get_full_name()
-                    request.user.profile.team.members.append(member_name)
+                    request.user.profile.team.members.append(request.user.get_full_name())
                     request.user.profile.team.save()
 
                     messages.success(
