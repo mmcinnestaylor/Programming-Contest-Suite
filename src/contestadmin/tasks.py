@@ -7,6 +7,7 @@ from django.db import transaction
 from celery import shared_task
 from celery.utils.log import get_task_logger
 
+from contestsuite.settings import MEDIA_ROOT
 from contestadmin.models import Contest
 from manager.models import Course, Faculty
 from register.models import Team
@@ -64,6 +65,20 @@ def process_contest_results():
                 pass
         
         logger.info('Processed contest results for %d teams' % total)
+
+
+@shared_task
+def generate_domjudge_files():
+    #teams = Team.objects.all()
+
+    filename = MEDIA_ROOT +'/contest_files/groups.tsv'
+
+    with open(filename, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile, delimiter='\t', quoting=csv.QUOTE_MINIMAL)
+        writer.writerow(['File_Version', '1'])
+        for division in Team.DIVISION:
+            writer.writerow([division[0], division[1]])
+
 
 @shared_task
 def generate_ec_forms():
