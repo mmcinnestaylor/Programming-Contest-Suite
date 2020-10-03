@@ -28,6 +28,7 @@
 			<thead class="thead-light">
 				<tr>
 					<th scope="col">Team Name</th>
+					<th scope="col">Questions Answered</th>
 					<th scope="col">Team Members</th>
 				</tr>
 			</thead>
@@ -35,10 +36,13 @@
 				{% for team in upper_teams %}
 				<tr>
 					<td>{{ team.name }}</td>
+					<td>{{ team.questions_answered }}</td>
 					<td>
-						{% for member in team.members %}
-							{{ member }}&emsp;&emsp;
-						{% endfor %}
+						<small>
+							{% for member in team.members %}
+								{{ member }}&emsp;&emsp;
+							{% endfor %}
+						</small>
 					</td>
 				</tr>
 				{% endfor %}
@@ -67,6 +71,7 @@
 			<thead class="thead-light">
 				<tr>
 					<th scope="col">Team Name</th>
+					<th scope="col">Questions Answered</th>
 					<th scope="col">Team Members</th>
 				</tr>
 			</thead>
@@ -74,10 +79,13 @@
 				{% for team in lower_teams %}
 				<tr>
 					<td>{{ team.name }}</td>
+					<td>{{ team.questions_answered }}</td>
 					<td>
-						{% for member in team.members %}
-						{{ member }}&emsp;&emsp;
-						{% endfor %}
+						<small>
+							{% for member in team.members %}
+								{{ member }}&emsp;&emsp;
+							{% endfor %}
+						</small>
 					</td>
 				</tr>
 				{% endfor %}
