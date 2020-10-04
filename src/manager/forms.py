@@ -27,8 +27,16 @@ class ProfileForm(forms.ModelForm):
             'fsu_num': 'FSU number',
         }
         help_texts = {
-            'fsu_id': 'Excluding @my.fsu.edu',
+            'fsu_id': 'Excluding @my.fsu.edu ex: ab12c@my.fsu.edu -> ab12c',
             'fsu_num': 'Last 8 numbers. Exclude spaces.',
+        }
+        error_messages = {
+            'fsu_id': {
+                'max_length': "The id entered is too long.",
+            },
+            'fsu_num': {
+                'max_length': "The number entered is too long.",
+            },
         }
 
 
