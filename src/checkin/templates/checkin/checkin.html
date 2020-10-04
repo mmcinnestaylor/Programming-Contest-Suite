@@ -4,23 +4,6 @@
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{% static 'checkin/css/checkin.css' %}"/>
 <script src="{% static 'checkin/js/common.js' %}"></script>
-<script>
-	var textarea = document.getElementById("id_fsu_num");
-
-	textarea.addEventListener("input", function () {
-		// replace with logic to check for end of swipe
-		// waiting on card reader
-
-		var maxlength = 8;
-		var currentLength = this.value.length;
-
-		if (currentLength >= maxlength) {
-			document.getElementById("swipeForm").submit();
-		} else {
-			console.log(maxlength - currentLength + " chars left");
-		}
-	});
-</script>
 {% endblock %}
 
 {% block title %}Contest Checkin{% endblock %}
@@ -127,4 +110,22 @@
 		<button type="button" class="btn btn-primary btn-lg mx-1" id="formSwap" onclick="swap_form()">Email checkin</button>
 	</div>
 </div>
+
+<script>
+	var textarea = document.getElementById("id_fsu_num");
+
+	textarea.addEventListener("input", function () {
+		// replace with logic to check for end of swipe
+		// waiting on card reader
+
+		var maxlength = 8;
+		var currentLength = this.value.length;
+
+		if (currentLength >= maxlength) {
+			document.getElementById("swipeForm").submit();
+		} else {
+			console.log(maxlength - currentLength + " chars left");
+		}
+	});
+</script>
 {% endblock %}
