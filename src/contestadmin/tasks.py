@@ -18,22 +18,30 @@ logger = get_task_logger(__name__)
 
 @shared_task
 @transaction.atomic
-def create_walkin_teams(**kwargs):
+def create_walkin_teams(division, total):
     logger.info('Starting walk-in team creation')
 
-    for i in range(kwargs['total']):
-        if kwargs['division'] == 1:
-            name = 'Walk-in-U-' + str(i+1).zfill(3)
+    if division == 1:
+        base_name = 'Walk-in-U-'
+        existing_count = Team.objects.filter(name__contains='Walk-in-U-').count()
+    else:
+        base_name = 'Walk-in-L-'
+        existing_count = Team.objects.filter(name__contains='Walk-in-L-').count()
+
+    for i in range(total):
+        '''if division == 1:
+            name = 'Walk-in-U-' + str(upper_count+i+1).zfill(3)
         else:
-            name = 'Walk-in-L-' + str(i+1).zfill(3)
+            name = 'Walk-in-L-' + str(lower_count+i+1).zfill(3)'''
+        name = base_name + str(existing_count+i+1).zfill(3)
         pin = User.objects.make_random_password(length=4)
-        Team.objects.create(name=name, division=kwargs['division'], pin=pin)
+        Team.objects.create(name=name, division=division, pin=pin)
         logger.info('Created walk-in team %d' % (i+1))
 
 
 @shared_task
 @transaction.atomic
-def generate_team_credentials():
+def generate_contest_files():
     count = 1
     teams =  Team.objects.all()
 
@@ -89,8 +97,8 @@ def generate_ec_forms():
         courses = Course.objects.filter(instructor=faculty)
 
         for course in courses:
-            students = User.objects.filter(profile__checked_in=True).filter(profile__courses=course)
-            filename = 'media/ec_files/'+faculty.last_name+'-'+(faculty.first_name)[0]+'-'+course.code+'.csv'
+            students = User.objects.filter(profile__courses=course).filter(profile__checked_in=True)
+            filename = 'media/ec_files/'+course.code+'-'+(faculty.email.split('@'))[0]+'.csv'
             
             with open(filename,'w', newline='') as csvfile:
                 writer = csv.writer(csvfile, quoting=csv.QUOTE_MINIMAL)
