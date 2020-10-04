@@ -28,8 +28,8 @@ class SwipeCheckinForm(forms.Form):
 class WalkinForm(forms.Form):
     # iterable
     DIVISIONS = (
-        ("1", "Upper"),
-        ("2", "Lower"),
+        (1, 'Upper'),
+        (2, 'Lower'),
     )
     
-    division = forms.ChoiceField(choices=DIVISIONS, widget=forms.RadioSelect(), required=False)
+    division = forms.ChoiceField(choices=DIVISIONS, widget=forms.RadioSelect(), required=True)
