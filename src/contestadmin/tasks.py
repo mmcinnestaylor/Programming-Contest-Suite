@@ -3,11 +3,14 @@ import csv
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.db import transaction
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+
 
 from celery import shared_task
 from celery.utils.log import get_task_logger
 
-from contestsuite.settings import MEDIA_ROOT
+from contestsuite.settings import MEDIA_ROOT, DEFAULT_FROM_EMAIL
 from contestadmin.models import Contest
 from manager.models import Course, Faculty
 from register.models import Team
@@ -119,32 +122,19 @@ def process_contest_results():
 
 
 @ shared_task
-def generate_domjudge_files():
-    # teams = Team.objects.all()
-
-    filename = MEDIA_ROOT + '/contest_files/groups.tsv'
-
-    with open(filename, 'w', newline='') as csvfile:
-        writer= csv.writer(csvfile, delimiter='\t', quoting=csv.QUOTE_MINIMAL)
-        writer.writerow(['File_Version', '1'])
-        for division in Team.DIVISION:
-            writer.writerow([division[0], division[1]])
-
-
-@ shared_task
-def generate_ec_forms():
-    total= 0
-    faculty_members= Faculty.objects.all()
+def generate_ec_forms(domain):
+    total = 0
+    faculty_members = Faculty.objects.all()
 
     for faculty in faculty_members:
-        courses= Course.objects.filter(instructor=faculty)
+        courses = Course.objects.filter(instructor=faculty)
 
         for course in courses:
             students = User.objects.filter(profile__courses=course).filter(profile__checked_in=True)
             filename = 'media/ec_files/'+course.code+'-'+(faculty.email.split('@'))[0]+'.csv'
 
             with open(filename, 'w', newline='') as csvfile:
-                writer= csv.writer(csvfile, quoting=csv.QUOTE_MINIMAL)
+                writer = csv.writer(csvfile, quoting=csv.QUOTE_MINIMAL)
                 writer.writerow(
                     ['fsu_id', 'last_name', 'first_name', 'questions_answered'])
                 for student in students:
@@ -152,6 +142,20 @@ def generate_ec_forms():
                                     student.first_name, student.profile.team.questions_answered])
 
             total += 1
+
+        message = render_to_string('contestadmin/ec_available_email.html', {
+            'faculty': faculty,
+            'domain': domain,
+            'uid': urlsafe_base64_encode(force_bytes(((faculty.email).split('@'))[0])),
+        })
+        
+        send_mail(
+            'Programming Contest EC files',
+            message,
+            DEFAULT_FROM_EMAIL,
+            [faculty.email],
+            fail_silently = False,
+        )
 
     logger.info(logger.info(
         'Processed extra credit files for %d courses' % total))
