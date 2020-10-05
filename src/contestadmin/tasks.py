@@ -100,7 +100,6 @@ def generate_contest_files():
                 ])
 
 
-
 @ shared_task
 @ transaction.atomic
 def process_contest_results():
