@@ -11,7 +11,8 @@ class Contest(models.Model):
     - Results field for DOMJudge contest results uploading
     """
 
-    results = models.FileField(upload_to='uploads/')
+    results = models.FileField(upload_to='uploads/', blank=True)
+    ec_processed = models.BooleanField(default=False)
         
     def __str__(self):
         return ("Programming Contest")
