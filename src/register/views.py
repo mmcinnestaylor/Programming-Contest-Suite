@@ -21,7 +21,7 @@ from manager.utils import has_no_team, not_registered
 
 class ActivateAccount(View):
 
-    def get(self, request, uidb64, token, *args, **kwargs):
+    def get(self, request, uidb64, token):
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
