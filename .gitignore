@@ -130,3 +130,6 @@ dmypy.json
 
 .vscode
 src/boot.sh
+.DS_Store
+src/media/*
+

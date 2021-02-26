@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Faculty Dashboard{% endblock %}
+
+{% block content %}
+	<div class="row justify-content-center">
+		<h1>Faculty Dashboard</h1>
+	</div>	
+	<div class="row justify-content-center mt-4">
+		<div class="col-8">
+			<div class="card">
+				<div class="card-header lead">
+					Hello {{ first_name }} {{ last_name }}
+				</div>
+				<div class="card-body">
+				<p class="card-text">The zip file linked below contains CSVs with participant information for each of the courses you registered with the contest. You will only receive reports for classes with at least one participant. </p>
+				<a href="{% url 'fac_ec_files_dl' uidb64=uid  %}" class="btn btn-primary"><i class="fa fa-download mx-1" aria-hidden="true"></i>Download</a>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

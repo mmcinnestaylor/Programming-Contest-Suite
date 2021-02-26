@@ -1,0 +1,11 @@
+{% autoescape off %}
+Hello {{ faculty.first_name }},
+
+Thank you for offering extra credit in your course(s) for Programming Contest participation. The documents containing participation information for your students are available, and can be accessed via the link below. If you have any issues accessing the files, please do not hesitate to contact us.
+
+http://{{ domain }}{% url 'fac_ec_dashboard' uidb64=uid %}
+
+Cheers,
+The Programming Contest Team
+contest@fsu.acm.org
+{% endautoescape %}

@@ -2,6 +2,12 @@
 
 {% load static %}
 
+{% block head %}
+	<style>
+		ul {list-style-type: none;}
+	</style>
+{% endblock %}
+
 {% block title %}Manage Profile{% endblock %}
 
 {% block content %}
@@ -18,8 +24,9 @@
 			{% endif %}
 		{% endfor %}
 	{% endif %}
-	<div class="row justify-content-center">
-				<form method="post" class="mt-3">
+	<div class="row justify-content-center ">
+
+				<form method="post" class="mt-3 text-nowrap overflow-auto">
 					{% csrf_token %}
 					{% for field in form %}
 					<p>
@@ -34,7 +41,7 @@
 					</small>
 					</p>
 					{% endfor %}
-					
+			
 		<button class="btn btn-primary btn-sm" type="submit" value="submit">Select</button>
 		<a class="btn btn-secondary btn-sm" href="{% url 'manage_dashboard' %}" role="button">Cancel</a>
 		</form>

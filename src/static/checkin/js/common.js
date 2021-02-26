@@ -1,4 +1,4 @@
-function swapForm() {
+function swap_form() {
 	var email = document.getElementById("emailDiv");
 	var swipe = document.getElementById("swipeDiv");
 	var button = document.getElementById("formSwap");
@@ -11,4 +11,17 @@ function swapForm() {
 		email.style.display = "none";
 		button.innerHTML = "Email checkin";
 	}
+}
+
+function walkin_prompt(is_walkin) {
+	var walkin = document.getElementById("walkinDiv");
+	var checkin = document.getElementById("checkin_form");
+	var prompt = document.getElementById("walkin_prompt");
+
+	if (is_walkin) {
+		walkin.style.display = "block";
+	}
+
+	prompt.style.display = "none";
+	checkin.style.display = "block";
 }

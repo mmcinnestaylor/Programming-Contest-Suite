@@ -1,0 +1,280 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Contest Dashboard{% endblock %}
+
+{% block content %}
+	<div class="row justify-content-center">
+		<h1>Contest Dashboard</h1>
+	</div>
+	<!-- Messages -->
+	{% if messages %}
+		{% for message in messages %}
+			{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+				<div class="alert alert-danger alert-dismissible fade show mt-3">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+				</div>
+			{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+				<div class="alert alert-warning alert-dismissible fade show mt-3">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+				</div>
+			{% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+				<div class="alert alert-success alert-dismissible fade show mt-3">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+				</div>
+			{% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+				<div class="alert alert-info alert-dismissible fade show mt-3">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+	<!-- End Messages -->
+
+	<!-- Contest Control Card deck -->
+	<div class="card-deck">
+		<!-- Team card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Pre-Contest
+			</div>
+			<div class="card-body overflow-auto">
+				<div class="row justify-content-center">
+					<a class="btn btn-primary btn-sm my-1" href="{% url 'gen_dj_files' %}" role="button">Generate Domjudge TSVs</a>
+					{% if dj_files_available %}					
+						<a class="btn text-dark" href="{% url 'download_dj_files' %}" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
+					{% else %}
+						<a class="btn text-secondary disabled" href="#" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<!-- Team card end -->
+		<!-- Upload card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Upload Results
+			</div>
+			<form method="post" enctype="multipart/form-data">
+				<div class="card-body overflow-auto">
+					{% csrf_token %}
+					{% for field in file_form %}
+					<p class="mb-0">
+						{{ field }}<br>
+						<small class="form-text text-muted">
+							{% for error in field.errors %}
+								<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
+							{% endfor %}
+						</small>
+					</p>
+					{% endfor %}
+				</div>
+				<div class="card-footer">
+					<button class="btn btn-primary btn-sm" type="submit">Submit</button>
+				</div>
+			</form>
+		</div>
+		<!-- Upload card end -->
+	</div>
+	<!-- Contest Control deck end -->
+
+	<!-- EC Control Card deck -->
+	<div class="card-deck">
+		<!-- EC card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Extra Credit
+			</div>
+			<div class="card-body overflow-auto">
+				<div class="row justify-content-center">
+					
+					{% if dj_results_processed %}					
+						<a class="btn btn-primary btn-sm my-1" href="{% url 'gen_ec_reports' %}" role="button">Generate Reports</a>
+					{% else %}
+						<a class="btn btn-primary btn-sm my-1 disabled" href="#" role="button">Generate Reports</a>
+					{% endif %}
+
+					{% if ec_files_available %}					
+						<a class="btn text-dark" href="{% url 'download_ec_files' %}" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
+					{% else %}
+						<a class="btn text-secondary disabled" href="#" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
+					{% endif %}
+				</div>
+				<div class="row justify-content-center">
+					{% if ec_files_available %}
+						<a class="btn btn-success btn-sm my-1" href="{% url 'email_faculty' %}" role="button">Email Faculty</a>
+					{% else %}
+						<a class="btn btn-success btn-sm my-1 disabled" href="#" role="button">Email Faculty</a>
+					{% endif %}
+				</div>
+
+			</div>
+		</div>
+		<!-- EC card end -->
+		<!-- Extra card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Tools 
+			</div>
+			<div class="card-body overflow-auto">
+				<div class="row justify-content-center">
+					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal"
+						data-target="#walkinModal">Create walk-in teams</button>
+				</div>
+				<div class="row justify-content-center">					
+					<a class="btn btn-primary btn-sm my-1 disabled" href="#" role="button">Update User Role</a>
+				</div>
+			</div>
+		</div>
+		<!-- Extra card end -->
+	</div>
+	<!-- EC Control deck end -->
+
+	<!-- Contest Stats Card deck -->
+	<div class="card-deck">
+		<!-- User Stats card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Users
+			</div>
+			<div class="card-body overflow-auto">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item"><span class="font-weight-bolder">Total:</span> {{ users_registered }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Verified:</span> {{ users_verified }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Added FSU num:</span> {{ added_fsu_num }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Added FSU ID:</span> {{ added_fsu_id }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Added Courses:</span> {{ added_courses }}</li>
+				</ul>
+			</div>
+		</div>
+		<!-- User Stats card end -->
+		<!-- Team Stats card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Teams
+			</div>
+			<div class="card-body overflow-auto">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item"><span class="font-weight-bolder">Total:</span> {{ total_teams }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Registered:</span> {{ registered_teams }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Walk-ins:</span> {{ total_walkin }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Walk-ins used:</span> {{ walkin_used }}</li>
+					
+				</ul>
+			</div>
+		</div>
+		<!-- Team Stats card end -->		
+	</div>
+	<!-- Contest Stats Card deck end -->
+
+	<!-- Division Stats Card deck -->
+	<div class="card-deck">
+		<!-- Upper Stats card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Upper Division
+			</div>
+			<div class="card-body overflow-auto">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item"><span class="font-weight-bolder">Registered Teams:</span> {{ num_upper_teams }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Registered Participants:</span> {{ num_upper_reg_participants }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Walk-in Participants:</span> {{ num_upper_walkin_participants }}</li>
+				</ul>
+			</div>
+		</div>
+		<!-- Upper Stats card end -->
+		<!-- Lower Stats card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Lower Division
+			</div>
+			<div class="card-body overflow-auto">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item"><span class="font-weight-bolder">Registered Teams:</span> {{ num_lower_teams }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Registered Participants:</span> {{ num_lower_reg_participants }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Walk-in Participants:</span> {{ num_lower_walkin_participants }}</li>
+				</ul>
+			</div>
+		</div>
+		<!-- Lower Stats card end -->		
+	</div>
+	<!-- Division Stats Card deck end -->
+
+	
+
+	<!-- Course Summary card -->
+	<div class="card mt-4 mb-3">
+		<div class="card-header font-weight-bold">
+			Courses
+		</div>
+		<div class="card-body overflow-auto">
+			<div class="row justify-content-center">
+				<div class="col-10">
+					<table class="table table-sm">
+						<thead class="thead-light">
+							<tr>
+								<th scope="col">Code</th>
+								<th scope="col">Name</th>
+								<th scope="col">Instructor</th>
+								<th scope="col">Students</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for course in courses %}
+							<tr>
+								<td>{{ course.code }}</td>
+								<td>{{ course.name }}</td>
+								<td>{{ course.instructor.last_name }}</td>
+								<td>{{ course.num_registered }}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Course Summary card end -->
+
+	<!-- Create Walk-in Teams Modal -->
+	<div class="modal fade" id="walkinModal" tabindex="-1" role="dialog"
+		aria-labelledby="confirmClearModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmClearModalLongTitle">Create walk-in teams</h5>
+				</div>
+				<form method="post">
+					{% csrf_token %}
+					<div class="modal-body">
+						{% for field in gen_walkin_form %}
+						<p>
+							<h5 class="mb-0">{{ field.label_tag }}</h5>
+							{{ field }}<br>
+							<small class="form-text text-muted">
+								{% for error in field.errors %}
+									<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
+								{% endfor %}
+								{% if field.help_text %}
+									{{ field.help_text }}
+								{% endif %}
+							</small>
+						</p>
+					{% endfor %}
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" type="submit">Generate</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- End Create Walk-in Teams Modal -->
+
+	
+{% endblock %}

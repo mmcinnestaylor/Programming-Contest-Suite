@@ -14,8 +14,8 @@ class Faculty(models.Model):
     """
 
     email = models.EmailField(max_length=50, primary_key=True)
-    first_name = models.CharField(max_length=50, blank=False)
-    last_name = models.CharField(max_length=50, blank=False)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
         
     def __str__(self):
         return (str(self.first_name) + ' ' + str(self.last_name))
@@ -30,8 +30,8 @@ class Course(models.Model):
     - sections = [1, 2, 3, 4, 5]
     """
 
-    code = models.CharField(max_length=8, blank=False)
-    name = models.CharField(max_length=50, blank=False)
+    code = models.CharField(max_length=8)
+    name = models.CharField(max_length=50)
     instructor = models.ForeignKey(Faculty, on_delete=models.SET_NULL, null=True)
 
     class Meta:
@@ -39,6 +39,9 @@ class Course(models.Model):
 
     def __str__(self):
         return (str(self.code) + ' : ' + str(self.name) + ' - ' + str(self.instructor.last_name) + ', ' + str(self.instructor.first_name)[0])
+
+    def num_registered(self):
+        return Profile.objects.filter(courses=self).count()
 
 
 class Profile(models.Model):
@@ -53,7 +56,15 @@ class Profile(models.Model):
     - checked_in used to ensure only active participants get extra credit
     """
 
+    ROLES = (
+        (1, 'Contestant'),
+        (2, 'Proctor'),
+        (3, 'Question Writer'),
+        (4, 'Organizer')
+    )
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    role = models.PositiveSmallIntegerField(choices=ROLES, default=1)
     team = models.ForeignKey(Team, related_name='profile_team', on_delete=models.SET_NULL, blank=True, null=True)
     team_admin = models.BooleanField(default=False)
     fsu_id = models.CharField(max_length=8, unique=True, blank=True, null=True)

@@ -49,22 +49,27 @@ if DEBUG:
 # Application definition
 
 INSTALLED_APPS = [
+    # Django built-ins
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # User defined
     'announcements.apps.AnnouncementsConfig',
     'checkin.apps.CheckinConfig',
+    'contestadmin.apps.ContestAdminConfig',
     'core.apps.CoreConfig',
     'manager.apps.ManagerConfig',
     'register.apps.RegisterConfig',
+    # 3rd party packages
     'django_mysql',
     'import_export',
     'django_celery_beat',
 ]
 
+# Add debug_toolber only if site is in debug mode
 if DEBUG:
     INSTALLED_APPS.append('debug_toolbar')
 
@@ -78,6 +83,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Add debug_toolber middleware only if site is in debug mode
 if DEBUG:
     MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
 
@@ -108,7 +114,6 @@ WSGI_APPLICATION = 'contestsuite.wsgi.application'
 # Parse database connection url strings like psql://user:pass@127.0.0.1:8458/db
 # read os.environ['DATABASE_URL'] and raises ImproperlyConfigured exception if not found
 
-# DATABASES = {'default': env.db('DATABASE_URL')}
 DATABASES = {'default': {'ATOMIC_REQUESTS': False,
              'AUTOCOMMIT': True,
              'CONN_MAX_AGE': 0,
@@ -173,6 +178,8 @@ STATIC_ROOT = root('static')
 
 STATIC_URL = env.str('STATIC_URL', default='/static/')
 
+MEDIA_ROOT = root('media')
+
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/manage/'
@@ -189,6 +196,7 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 
 # Email settings
+# https://docs.djangoproject.com/en/3.1/topics/email/
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  
@@ -198,7 +206,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_HOST_PASSWORD = ''
 # EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'ACM Programming Contest <contest@fsu.acm.org>' 
-
 
 
 # Celery Settings
