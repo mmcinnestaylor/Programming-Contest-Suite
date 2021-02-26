@@ -5,6 +5,7 @@
     {% block head %}{% endblock %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Marlan McInnes-Taylor">
     <link rel="stylesheet" 
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -12,9 +13,7 @@
           href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
     <link rel="stylesheet" type="text/css"
           href="{% static 'core/css/base.css' %}"/>
-    
-    <link rel="icon" type="image/x-icon" sizes="16x16 32x32 64x64"
-          href="{% static 'core/img/favicon.ico' %}"/>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'core/img/favicon.ico' %}"/>
     <script src="https://kit.fontawesome.com/76b2c8cdbc.js" crossorigin="anonymous"></script>
     {# Strict order: jQuery first, then Popper.js, then Bootstrap JS #}
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
