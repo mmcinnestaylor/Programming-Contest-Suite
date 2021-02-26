@@ -71,6 +71,7 @@
                 <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown">{{ user.first_name }}</a>
                 <div class="dropdown-menu dropdown-menu-right">
                   {% if user.is_staff %}
+                    <a class="dropdown-item" href="{% url 'checkin' %}">Checkin</a>
                     <a class="dropdown-item" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
                   {% endif %}
                   <a class="dropdown-item" href="{% url 'manage_dashboard' %}">Profile Dashboard</a>

@@ -11,7 +11,7 @@ from register.models import Team
 # Create your views here.
 
 
-#@staff_member_required
+@staff_member_required
 @transaction.atomic
 def checkin(request):
 	context = {}
@@ -119,6 +119,6 @@ def checkin(request):
 	return render(request, 'checkin/checkin.html', context)
 
 
-#@staff_member_required
+@staff_member_required
 def checkin_result(request):
 	return render(request, 'checkin/checkin_result.html')
