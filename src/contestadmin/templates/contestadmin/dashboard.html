@@ -44,30 +44,41 @@
 			</div>
 			<div class="card-body overflow-auto">
 				<div class="row justify-content-center">
-					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal"
-						data-target="#walkinModal">Create walk-in teams</button>
-				</div>
-				<div class="row justify-content-center">
-					<a class="btn btn-primary btn-sm my-1" href="#" role="button">Generate Domjudge TSVs</a>
+					<a class="btn btn-primary btn-sm my-1" href="{% url 'gen_dj_files' %}" role="button">Generate Domjudge TSVs</a>
+					{% if dj_files_available %}					
+						<a class="btn text-dark" href="{% url 'download_dj_files' %}" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
+					{% else %}
+						<a class="btn text-secondary disabled" href="#" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
+					{% endif %}
 				</div>
 			</div>
 		</div>
 		<!-- Team card end -->
-		<!-- Team Members card -->
+		<!-- Upload card -->
 		<div class="card mt-4">
 			<div class="card-header font-weight-bold">
-				Post-Contest
+				Upload Results
 			</div>
-			<div class="card-body overflow-auto">
-				<div class="row justify-content-center">					
-					<a class="btn btn-primary btn-sm my-1" href="#" role="button">Generate Extra Credit Forms</a>
+			<form method="post" enctype="multipart/form-data">
+				<div class="card-body overflow-auto">
+					{% csrf_token %}
+					{% for field in file_form %}
+					<p class="mb-0">
+						{{ field }}<br>
+						<small class="form-text text-muted">
+							{% for error in field.errors %}
+								<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
+							{% endfor %}
+						</small>
+					</p>
+					{% endfor %}
 				</div>
-				<div class="row justify-content-center">					
-					<a class="btn btn-primary btn-sm my-1" href="{% url 'all_ec_files' %}" role="button">Download Extra Credit Forms</a>
+				<div class="card-footer">
+					<button class="btn btn-primary btn-sm" type="submit">Submit</button>
 				</div>
-			</div>
+			</form>
 		</div>
-		<!-- Team Members card end -->
+		<!-- Upload card end -->
 	</div>
 	<!-- Contest Control deck end -->
 
@@ -79,12 +90,28 @@
 				Extra Credit
 			</div>
 			<div class="card-body overflow-auto">
-				<div class="row justify-content-center">					
-					<a class="btn btn-primary btn-sm my-1" href="#" role="button">Generate Extra Credit Forms</a>
+				<div class="row justify-content-center">
+					
+					{% if dj_results_processed %}					
+						<a class="btn btn-primary btn-sm my-1" href="{% url 'gen_ec_reports' %}" role="button">Generate Reports</a>
+					{% else %}
+						<a class="btn btn-primary btn-sm my-1 disabled" href="#" role="button">Generate Reports</a>
+					{% endif %}
+
+					{% if ec_files_available %}					
+						<a class="btn text-dark" href="{% url 'download_ec_files' %}" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
+					{% else %}
+						<a class="btn text-secondary disabled" href="#" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
+					{% endif %}
 				</div>
-				<div class="row justify-content-center">					
-					<a class="btn btn-primary btn-sm my-1" href="{% url 'all_ec_files' %}" role="button">Download Extra Credit Forms</a>
+				<div class="row justify-content-center">
+					{% if ec_files_available %}
+						<a class="btn btn-success btn-sm my-1" href="{% url 'email_faculty' %}" role="button">Email Faculty</a>
+					{% else %}
+						<a class="btn btn-success btn-sm my-1 disabled" href="#" role="button">Email Faculty</a>
+					{% endif %}
 				</div>
+
 			</div>
 		</div>
 		<!-- EC card end -->
@@ -94,11 +121,12 @@
 				Tools 
 			</div>
 			<div class="card-body overflow-auto">
-				<div class="row justify-content-center">					
-					<a class="btn btn-primary btn-sm my-1" href="#" role="button">Registration Blacklist</a>
+				<div class="row justify-content-center">
+					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal"
+						data-target="#walkinModal">Create walk-in teams</button>
 				</div>
 				<div class="row justify-content-center">					
-					<a class="btn btn-primary btn-sm my-1" href="{% url 'all_ec_files' %}" role="button">Download Extra Credit Forms</a>
+					<a class="btn btn-primary btn-sm my-1 disabled" href="#" role="button">Update User Role</a>
 				</div>
 			</div>
 		</div>
@@ -248,49 +276,5 @@
 	</div>
 	<!-- End Create Walk-in Teams Modal -->
 
-	<!-- Confirm Leave Modal -->
-	<div class="modal fade" id="confirmLeaveModal" tabindex="-1" role="dialog"
-		aria-labelledby="confirmLeaveModalCenterTitle" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="confirmLeaveModalLongTitle">Leave team</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<p>Are you sure you want to leave {{ request.user.profile.team.name }} ?</p>
-				</div>
-				<div class="modal-footer">
-					<a class="btn btn-primary" href="{% url 'leave_team' %}" role="button">Confirm</a>
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- End Confirm Leave Modal -->
-
-	<!-- Confirm Delete Modal -->
-	<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"
-		aria-labelledby="confirmDeleteModalCenterTitle" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="confirmDeleteModalLongTitle">Delete team</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<p>Are you sure you want to delete {{ request.user.profile.team.name }} ?</p>
-				</div>
-				<div class="modal-footer">
-					<a class="btn btn-primary" href="{% url 'delete_team' %}" role="button">Confirm</a>
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- End Confirm Delete Modal -->
+	
 {% endblock %}
