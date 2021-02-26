@@ -132,4 +132,3 @@ dmypy.json
 src/boot.sh
 .DS_Store
 src/media/*
-
