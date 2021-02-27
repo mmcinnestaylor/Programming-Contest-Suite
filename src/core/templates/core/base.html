@@ -31,7 +31,7 @@
     <header>
       <nav class="navbar navbar-expand-md bg-dark navbar-dark">
         <div class="d-none d-md-block" id="logo">
-          <a href="https://www.acm.org" target="_blank" rel="no-follow"><img src="{% static 'core/img/logochapter.png' %}" width="50" height="50" alt="Chapter Logo"></a>
+          <a href="{% url 'index' %}" rel="no-follow"><img src="{% static 'core/img/logochapter.png' %}" width="50" height="50" alt="Chapter Logo"></a>
         </div>
         <a class="navbar-brand" href="{% url 'index' %}">ACM Programming Contest</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
