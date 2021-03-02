@@ -34,7 +34,7 @@ SECRET_KEY = env.str('SECRET_KEY')
 DEBUG = env.bool('DEBUG', default=False)
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'contest.local', '192.168.10.12', '[::1]']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
 
 
 # Debug Toolbar Access 
@@ -66,7 +66,6 @@ INSTALLED_APPS = [
     # 3rd party packages
     'django_mysql',
     'import_export',
-    'django_celery_beat',
 ]
 
 # Add debug_toolber only if site is in debug mode
@@ -212,7 +211,6 @@ DEFAULT_FROM_EMAIL = 'ACM Programming Contest <contest@fsu.acm.org>'
 # https://docs.celeryproject.org/en/stable/getting-started/first-steps-with-celery.html#configuration
  
 CELERY_BROKER_URL = env.str('CELERY_BROKER_URL')
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_RESULT_BACKEND = env.str('CELERY_RESULT_BACKEND')
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
