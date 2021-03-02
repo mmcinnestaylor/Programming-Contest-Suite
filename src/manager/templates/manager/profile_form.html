@@ -18,39 +18,46 @@
 		{% endfor %}
 	{% endif %}
 	<div class="row justify-content-center">
-		<div class="col col-sm-4">
+		<div class="col col-md-4">
 			<form method="post">
-				{% csrf_token %}
-				{% for field in user_form %}
-					<p>
-						<h5 class="mb-0">{{ field.label_tag }}</h5>
-						{{ field }}<br>
-						<small class="form-text text-muted">
-							{% for error in field.errors %}
-							<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
-							{% endfor %}
-							{% if field.help_text %}
-								{{ field.help_text }}
-							{% endif %}
-						</small>
-					</p>
-				{% endfor %}
-				{% for field in profile_form %}
-					<p>
-						<h5 class="mb-0">{{ field.label_tag }}</h5>
-						{{ field }}<br>
-						<small class="form-text text-muted">
-							{% for error in field.errors %}
-								<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
-							{% endfor %}
-							{% if field.help_text %}
-								{{ field.help_text }}
-							{% endif %}
-						</small>
-					</p>
-				{% endfor %}
-				<button class="btn btn-primary btn-sm" type="submit">Save</button>
-				<a class="btn btn-secondary btn-sm" href="{% url 'manage_dashboard' %}" role="button">Cancel</a>
+				<div class="card">
+					<div class="card-body">
+						{% csrf_token %}
+						{% for field in user_form %}
+							<p>
+								<h5 class="mb-0">{{ field.label_tag }}</h5>
+								{{ field }}<br>
+								<small class="form-text text-muted">
+									{% for error in field.errors %}
+									<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
+									{% endfor %}
+									{% if field.help_text %}
+										{{ field.help_text }}
+									{% endif %}
+								</small>
+							</p>
+						{% endfor %}
+						{% for field in profile_form %}
+							<p>
+								<h5 class="mb-0">{{ field.label_tag }}</h5>
+								{{ field }}<br>
+								<small class="form-text text-muted">
+									{% for error in field.errors %}
+										<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
+									{% endfor %}
+									{% if field.help_text %}
+										{{ field.help_text }}
+									{% endif %}
+								</small>
+							</p>
+						{% endfor %}						
+					</div>
+					<div class="card-footer">
+						<button class="btn btn-primary btn-sm" type="submit">Save</button>
+						<a class="btn btn-secondary btn-sm" href="{% url 'manage_dashboard' %}" role="button">Cancel</a>
+					</div>
+				</div>
+				
 			</form>
 		</div>
 	</div>
