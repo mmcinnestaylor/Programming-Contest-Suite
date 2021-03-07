@@ -11,6 +11,7 @@ class Contest(models.Model):
     - Results field for DOMJudge contest results uploading
     """
 
+    contest_date = models.DateTimeField(auto_now=False)
     results = models.FileField(upload_to='uploads/', blank=True)
     ec_processed = models.BooleanField(default=False)
         

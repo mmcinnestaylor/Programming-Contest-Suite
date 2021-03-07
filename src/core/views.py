@@ -1,4 +1,6 @@
 from django.shortcuts import render
+
+from contestadmin.models import Contest
 from register.models import Team
 from manager.models import Profile
 
@@ -6,7 +8,14 @@ from manager.models import Profile
 
 # Display index page
 def index(request):
-    return render(request, 'core/index.html')
+    context = {}
+
+    try:
+        context['contest'] = Contest.objects.first()
+    except:
+        context['contest'] = None
+
+    return render(request, 'core/index.html', context)
 
 
 # Display contact us page

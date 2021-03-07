@@ -51,7 +51,11 @@
     <div class="carousel-item active" data-interval="10000">
       <div class="jumbotron text-center" style="background-color: #787878; height: 400px;">
         <h1>Welcome to the ACM at FSU Programming Contest</h1>
-        <h3>Spring 2021 Date @ 9am</h3>
+        {% if contest is None %}
+          <h3>Contest Date TBA</h3>
+        {% else %}
+          <h3>{{ contest.contest_date|date }} @ {{ contest.contest_date|time }}</h3>
+        {% endif %}
       </div>
       <div class="carousel-caption d-none d-md-block">
         <h5>First slide label</h5>
