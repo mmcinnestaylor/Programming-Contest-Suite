@@ -71,8 +71,8 @@ def checkin(request):
 						messages.info(request, 'Check your registered email or account dashboard for DOMJudge credentials.', fail_silently=True)
 			elif swipe_form.cleaned_data['fsu_num']:
 				if swipe_form.valid_read():
-					# fsu_num = swipe_form.parse()
-					fsu_num = swipe_form.cleaned_data['fsu_num']
+					fsu_num = swipe_form.parse()
+					
 					try:
 						user = User.objects.get(profile__fsu_num=fsu_num)
 					except:
