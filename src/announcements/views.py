@@ -4,6 +4,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 
 from .models import Announcement
+from contestsuite.settings import CACHE_TIMEOUT
 
 # Create your views here.
 
@@ -16,6 +17,7 @@ class AnnouncementListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['now'] = timezone.now()
+        context['cache_timeout'] = CACHE_TIMEOUT
         return context
 
 
@@ -26,4 +28,5 @@ class AnnouncementDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['now'] = timezone.now()
+        context['cache_timeout'] = CACHE_TIMEOUT
         return context
