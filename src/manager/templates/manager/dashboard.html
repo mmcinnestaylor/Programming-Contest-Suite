@@ -196,30 +196,34 @@
 	<!-- Team Card deck end -->
 	<!-- Announcements Display -->
 	<div class="row justify-content-center">
-		<div class="jumbotron mt-4">
-			<h2 >Recent Announcements</h2>
-			<hr class="my-4">
-			{% for announcement in announcements %}
-				<div class="card mb-4 shadow-sm">
-					<div class="card-body">
-						<h4 class="card-title">{{ announcement.title }}</h4>
-						<p class="card-text text-muted h6">{{ announcement.author.first_name }} | {{ announcement.created_on}} </p>
-						{% if announcement.created_on < announcement.updated_on %}
-							<p class="card-text text-muted h6">Updated on: {{ announcement.updated_on}} </p>
-						{% endif %}
-						{% if announcement.content|length > 140 %}
-							<p class="card-text lead">{{announcement.content|slice:":140" }}...</p>
-							<a href="{% url 'announcement_detail' announcement.slug  %}" class="btn btn-primary btn-sm">Read More</a>
-						{% else %}
-							<p class="card-text lead">{{announcement.content }}</p>
-						{% endif %}
+		<div class="col">
+			<div class="jumbotron mt-4">
+				<h2 class="mt-0">Recent Announcements</h2>
+				<hr class="my-4">
+				{% for announcement in announcements %}
+					<div class="card mb-4 shadow-sm">
+						<div class="card-body">
+							<h4 class="card-title mb-0">{{ announcement.title }}</h4>
+							<small class="card-text text-muted">{{ announcement.author.first_name }} | {{ announcement.created_on}} </small>
+							{% if announcement.created_on < announcement.updated_on %}
+								<br>
+								<small class="card-text text-muted">Updated on: {{ announcement.updated_on}} </small>
+							{% endif %}
+							{% if announcement.content|length > 140 %}
+								<p class="card-text lead mt-2">{{announcement.content|slice:":140" }}...</p>
+								<a href="{% url 'announcement_detail' announcement.slug  %}" class="btn btn-primary btn-sm">Read More</a>
+							{% else %}
+								<p class="card-text lead mt-2">{{announcement.content }}</p>
+							{% endif %}
+						</div>
 					</div>
-				</div>
-			{% empty %}
-				<p class="lead">No announcements yet.</p>
-			{% endfor %}
-			<a class="btn btn-primary " href="{% url 'announcements' %}" role="button">Announcements &rarr;</a>
+				{% empty %}
+					<p class="lead">No announcements yet.</p>
+				{% endfor %}
+				<a class="btn btn-primary" href="{% url 'announcements' %}" role="button">Announcements &rarr;</a>
+			</div>
 		</div>
+		
 	</div>
 	<!-- End Announcements Display --> 
 	<!-- Confirm Clear Modal -->
