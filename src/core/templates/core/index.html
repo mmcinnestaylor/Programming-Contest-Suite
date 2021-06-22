@@ -2,7 +2,9 @@
 {% load cache %}
 {% load static %}
 
-{% block head %}{% endblock %}
+{% block head %}
+  <link rel="stylesheet" type="text/css" href="{% static 'core/css/index.css' %}"/>
+{% endblock %}
 
 {% block title %}Home{% endblock %}
 
@@ -44,7 +46,7 @@
     </ol>
     <div class="carousel-inner rounded">
       <div class="carousel-item active" data-interval="10000">
-        <div class="jumbotron text-center" style="background-color: #787878; height: 400px;">
+        <div class="jumbotron text-center" id="jumbo-welcome">
           <h1>Welcome to the ACM at FSU Programming Contest</h1>
           {% if contest is None %}
             <h3>Contest Date TBA</h3>
@@ -58,7 +60,7 @@
         </div>
       </div>
       <div class="carousel-item" data-interval="10000">
-        <div class="jumbotron text-center" style="background-color: #787878; height: 400px;">
+        <div class="jumbotron text-center" id="jumbo-teams">
           <h1>Currently Registered Participants & Teams</h1>
           <h3>Content</h3>
         </div>
@@ -68,8 +70,8 @@
         </div>
       </div>
       <div class="carousel-item" data-interval="10000">
-        <div class="jumbotron text-center" style="background-color: #787878; height: 400px;">
-          <h1>Slide 5</h1>
+        <div class="jumbotron text-center" id="jumbo-announcements">
+          <h1>Recent Announcements</h1>
           <h3>Content</h3>
         </div>
         <div class="carousel-caption d-none d-md-block">
