@@ -16,7 +16,7 @@ class SwipeCheckinForm(forms.Form):
 
     # determines if the swipe is valid
     def valid_read(self):
-        if self.cleaned_data['fsu_num'][1] == 'B':
+        if len(self.cleaned_data['fsu_num']) > 2 and self.cleaned_data['fsu_num'][1] == 'B':
             return True
         return False
 

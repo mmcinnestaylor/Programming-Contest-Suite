@@ -1,4 +1,7 @@
 from django.shortcuts import render
+
+from contestadmin.models import Contest
+from contestsuite.settings import CACHE_TIMEOUT
 from register.models import Team
 from manager.models import Profile
 
@@ -6,7 +9,15 @@ from manager.models import Profile
 
 # Display index page
 def index(request):
-    return render(request, 'core/index.html')
+    context = {}
+
+    context['cache_timeout'] = CACHE_TIMEOUT
+    try:
+        context['contest'] = Contest.objects.first()
+    except:
+        context['contest'] = None
+
+    return render(request, 'core/index.html', context)
 
 
 # Display contact us page
@@ -25,6 +36,8 @@ def teams(request):
 
     teams_set = Team.objects.all()
     participants_set = Profile.objects.all()
+
+    context['cache_timeout'] = CACHE_TIMEOUT
 
     # Aggregate upper division team and participant info
     upper_teams_set = teams_set.filter(division=1)

@@ -47,10 +47,7 @@
 		<button type="button" class="btn btn-primary btn-lg mx-1" onclick="walkin_prompt(true)">Yes</button>
 	</div>
 
-
-
 	<div id="checkin_form" style="display:none">
-		<h2 class="text-warning">Swipe your FSU Card or select Email checkin</h2>
 		<form method="post" id="swipeForm">
 			{% csrf_token %}
 			<div class="" id="walkinDiv" style="display:none">
@@ -60,7 +57,7 @@
 				{% endfor %}
 			</div>
 
-			<div id="swipeDiv">
+			<div id="swipeDiv" onload="read_swipe()">
 				<div class="row justify-content-center">
 					{% for field in swipe_form %}
 					<p>
@@ -110,22 +107,4 @@
 		<button type="button" class="btn btn-primary btn-lg mx-1" id="formSwap" onclick="swap_form()">Email checkin</button>
 	</div>
 </div>
-
-<script>
-	var textarea = document.getElementById("id_fsu_num");
-
-	textarea.addEventListener("input", function () {
-		// replace with logic to check for end of swipe
-		// waiting on card reader
-
-		var maxlength = 8;
-		var currentLength = this.value.length;
-
-		if (currentLength >= maxlength) {
-			document.getElementById("swipeForm").submit();
-		} else {
-			console.log(maxlength - currentLength + " chars left");
-		}
-	});
-</script>
 {% endblock %}
