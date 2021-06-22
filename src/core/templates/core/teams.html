@@ -13,31 +13,30 @@
 		<h2>Upper Division</h2>
 	</div>
 	<div class="row">
-		<button type="button" class="btn  btn-sm btn-dark mr-2" disabled>
+		<button type="button" class="btn  btn-sm btn-primary mr-2" disabled>
 			Teams <span class="badge badge-light">{{ num_upper_teams }}</span>
 			<span class="sr-only">number of upper division teams</span>
 		</button>
-		<button type="button" class="btn  btn-sm btn-dark" disabled>
+		<button type="button" class="btn  btn-sm btn-info" disabled>
 			Participants <span class="badge badge-light">{{ num_upper_participants }}</span>
 			<span class="sr-only">number of upper division participants</span>
 		</button>
 	</div>
-	<br>
-	<div class="row justify-content-center">
+	<div class="row justify-content-center mt-3">
 		<div class="col-10">
-			<table class="table table-sm">
-				<thead class="thead-light">
+			<table class="table table-sm table-striped shadow rounded">
+				<thead class="thead-dark text-center">
 					<tr>
 						<th scope="col">Team Name</th>
 						<th scope="col">Questions Answered</th>
 						<th scope="col">Team Members</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody class="bg-light">
 					{% for team in upper_teams %}
 					<tr>
 						<td>{{ team.name }}</td>
-						<td>{{ team.questions_answered }}</td>
+						<td class="text-center">{{ team.questions_answered }}</td>
 						<td>
 							<small>
 								{% for member in team.members %}
@@ -56,11 +55,11 @@
 		<h2>Lower Division</h2>
 	</div>
 	<div class="row">
-		<button type="button" class="btn  btn-sm btn-dark mr-2" disabled>
+		<button type="button" class="btn  btn-sm btn-primary mr-2" disabled>
 			Teams <span class="badge badge-light">{{ num_lower_teams }}</span>
 			<span class="sr-only">number of lower division teams</span>
 		</button>
-		<button type="button" class="btn  btn-sm btn-dark" disabled>
+		<button type="button" class="btn  btn-sm btn-info" disabled>
 			Participants <span class="badge badge-light">{{ num_lower_participants }}</span>
 			<span class="sr-only">number of lower division participants</span>
 		</button>
@@ -68,15 +67,15 @@
 	<br>
 	<div class="row justify-content-center">
 		<div class="col-10">
-			<table class="table table-sm">
-				<thead class="thead-light">
+			<table class="table table-sm table-striped shadow ">
+				<thead class="thead-dark text-center">
 					<tr>
 						<th scope="col">Team Name</th>
 						<th scope="col">Questions Answered</th>
 						<th scope="col">Team Members</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody class="bg-light">
 					{% for team in lower_teams %}
 					<tr>
 						<td>{{ team.name }}</td>
