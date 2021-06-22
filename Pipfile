@@ -9,7 +9,8 @@ mysqlclient = "==1.4.*"
 django-mysql = "*"
 django-redis = "*"
 django-import-export = "*"
-celery = "*"
+celery = "==4.4.*"
+flower = "*"
 
 [dev-packages]
 pylint = "*"
