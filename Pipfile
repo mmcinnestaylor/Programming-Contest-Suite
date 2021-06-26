@@ -11,6 +11,9 @@ django-redis = "*"
 django-import-export = "*"
 celery = "==4.4.*"
 flower = "*"
+gunicorn = "*"
+six = "*"
+mariadb = "*"
 
 [dev-packages]
 pylint = "*"
