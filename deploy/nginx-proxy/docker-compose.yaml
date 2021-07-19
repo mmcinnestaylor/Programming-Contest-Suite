@@ -7,11 +7,11 @@ services:
             - '80:80'
             - '443:443'
         volumes:
-            - 'certs:/etc/nginx/certs'
-            - 'vhost:/etc/nginx/vhost.d'
-            - 'html:/usr/share/nginx/html'
-            - '/var/run/docker.sock:/tmp/docker.sock:ro'
-            - 'config/nginx-proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro'
+            - certs:/etc/nginx/certs
+            - vhost:/etc/nginx/vhost.d
+            - html:/usr/share/nginx/html
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+            - config/nginx-proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
         deploy:
             replicas: 2
             rollback_config:
@@ -20,4 +20,9 @@ services:
                 parallelism: 1
                 delay: 5s
                 failure_action: rollback
+volumes:
+    certs:
+    vhost:
+    html:
+
         
