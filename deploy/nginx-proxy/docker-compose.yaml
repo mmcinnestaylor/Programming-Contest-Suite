@@ -12,6 +12,8 @@ services:
             - html:/usr/share/nginx/html
             - /var/run/docker.sock:/tmp/docker.sock:ro
             - config/nginx-proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+        networks:
+            - proxied-apps
         deploy:
             replicas: 2
             rollback_config:
