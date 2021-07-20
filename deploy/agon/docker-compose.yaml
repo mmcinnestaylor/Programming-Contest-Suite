@@ -12,8 +12,8 @@ services:
         volumes:
             - ./html:/usr/share/nginx/html:ro
         deploy:
-			replicas: 2
-			rollback_config:
+            replicas: 2
+            rollback_config:
                 parallelism: 0
             update_config:
                 parallelism: 1
