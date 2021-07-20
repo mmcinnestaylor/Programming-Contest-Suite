@@ -3,9 +3,6 @@ version: "3.8"
 services:
     agon-homepage:
         image: nginx:1.21-alpine
-        expose:
-            - 80
-            - 443
         environment:
             - VIRTUAL_HOST=agon.cs.fsu.edu
             - LETSENCRYPT_HOST=agon.cs.fsu.edu
