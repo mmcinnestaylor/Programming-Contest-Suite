@@ -1,7 +1,7 @@
 version: '3.8'
 services:
     dj-mariadb:
-        image: mariadb
+        image: mariadb:10.6-focal
         environment:
             - MYSQL_ROOT_PASSWORD=rootpw
             - MYSQL_USER=domjudge
@@ -10,7 +10,7 @@ services:
         networks:
             - ds-db-backend
     domserver:
-        image: 'domjudge/domserver:7.3.3'
+        image: domjudge/domserver:7.3.3
         environment:
             - MYSQL_HOST=dj-mariadb
             - MYSQL_USER=domjudge
@@ -20,11 +20,10 @@ services:
             - VIRTUAL_HOST=domjudge.cs.fsu.edu
         networks:
             - frontend
-            - jh-backend
-            - db-backend
+            - ds-jh-backend
+            - ds-db-backend
     judgehost:
-        privileged: true
-        image: 'domjudge/judgehost:7.3.3'
+        image: domjudge/judgehost:7.3.3
         volumes:
             - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
         environment:
@@ -35,8 +34,8 @@ networks:
     frontend:
         external: true
         name: proxied-apps
-    jh-backend:
+    ds-jh-backend:
         name: ds-jh-backend
-    db-backend:
+    ds-db-backend:
         name: ds-db-backend
     
