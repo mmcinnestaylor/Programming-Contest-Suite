@@ -4,8 +4,8 @@ services:
         image: nginxproxy/nginx-proxy:0.9
         container_name: nginx-proxy
         ports:
-            - '80:80'
-            - '443:443'
+            - 80:80
+            - 443:443
         volumes:
             - certs:/etc/nginx/certs
             - vhost:/etc/nginx/vhost.d
@@ -24,5 +24,4 @@ volumes:
     certs:
     vhost:
     html:
-
         
