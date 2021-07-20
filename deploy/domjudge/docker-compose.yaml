@@ -8,7 +8,7 @@ services:
             - MYSQL_PASSWORD=djpw
             - MYSQL_DATABASE=domjudge
         networks:
-            - dj-db-backend
+            - ds-db-backend
     domserver:
         image: 'domjudge/domserver:7.3.3'
         environment:
@@ -20,8 +20,8 @@ services:
             - VIRTUAL_HOST=domjudge.cs.fsu.edu
         networks:
             - frontend
-            - dj-jh-backend
-            - dj-db-backend
+            - jh-backend
+            - db-backend
     judgehost:
         privileged: true
         image: 'domjudge/judgehost:7.3.3'
@@ -30,9 +30,13 @@ services:
         environment:
             - DAEMON_ID=0
         networks:
-            - dj-jh-backend        
+            - ds-jh-backend        
 networks:
     frontend:
         external: true
         name: proxied-apps
+    jh-backend:
+        name: ds-jh-backend
+    db-backend:
+        name: ds-db-backend
     
