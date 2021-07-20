@@ -2,7 +2,6 @@ version: '3.8'
 services:
     nginx-proxy:
         image: nginxproxy/nginx-proxy:0.9
-        container_name: nginx-proxy
         ports:
             - 80:80
             - 443:443
@@ -11,7 +10,7 @@ services:
             - vhost:/etc/nginx/vhost.d
             - html:/usr/share/nginx/html
             - /var/run/docker.sock:/tmp/docker.sock:ro
-            - config/nginx-proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+            - ./config/nginx-proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
         networks:
             - proxied-apps
         deploy:
