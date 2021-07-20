@@ -19,3 +19,7 @@ services:
                 parallelism: 1
                 delay: 5s
                 failure_action: rollback
+networks:
+    default:
+        external: true
+        name: nginxproxy_default
