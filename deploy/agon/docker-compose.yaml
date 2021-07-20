@@ -11,7 +11,7 @@ services:
             - LETSENCRYPT_HOST=agon.cs.fsu.edu
         volumes:
             - ./html:/usr/share/nginx/html:ro
-		deploy:
+        deploy:
 			replicas: 2
 			rollback_config:
                 parallelism: 0
