@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-    dj-mariadb:
+    mariadb:
         image: mariadb:10.6-focal
         environment:
             - MYSQL_ROOT_PASSWORD=rootpw
@@ -20,21 +20,11 @@ services:
             - VIRTUAL_HOST=domjudge.cs.fsu.edu
         volumes:
             - ./config/initial_admin_password.secret:/opt/domjudge/domserver/etc/initial_admin_password.secret:ro
-            - ./config/restapi.secret:/opt/domjudge/domserver/etc/restapi.secret:ro
+            # - ./config/restapi.secret:/opt/domjudge/domserver/etc/restapi.secret:ro
         networks:
             - frontend
             - ds-jh-backend
-            - ds-db-backend
-    judgehost_0:
-        image: domjudge/judgehost:7.3.3
-        volumes:
-            - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
-        environment:
-            - DAEMON_ID=0
-            - DOMSERVER_BASEURL=http://domserver/
-            - JUDGEDAEMON_PASSWORD=anothertestpass1!
-        networks:
-            - ds-jh-backend        
+            - ds-db-backend        
 networks:
     frontend:
         external: true
