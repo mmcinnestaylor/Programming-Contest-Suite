@@ -17,6 +17,8 @@ services:
                 parallelism: 1
                 delay: 5s
                 failure_action: rollback
+volumes:
+    acme:
 networks:
     default:
         external: true
