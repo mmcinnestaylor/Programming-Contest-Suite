@@ -18,18 +18,22 @@ services:
             - MYSQL_PASSWORD=djpw
             - MYSQL_ROOT_PASSWORD=rootpw
             - VIRTUAL_HOST=domjudge.cs.fsu.edu
+        volumes:
+            - ./config/admin.conf:/opt/domjudge/domserver/etc/initial_admin_password.secret:ro
+            - ./config/judgehost.conf:/opt/domjudge/domserver/etc/restapi.secret:ro
         networks:
             - frontend
             - ds-jh-backend
             - ds-db-backend
-    judgehost:
-        image: domjudge/judgehost:7.3.3
-        volumes:
-            - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
-        environment:
-            - DAEMON_ID=0
-        networks:
-            - ds-jh-backend        
+    #judgehost_0:
+    #    image: domjudge/judgehost:7.3.3
+    #    volumes:
+    #        - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+    #    environment:
+    #        - DAEMON_ID=0
+    #        - DOMSERVER_BASEURL=http://domjudge.cs.fsu.edu
+    #    networks:
+    #        - ds-jh-backend        
 networks:
     frontend:
         external: true
