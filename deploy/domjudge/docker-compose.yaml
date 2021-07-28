@@ -7,6 +7,8 @@ services:
             - MYSQL_USER=domjudge
             - MYSQL_PASSWORD=djpw
             - MYSQL_DATABASE=domjudge
+        volumes:
+            - domserver_db_data:/var/lib/mysql
         networks:
             - ds-db-backend
     domserver:
@@ -25,6 +27,8 @@ services:
             - frontend
             - ds-jh-backend
             - ds-db-backend        
+volumes:
+    domserver_db_data:
 networks:
     frontend:
         external: true
