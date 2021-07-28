@@ -10,7 +10,7 @@ services:
             - ./config/nginx.conf:/etc/nginx/conf.d/my_proxy.conf:ro
         networks:
             - frontend
-            - backend            
+            - nginx-backend            
     django:
         image: acmfsu/pcs-v2:beta
         # '/start' is the shell script used to run the service
@@ -98,7 +98,7 @@ networks:
     frontend:
         external: true
         name: proxied-apps
-    backend:
+    nginx-backend:
         name: nginx-backend
     mariadb-backend:
         name: mariadb-backend
