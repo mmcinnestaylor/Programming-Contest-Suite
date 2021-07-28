@@ -49,7 +49,7 @@ services:
         volumes:
             - django_db_data:/var/lib/mysql
         environment:
-            - MARIA_ROOT_PASSWORD=rootpw
+            - MARIADB_ROOT_PASSWORD=rootpw
             - MARIADB_DATABASE=contestsuite-dev
             - MARIADB_USER=dev
             - MARIADB_PASSWORD=seminoles
