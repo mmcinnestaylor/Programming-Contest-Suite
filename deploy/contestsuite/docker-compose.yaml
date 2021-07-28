@@ -7,7 +7,7 @@ services:
             - VIRTUAL_HOST=contest.cs.fsu.edu
             - LETSENCRYPT_HOST=contest.cs.fsu.edu
         volumes:
-            - ./config/nginx.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+            - ./config/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
         networks:
             - frontend
             - nginx-backend            
@@ -49,6 +49,7 @@ services:
         volumes:
             - django_db_data:/var/lib/mysql
         environment:
+            - MARIA_ROOT_PASSWORD=rootpw
             - MARIADB_DATABASE=contestsuite-dev
             - MARIADB_USER=dev
             - MARIADB_PASSWORD=seminoles
