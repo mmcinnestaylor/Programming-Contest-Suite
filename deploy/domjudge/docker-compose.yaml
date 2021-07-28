@@ -14,7 +14,7 @@ services:
     domserver:
         image: domjudge/domserver:7.3.3
         environment:
-            - MYSQL_HOST=dj-mariadb
+            - MYSQL_HOST=mariadb
             - MYSQL_USER=domjudge
             - MYSQL_DATABASE=domjudge
             - MYSQL_PASSWORD=djpw
