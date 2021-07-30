@@ -37,8 +37,8 @@ services:
             - SQL_USER=dev
             - SQL_PASSWORD=seminoles
         volumes:
-            - django_app_data:/app
-            - django_static_data:/app/web/static
+            - django_app_data:/app/media
+            - django_static_data:/app/static
         networks:
             - nginx-backend
             - mariadb-backend
