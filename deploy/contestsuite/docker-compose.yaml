@@ -8,11 +8,12 @@ services:
             - LETSENCRYPT_HOST=contest.cs.fsu.edu
         volumes:
             - ./config/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
+            - django_static_data:/usr/share/nginx/html/static:ro
         networks:
             - frontend
             - nginx-backend            
     django:
-        image: acmfsu/pcs-v2:beta
+        image: acmfsu/pcs-v2:alpha3
         # '/start' is the shell script used to run the service
         command: /app/start
         environment:
@@ -64,7 +65,7 @@ services:
         networks:
             - rabbitmq-backend
     celery_worker:
-        image: acmfsu/pcs-v2:beta
+        image: acmfsu/pcs-v2:alpha3
         command: /app/start-celeryworker
         environment:
             - DEBUG=False
