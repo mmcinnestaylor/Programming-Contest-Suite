@@ -2,15 +2,21 @@ version: '3.8'
 services:
     judgehost_0:
         image: domjudge/judgehost:7.3.3
-        volumes:
-            - /sys/fs/cgroup:/sys/fs/cgroup:ro
         environment:
+            CONTAINER_TIMEZONE: America/New_York
             DAEMON_ID: 0
             DOMSERVER_BASEURL: http://domserver/
+            JUDGEDAEMON_USERNAME: /run/secrets/judgedaemon_user
             JUDGEDAEMON_PASSWORD: /run/secrets/judgedaemon_password
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        networks:
+            - domserver-jh-backend
 secrets:
+    judgedaemon_user:
+        file: ../secrets/judgehosts/judgedaemon_user.txt
     judgedaemon_password:
-        file: ../secrets/judgehosts/judgedaemon_password.txt        
+        file: ../secrets/judgehosts/judgedaemon_password.txt 
 networks:
     default:
         external: true
