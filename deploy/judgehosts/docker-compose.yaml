@@ -5,11 +5,14 @@ services:
         volumes:
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
         environment:
-            - DAEMON_ID=0
-            - DOMSERVER_BASEURL=http://domserver/
-            - JUDGEDAEMON_PASSWORD=anothertestpass1!        
+            DAEMON_ID: 0
+            DOMSERVER_BASEURL: http://domserver/
+            JUDGEDAEMON_PASSWORD: /run/secrets/judgedaemon_password
+secrets:
+    judgedaemon_password:
+        file: ../secrets/judgehosts/judgedaemon_password.txt        
 networks:
     default:
         external: true
-        name: ds-jh-backend
+        name: domserver-jh-backend
     
