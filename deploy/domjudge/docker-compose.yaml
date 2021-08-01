@@ -4,13 +4,14 @@ services:
         image: domjudge/domserver:7.3.3
         environment:
             MYSQL_HOST: mariadb
-            MYSQL_DATABASE: /run/secrets/db_name
-            MYSQL_USER: /run/secrets/db_user
-            MYSQL_PASSWORD: /run/secrets/db_password
-            MYSQL_ROOT_PASSWORD: /run/secrets/db_root_password
+            MYSQL_DATABASE: ${DB_NAME}
+            MYSQL_USER: ${DB_USER}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
             VIRTUAL_HOST: domjudge.cs.fsu.edu
+            LETSENCRYPT_HOST: domjudge.cs.fsu.edu
         volumes:
-            - ../secrets/domjudge/initial_admin_password.txt:/opt/domjudge/domserver/etc/initial_admin_password.secret:ro 
+            - ./config/initial_admin_password.secret:/opt/domjudge/domserver/etc/initial_admin_password.secret:ro 
         networks:
             - frontend
             - domserver-jh-backend
@@ -19,23 +20,14 @@ services:
         image: mariadb:10.6-focal
         environment:
             CONTAINER_TIMEZONE: America/New_York
-            MARIADB_DATABASE: /run/secrets/db_name
-            MARIADB_USER: /run/secrets/db_user
-            MARIADB_PASSWORD: /run/secrets/db_password
-            MARIADB_ROOT_PASSWORD: /run/secrets/db_root_password
+            MARIADB_DATABASE: ${DB_NAME}
+            MARIADB_USER: ${DB_USER}
+            MARIADB_PASSWORD: ${DB_PASSWORD}
+            MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
         volumes:
             - domserver_db_data:/var/lib/mysql
         networks:
             - domserver-db-backend        
-secrets:
-    db_name:
-        file: ../secrets/domjudge/db_name.txt
-    db_user:
-        file: ../secrets/domjudge/db_user.txt
-    db_password:
-        file: ../secrets/domjudge/db_password.txt
-    db_root_password:
-        file: ../secrets/domjudge/db_root_password.txt
 volumes:
     domserver_db_data:
 networks:
