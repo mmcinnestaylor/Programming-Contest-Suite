@@ -3,14 +3,12 @@ FROM python:3.9-slim-buster
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-WORKDIR /
-
 RUN apt-get update \
-  # dependencies for building Python packages
+  # Dependencies for building Python packages
   && apt-get install -y build-essential \
   # Translations dependencies
   && apt-get install -y gettext \
-  # comment
+  # MariaDB dependency
   && apt-get install -y libmariadb-dev \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
@@ -24,8 +22,6 @@ RUN pip install -r requirements.txt
 COPY ./src app
 
 WORKDIR /app/
-
-# RUN mkdir static
 
 COPY ./deploy/contestsuite/scripts/django/start.sh start
 RUN sed -i 's/\r$//g' start
