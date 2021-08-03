@@ -3,7 +3,7 @@ services:
     domserver:
         image: domjudge/domserver:7.3.3
         env_file:
-            - ./env/domserver.env
+            - ./envs/domserver.env
         volumes:
             - ./config/initial_admin_password.secret:/opt/domjudge/domserver/etc/initial_admin_password.secret:ro 
         networks:
@@ -13,7 +13,7 @@ services:
     mariadb:
         image: mariadb:10.6-focal
         env_file:
-            - ./env/db.env
+            - ./envs/db.env
         volumes:
             - domserver_db_data:/var/lib/mysql
         networks:
