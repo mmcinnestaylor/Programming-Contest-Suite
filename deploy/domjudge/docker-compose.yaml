@@ -17,6 +17,7 @@ services:
         volumes:
             - domserver_db_data:/var/lib/mysql
         networks:
+            - frontend
             - domserver-db-backend
             - domserver-jh-backend        
 volumes:
