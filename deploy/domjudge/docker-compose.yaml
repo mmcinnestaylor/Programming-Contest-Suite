@@ -2,14 +2,8 @@ version: '3.8'
 services:
     domserver:
         image: domjudge/domserver:7.3.3
-        environment:
-            MYSQL_HOST: mariadb
-            MYSQL_DATABASE: ${DB_NAME}
-            MYSQL_USER: ${DB_USER}
-            MYSQL_PASSWORD: ${DB_PASSWORD}
-            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-            VIRTUAL_HOST: domjudge.cs.fsu.edu
-            LETSENCRYPT_HOST: domjudge.cs.fsu.edu
+        env_file:
+            - ./env/domserver.env
         volumes:
             - ./config/initial_admin_password.secret:/opt/domjudge/domserver/etc/initial_admin_password.secret:ro 
         networks:
@@ -18,12 +12,8 @@ services:
             - domserver-db-backend
     mariadb:
         image: mariadb:10.6-focal
-        environment:
-            CONTAINER_TIMEZONE: America/New_York
-            MARIADB_DATABASE: ${DB_NAME}
-            MARIADB_USER: ${DB_USER}
-            MARIADB_PASSWORD: ${DB_PASSWORD}
-            MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+        env_file:
+            - ./env/db.env
         volumes:
             - domserver_db_data:/var/lib/mysql
         networks:
