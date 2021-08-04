@@ -7,11 +7,12 @@ services:
             - 443:443
         volumes:
             - certs:/etc/nginx/certs
-            - vhost:/etc/nginx/vhost.d
             - html:/usr/share/nginx/html
+            - vhost:/etc/nginx/vhost.d
             - /var/run/docker.sock:/tmp/docker.sock:ro
             - ./config/nginx-proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
         networks:
+            - frontend
             - backend
         deploy:
             replicas: 2
@@ -26,11 +27,13 @@ services:
         env_file:
             - ./envs/acme.env
         volumes:
-            - /var/run/docker.sock:/var/run/docker.sock:ro
             - acme:/etc/acme.sh
             - certs:/etc/nginx/certs
-            - vhost:/etc/nginx/vhost.d
             - html:/usr/share/nginx/html
+            - vhost:/etc/nginx/vhost.d
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+        networks:
+            - acme-companion
         deploy:
             replicas: 2
             rollback_config:
@@ -45,6 +48,8 @@ volumes:
     html:
     vhost:
 networks:
+    frontend:
+        name: acme-companion
     backend:
         name: proxied-apps
         
