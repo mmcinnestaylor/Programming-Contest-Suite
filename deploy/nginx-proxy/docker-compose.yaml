@@ -21,10 +21,29 @@ services:
                 parallelism: 1
                 delay: 5s
                 failure_action: rollback
+    acme-companion:
+        image: nginxproxy/acme-companion:2.1
+        env_file:
+            - ./envs/acme.env
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - acme:/etc/acme.sh
+            - certs:/etc/nginx/certs
+            - vhost:/etc/nginx/vhost.d
+            - html:/usr/share/nginx/html
+        deploy:
+            replicas: 2
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
 volumes:
+    acme:
     certs:
-    vhost:
     html:
+    vhost:
 networks:
     backend:
         name: proxied-apps
