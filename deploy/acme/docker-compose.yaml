@@ -19,6 +19,9 @@ services:
                 failure_action: rollback
 volumes:
     acme:
+    certs:
+    html:
+    vhost:
 networks:
     default:
         external: true
