@@ -1,0 +1,115 @@
+version: '3.8'
+services:
+    judgehost_0:
+        image: domjudge/judgehost:7.3.3
+        env_file:
+            - ./envs/judgehost.env
+        environment:
+            DAEMON_ID: 0
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        networks:
+            - domserver-jh-backend
+        deploy:
+            replicas: 2
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+    judgehost_1:
+        image: domjudge/judgehost:7.3.3
+        env_file:
+            - ./envs/judgehost.env
+        environment:
+            DAEMON_ID: 1
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        networks:
+            - domserver-jh-backend
+        deploy:
+            replicas: 2
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+    judgehost_2:
+        image: domjudge/judgehost:7.3.3
+        env_file:
+            - ./envs/judgehost.env
+        environment:
+            DAEMON_ID: 2
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        networks:
+            - domserver-jh-backend
+        deploy:
+            replicas: 2
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+    judgehost_3:
+        image: domjudge/judgehost:7.3.3
+        env_file:
+            - ./envs/judgehost.env
+        environment:
+            DAEMON_ID: 3
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        networks:
+            - domserver-jh-backend
+        deploy:
+            replicas: 2
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+    judgehost_4:
+        image: domjudge/judgehost:7.3.3
+        env_file:
+            - ./envs/judgehost.env
+        environment:
+            DAEMON_ID: 4
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        networks:
+            - domserver-jh-backend
+        deploy:
+            replicas: 2
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+    judgehost_5:
+        image: domjudge/judgehost:7.3.3
+        env_file:
+            - ./envs/judgehost.env
+        environment:
+            DAEMON_ID: 5
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        networks:
+            - domserver-jh-backend
+        deploy:
+            replicas: 2
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+networks:
+    domserver-jh-backend:
+        external: true
+        name: domserver-jh-backend
+    
