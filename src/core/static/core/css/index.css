@@ -33,20 +33,17 @@ body {
   overflow: hidden;
 }
 
-#jumbo-welcome {
-  background: rgb(44,42,41);
-  background: linear-gradient(45deg, rgba(44,42,41,1) 0%, rgba(120,47,64,1) 35%, rgba(206,184,136,1) 100%); 
+#jumbo-announcements {
+  background: #0182ac;
+  height: 400px;
+}
+
+#jumbo-datetime {
+  background: #000000;
   height: 400px;
 }
 
 #jumbo-teams {
-  background: rgb(120,47,64);
-  background: linear-gradient(143deg, rgba(120,47,64,1) 1%, rgba(86,85,84,1) 60%, rgba(218,202,166,1) 100%);   
-  height: 400px;
-}
-
-#jumbo-announcements {
-  background: rgb(120,47,64);
-  background: radial-gradient(circle, rgba(120,47,64,1) 1%, rgba(86,85,84,1) 60%, rgba(218,202,166,1) 100%);  
+  background: #ffffff;
   height: 400px;
 }

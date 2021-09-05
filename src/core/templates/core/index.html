@@ -46,12 +46,23 @@
     </ol>
     <div class="carousel-inner rounded">
       <div class="carousel-item active" data-interval="10000">
-        <div class="jumbotron text-center" id="jumbo-welcome">
+        <div class="jumbotron text-center" id="jumbo-announcements">
+          <h1>Welcome to the ACM at FSU Programming Contest</h1>
+          <h1>Recent Announcements</h1>
+          <h3>Content</h3>
+        </div>
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Third slide label</h5>
+          <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+        </div>
+      </div>
+      <div class="carousel-item" data-interval="10000">
+        <div class="jumbotron text-center" id="jumbo-datetime">
           <h1>Welcome to the ACM at FSU Programming Contest</h1>
           {% if contest is None %}
-            <h3>Contest Date TBA</h3>
+          <h3>Contest Date TBA</h3>
           {% else %}
-            <h3>{{ contest.contest_date|date }} @ {{ contest.contest_date|time }}</h3>
+          <h3>{{ contest.contest_date|date }} @ {{ contest.contest_date|time }}</h3>
           {% endif %}
         </div>
         <div class="carousel-caption d-none d-md-block">
@@ -67,16 +78,6 @@
         <div class="carousel-caption d-none d-md-block">
           <h5>Second slide label</h5>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        </div>
-      </div>
-      <div class="carousel-item" data-interval="10000">
-        <div class="jumbotron text-center" id="jumbo-announcements">
-          <h1>Recent Announcements</h1>
-          <h3>Content</h3>
-        </div>
-        <div class="carousel-caption d-none d-md-block">
-          <h5>Third slide label</h5>
-          <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
         </div>
       </div>
     </div>
