@@ -1,0 +1,38 @@
+# pull official base image
+FROM python:3.9-slim-buster
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update \
+  # Dependencies for building Python packages
+  && apt-get install -y build-essential \
+  # Translations dependencies
+  && apt-get install -y gettext \
+  # MariaDB dependency
+  && apt-get install -y libmariadb-dev \
+  # cleaning up unused files
+  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  && rm -rf /var/lib/apt/lists/*
+
+# install dependencies
+RUN pip install --upgrade pip
+COPY ./requirements-dev.txt .
+RUN pip install -r requirements-dev.txt
+
+# copy project
+COPY ./src app
+
+COPY ./deploy/dev/scripts/django/entrypoint.sh entrypoint
+RUN sed -i 's/\r$//g' entrypoint
+RUN chmod +x entrypoint
+
+COPY ./deploy/dev/scripts/celery/worker/entrypoint.sh /app/entrypoint-celery
+RUN sed -i 's/\r$//g' /app/entrypoint-celery
+RUN chmod +x /app/entrypoint-celery
+
+# set work directory
+WORKDIR /app/
+
+ENTRYPOINT ["/entrypoint"]

@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+    django:
+        build:
+            context: ../..
+            dockerfile: Dockerfile-dev
+        image: contestsuite:dev 
+        # '/start' is the shell script used to run the service
+        #command: /app/start
+        ports:
+            - 8000:8000
+        environment:
+            - DEBUG=True
+            - SECRET_KEY=86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
+
+            - CACHE_LOCATION=redis://redis:6379/0
+            - CELERY_BACKEND=redis://redis:6379/1
+            - CELERY_BROKER=amqp://rabbitmq:5672
+
+            - SQL_HOST=mariadb
+            - SQL_PORT=3306
+            - SQL_DATABASE=contestsuite
+            - SQL_USER=dev
+            - SQL_PASSWORD=seminoles
+        volumes:
+            - ../../src:/app
+        networks:
+            - contestsuite-dev
+        depends_on:
+            - redis
+            - rabbitmq
+            - mariadb
+            - celery_worker
+    celery_worker:
+        image: contestsuite:dev
+        entrypoint: /app/entrypoint-celery
+        environment:
+            - DEBUG=True
+            - SECRET_KEY=86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
+
+            - CACHE_LOCATION=redis://redis:6379/0
+            - CELERY_BACKEND=redis://redis:6379/1
+            - CELERY_BROKER=amqp://rabbitmq:5672
+
+            - SQL_HOST=mariadb
+            - SQL_PORT=3306
+            - SQL_DATABASE=contestsuite
+            - SQL_USER=dev
+            - SQL_PASSWORD=seminoles
+        networks:
+            - contestsuite-dev
+        depends_on:
+            - redis
+            - rabbitmq
+            - mariadb
+    mariadb:
+        image: mariadb:10.5-focal
+        volumes:
+            - django_db_data:/var/lib/mysql
+        environment:
+            - MARIADB_ROOT_PASSWORD=rootpw
+            - MARIADB_DATABASE=contestsuite
+            - MARIADB_USER=dev
+            - MARIADB_PASSWORD=seminoles
+        networks:
+            - contestsuite-dev
+    redis:
+        image: redis:5-buster
+        networks:
+            - contestsuite-dev
+    rabbitmq:
+        image: rabbitmq:3
+        networks:
+            - contestsuite-dev       
+volumes:
+    django_db_data:
+networks:
+    contestsuite-dev:
+        name: contestsuite-dev
