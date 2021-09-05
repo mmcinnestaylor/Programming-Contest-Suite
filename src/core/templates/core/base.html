@@ -55,6 +55,7 @@
                 </a>
                 <div class="dropdown-menu">
                   <a class="dropdown-item" href="https://domjudge.cs.fsu.edu">Contest Server</a>
+                  <a class="dropdown-item" href="#">Practice Questions</a>
                   <a class="dropdown-item" href="https://fsu.instructure.com/courses/162691">Programming Club</a>
                 </div>
               </li>
@@ -80,7 +81,7 @@
                   <a class="nav-link" href="{% url 'login' %}">Login</a>
                 </li>
                 <li class="nav-item active">
-                  <a class="nav-link" href="{% url 'register_base' %}">Register</a>
+                  <a class="nav-link text-warning" href="{% url 'register_base' %}">Register</a>
                 </li>
               {% endif %}
             </ul>
