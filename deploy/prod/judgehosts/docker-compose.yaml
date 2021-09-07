@@ -12,7 +12,7 @@ services:
             LAUNCH_SERVICE_NAME: "jh-0"
             LAUNCH_CONTAINER_NAME: "jh-0"
             LAUNCH_EXT_NETWORKS: "domserver-jh-backend"
-            LAUNCH_HOSTNAME: "jh-0"
+            LAUNCH_HOSTNAME: "jh"
         networks:
             - domserver-jh-backend
         volumes:
@@ -36,7 +36,7 @@ services:
             LAUNCH_SERVICE_NAME: "jh-1"
             LAUNCH_CONTAINER_NAME: "jh-1"
             LAUNCH_EXT_NETWORKS: "domserver-jh-backend"
-            LAUNCH_HOSTNAME: "jh-1"
+            LAUNCH_HOSTNAME: "jh"
         networks:
             - domserver-jh-backend
         volumes:
@@ -60,7 +60,7 @@ services:
             LAUNCH_SERVICE_NAME: "jh-2"
             LAUNCH_CONTAINER_NAME: "jh-2"
             LAUNCH_EXT_NETWORKS: "domserver-jh-backend"
-            LAUNCH_HOSTNAME: "jh-2"
+            LAUNCH_HOSTNAME: "jh"
         networks:
             - domserver-jh-backend
         volumes:
@@ -84,7 +84,7 @@ services:
             LAUNCH_SERVICE_NAME: "jh-3"
             LAUNCH_CONTAINER_NAME: "jh-3"
             LAUNCH_EXT_NETWORKS: "domserver-jh-backend"
-            LAUNCH_HOSTNAME: "jh-3"
+            LAUNCH_HOSTNAME: "jh"
         networks:
             - domserver-jh-backend
         volumes:
