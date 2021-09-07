@@ -28,6 +28,7 @@ networks:
         name: proxied-apps
     domserver-jh-backend:
         name: domserver-jh-backend
+        attachable: true
     domserver-db-backend:
         name: domserver-db-backend
     
