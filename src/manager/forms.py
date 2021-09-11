@@ -28,7 +28,7 @@ class ProfileForm(forms.ModelForm):
         }
         help_texts = {
             'fsu_id': 'Excluding @my.fsu.edu ex: ab12c@my.fsu.edu -> ab12c',
-            'fsu_num': 'Last 8 numbers. Exclude spaces.',
+            'fsu_num': 'Last 8 numbers on FSUCard. Exclude spaces.',
         }
         error_messages = {
             'fsu_id': {
