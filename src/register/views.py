@@ -124,7 +124,7 @@ def team(request):
         if form.is_valid():
             # Create a temporary object, add additional attribute data, then save to DB
             newTeam = form.save(commit=False)
-            newTeam.pin = User.objects.make_random_password(length=4)
+            newTeam.pin = User.objects.make_random_password(length=6)
             memberName = request.user.get_full_name()
             newTeam.members.append(memberName)
             newTeam.num_members += 1

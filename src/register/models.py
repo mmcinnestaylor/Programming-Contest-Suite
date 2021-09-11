@@ -21,7 +21,7 @@ class Team(models.Model):
     
     name = models.CharField(max_length=30, unique=True)
     division = models.PositiveSmallIntegerField(choices=DIVISION)
-    pin = models.CharField(max_length=4, unique=True)
+    pin = models.CharField(max_length=6, unique=True)
     contest_id = models.CharField(max_length=7, unique=True, blank=True, null=True)
     contest_password = models.CharField(max_length=6, unique=True, blank=True, null=True)
     questions_answered = models.PositiveSmallIntegerField(default=0)
