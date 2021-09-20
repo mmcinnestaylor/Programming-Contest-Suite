@@ -17,9 +17,15 @@ services:
         volumes:
             - domserver_db_data:/var/lib/mysql
         networks:
-            - frontend
             - domserver-db-backend
-            - domserver-jh-backend        
+        deploy:
+            replicas: 2
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback        
 volumes:
     domserver_db_data:
 networks:
