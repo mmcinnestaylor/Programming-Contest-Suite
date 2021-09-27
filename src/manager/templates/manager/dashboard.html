@@ -8,31 +8,7 @@
 		<h1>My Account</h1>
 	</div>
 	<!-- Messages -->
-	{% if messages %}
-		{% for message in messages %}
-			{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-				<div class="alert alert-danger alert-dismissible fade show mt-3">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
-				</div>
-			{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
-				<div class="alert alert-warning alert-dismissible fade show mt-3">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
-				</div>
-			{% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-				<div class="alert alert-success alert-dismissible fade show mt-3">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
-				</div>
-			{% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
-				<div class="alert alert-info alert-dismissible fade show mt-3">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
-				</div>
-			{% endif %}
-		{% endfor %}
-	{% endif %}
+	{% include 'core/messages.html' %}
 	<!-- End Messages -->
 	<!-- Announcements Display -->
 	<div class="row justify-content-center">
