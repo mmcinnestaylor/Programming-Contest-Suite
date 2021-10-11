@@ -107,16 +107,20 @@
     
             <div class="py-0">
               <h3 class="my-4 text-white"><a class="mx-2 font-italic text-primary" href="https://fsu.acm.org" target="_blank">ACM at FSU</a></h3>
-    
-              <p class="footer-links font-weight-bold">
-                <a class="text-white" href="https://icpc.global/" target="_blank">International Collegiate Programming Contest</a>
+              <p class="footer-links">
+                <a class="text-white" href="https://icpc.global/" target="_blank">International Programming Contest</a>
               </p>
-              <p class="text-light py-4 mb-4">&copy;2020 FSU ACM Student Chapter</p>
+              <div class="pt-2">
+                <a href="https://www.facebook.com/ACMatFSU/" target="_blank"><i class="fab fa-facebook fa-lg text-white mr-3"></i></a>
+                <a href="https://discord.gg/4z3hNMA" target="_blank"><i class="fab fa-discord fa-lg text-white mx-3"></i></a>
+                <a href="https://github.com/FSU-ACM" target="_blank"><i class="fab fa-github fa-lg text-white mx-3"></i></a>
+                <a href="{% url 'announcements_feed' %}"><i class="fa fa-rss fa-lg text-white mx-3"></i></a>
+              </div>              
             </div>
           </div>
     
           <div class="col-md-4 text-white text-center text-md-left ">
-            <div class="py-2 my-4">
+            <div class="pt-2 mt-4">
               <div>
                 <p class="text-white"> <i class="fa fa-map-marker mx-2 "></i>
                   James J. Love Building,
@@ -135,14 +139,9 @@
           </div>
     
           <div class="col-md-4 text-white my-4 text-center text-md-left ">
-            <span class=" font-weight-bold ">About the Contest</span>
+            <span class=" font-weight-bold">About the Contest</span>
             <p class="text-warning my-2">The ACM Programming Contest is a coding competition that emphasizes problem solving executed in code.</p>
-            <div class="py-2">
-              <a href="https://www.facebook.com/ACMatFSU/" target="_blank"><i class="fab fa-facebook fa-2x text-white mx-3"></i></a>
-              <a href="https://discord.gg/4z3hNMA" target="_blank"><i class="fab fa-discord fa-2x text-white mx-3"></i></a>
-              <a href="https://github.com/FSU-ACM" target="_blank"><i class="fab fa-github fa-2x text-white mx-3"></i></a>
-              <a href="{% url 'announcements_feed' %}"><i class="fa fa-rss fa-2x text-white mx-3"></i></a>
-            </div>
+            <p class="text-light">&copy;2020 FSU ACM Student Chapter</p>
           </div>
         </div>
       </div>
