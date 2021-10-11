@@ -35,12 +35,12 @@
 				<tbody class="bg-light">
 					{% for team in upper_teams %}
 					<tr>
-						<td>{{ team.name }}</td>
+						<td class="text-center">{{ team.name }}</td>
 						<td class="text-center">{{ team.questions_answered }}</td>
-						<td>
+						<td class="text-center">
 							<small>
-								{% for member in team.members %}
-									{{ member }}&emsp;&emsp;
+								{% for member in team.get_members %}
+									&emsp;{{ member }}&emsp;
 								{% endfor %}
 							</small>
 						</td>
@@ -78,11 +78,11 @@
 				<tbody class="bg-light">
 					{% for team in lower_teams %}
 					<tr>
-						<td>{{ team.name }}</td>
-						<td>{{ team.questions_answered }}</td>
-						<td>
+						<td class="text-center">{{ team.name }}</td>
+						<td class="text-center">{{ team.questions_answered }}</td>
+						<td class="text-center">
 							<small>
-								{% for member in team.members %}
+								{% for member in team.get_members %}
 									{{ member }}&emsp;&emsp;
 								{% endfor %}
 							</small>
@@ -93,5 +93,5 @@
 			</table>
 		</div>
 	</div>
-	{% endcache %}
+{% endcache %}
 {% endblock %}
