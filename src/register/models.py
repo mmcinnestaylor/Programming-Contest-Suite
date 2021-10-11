@@ -1,5 +1,6 @@
 from django.db import models
-from django_mysql.models import ListTextField
+from django.contrib.auth.models import User
+
 
 # Create your models here.	
 
@@ -11,7 +12,6 @@ class Team(models.Model):
     - pin used to allow nonmembers to join team
     - contest_id used by domjudge as team login username
     - contest_password used by domjudge as team login password
-    - members simple string list to avoid extra DB queries
     - num_members used to avoid extra DB queries
     """
     DIVISION = (
@@ -25,9 +25,16 @@ class Team(models.Model):
     contest_id = models.CharField(max_length=7, unique=True, blank=True, null=True)
     contest_password = models.CharField(max_length=6, unique=True, blank=True, null=True)
     questions_answered = models.PositiveSmallIntegerField(default=0)
-    members = ListTextField(base_field=models.CharField(max_length=181), size=3, max_length=(181 * 3), default=[])
     num_members = models.PositiveSmallIntegerField(default=0)
 
     def __str__(self):
         return (str(self.name) + ' : ' + str(self.division))
-    
+
+    def get_members(self):
+        members = User.objects.filter(profile__team=self)
+
+        member_names = []
+        for member in members:
+            member_names.append(member.first_name+' '+member.last_name)
+
+        return member_names
