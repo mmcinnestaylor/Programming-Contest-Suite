@@ -69,7 +69,6 @@ INSTALLED_APPS = [
     'manager.apps.ManagerConfig',
     'register.apps.RegisterConfig',
     # 3rd party packages
-    'django_mysql',
     'import_export',
 ]
 
