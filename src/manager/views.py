@@ -19,10 +19,7 @@ def dashboard(request):
     context = {}
     context['courses'] = request.user.profile.courses.all()
     context['team_members'] = User.objects.filter(profile__team=request.user.profile.team)
-    try:
-        context['announcements'] = (Announcement.objects.filter(status=1))[:3]
-    except:
-        context['announcements'] = []
+    context['announcements'] = (Announcement.objects.filter(status=1))[:1]
 
     # Generate account some useful account notifications
     if not request.user.profile.has_team():
