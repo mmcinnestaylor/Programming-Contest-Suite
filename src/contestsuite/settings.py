@@ -246,5 +246,4 @@ else:
     EMAIL_HOST_PASSWORD = os.environ.get('MAIL_PASSWORD', None)
     EMAIL_USE_SSL = True
 
-DEFAULT_FROM_EMAIL = 'acm@cs.fsu.edu'  
-
+DEFAULT_FROM_EMAIL = '<ACM Programming Contest>acm@cs.fsu.edu'  
