@@ -3,6 +3,8 @@ version: '3.8'
 services:
     nginx:
         image: nginx:1.21-alpine
+        env_file:
+            - ./envs/django.env
         environment:
             VIRTUAL_HOST: contest.cs.fsu.edu
         volumes:
@@ -17,19 +19,12 @@ services:
         command: /app/start
         environment:
             - DEBUG=False
-            - SECRET_KEY=86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
             - ALLOWED_HOSTS=contest.cs.fsu.edu,0.0.0.0
 
             - CACHE_TIMEOUT=300
             - CACHE_LOCATION=redis://redis:6379/0
             - CELERY_BACKEND=redis://redis:6379/1
             - CELERY_BROKER=amqp://rabbitmq:5672
-
-            - MAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
-            - MAIL_HOST=smtpsubdomain.example.com
-            - MAIL_PORT=465
-            - MAIL_USER=user@example.com
-            - MAIL_PASSWORD=examplepass
 
             - SQL_HOST=mariadb
             - SQL_PORT=3306
@@ -68,19 +63,12 @@ services:
         command: /app/start-celeryworker
         environment:
             - DEBUG=False
-            - SECRET_KEY=86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
             - ALLOWED_HOSTS=contest.cs.fsu.edu,0.0.0.0
 
             - CACHE_TIMEOUT=300
             - CACHE_LOCATION=redis://redis:6379/0
             - CELERY_BACKEND=redis://redis:6379/1
             - CELERY_BROKER=amqp://rabbitmq:5672
-
-            - MAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
-            - MAIL_HOST=smtpsubdomain.example.com
-            - MAIL_PORT=465
-            - MAIL_USER=user@example.com
-            - MAIL_PASSWORD=examplepass
 
             - SQL_HOST=mariadb
             - SQL_PORT=3306
