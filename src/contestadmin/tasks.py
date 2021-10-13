@@ -13,7 +13,7 @@ from celery.utils.log import get_task_logger
 
 from contestsuite.settings import MEDIA_ROOT, DEFAULT_FROM_EMAIL
 from contestadmin.models import Contest
-from manager.models import Course, Faculty
+from manager.models import Course, Faculty, Profile
 from register.models import Team
 
 
@@ -119,7 +119,25 @@ def generate_contest_files():
 
     logger.info('Successfully generated contest files')
 
-@ shared_task
+
+@shared_task
+@transaction.atomic
+def check_in_out_users(action):
+    if action == 1:
+        contestants = Profile.objects.all()
+
+        for contestant in contestants:
+            contestant.checked_in = True
+            contestant.save()
+    else:
+        contestants = Profile.objects.all()
+
+        for contestant in contestants:
+            contestant.checked_in = False
+            contestant.save()
+
+
+@shared_task
 def generate_ec_reports():
     num_courses = 0
     faculty_members = Faculty.objects.all()

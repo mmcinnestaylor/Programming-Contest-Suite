@@ -4,6 +4,16 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from contestadmin.models import Contest
 
+
+class CheckinUsersForm(forms.Form):
+    ACTION = (
+        (1, 'Checkin'),
+        (2, 'Checkout')
+    )
+
+    action = forms.ChoiceField(choices=ACTION)
+
+
 class GenerateWalkinForm(forms.Form):
     DIVISION = (
         (1, 'Upper Division'),
