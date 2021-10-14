@@ -244,6 +244,7 @@ else:
     EMAIL_PORT = int(os.environ.get('MAIL_PORT', 465))
     EMAIL_HOST_USER = os.environ.get('MAIL_USER', None)
     EMAIL_HOST_PASSWORD = os.environ.get('MAIL_PASSWORD', None)
-    EMAIL_USE_SSL = True
+    EMAIL_USE_SSL = False
+    EMAIL_USE_TLS = True
 
 DEFAULT_FROM_EMAIL = '<ACM Programming Contest>acm@cs.fsu.edu'  
