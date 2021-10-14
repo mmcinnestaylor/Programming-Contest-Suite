@@ -25,6 +25,12 @@ services:
             - CELERY_BACKEND=redis://redis:6379/1
             - CELERY_BROKER=amqp://rabbitmq:5672
 
+            - MAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+            - MAIL_HOST=smtpsubdomain.example.com
+            - MAIL_PORT=465
+            - MAIL_USER=user@example.com
+            - MAIL_PASSWORD=examplepass
+
             - SQL_HOST=mariadb
             - SQL_PORT=3306
             - SQL_DATABASE=contestsuite-dev
