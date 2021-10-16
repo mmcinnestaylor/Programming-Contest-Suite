@@ -10,9 +10,17 @@ services:
             - django_static_data:/usr/share/nginx/html/static:ro
         networks:
             - frontend
-            - nginx-backend            
+            - nginx-backend
+        deploy:
+            replicas: 4
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback            
     django:
-        image: acmfsu/contestsuite:beta
+        image: acmfsu/contestsuite:beta2
         # '/start' is the shell script used to run the service
         command: /app/start
         environment:
@@ -44,8 +52,16 @@ services:
             - mariadb-backend
             - redis-backend
             - rabbitmq-backend
+        deploy:
+            replicas: 2
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
     mariadb:
-        image: mariadb:10.5.10
+        image: mariadb:10.6-focal
         volumes:
             - django_db_data:/var/lib/mysql
         environment:
@@ -55,16 +71,38 @@ services:
             - MARIADB_PASSWORD=seminoles
         networks:
             - mariadb-backend
+        deploy:
+            replicas: 2
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
     redis:
         image: redis:5-buster
         networks:
             - redis-backend
+        deploy:
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
     rabbitmq:
         image: rabbitmq:3
         networks:
             - rabbitmq-backend
+        deploy:
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
     celery_worker:
-        image: acmfsu/contestsuite:beta
+        image: acmfsu/contestsuite:beta2
         command: /app/start-celeryworker
         environment:
             - DEBUG=False
@@ -91,6 +129,14 @@ services:
             - mariadb-backend
             - redis-backend
             - rabbitmq-backend
+        deploy:
+            replicas: 2
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
 volumes:
     django_app_data:
     django_db_data:
