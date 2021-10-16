@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 Django = ">=3"
-mysqlclient = "==1.4.*"
+mysqlclient = "*"
 django-redis = "*"
 django-import-export = "*"
 celery = "*"
