@@ -56,6 +56,7 @@
                 <div class="dropdown-menu">
                   <a class="dropdown-item" href="https://domjudge.cs.fsu.edu" target="_blank">Contest Server</a>
                   <a class="dropdown-item" href="https://fsu.instructure.com/courses/162691" target="_blank">Programming Club</a>
+                  <a class="dropdown-item" href="https://drive.google.com/drive/folders/1pjZk22HGTOjvedz932kHox6-rTz5JqoE?usp=sharing" target="_blank">Example Questions</a>
                 </div>
               </li>
               <li class="nav-item">
@@ -67,11 +68,13 @@
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown">{{ user.first_name }}</a>
                   <div class="dropdown-menu dropdown-menu-right">
-                    {% if user.is_staff %}
-                      <a class="dropdown-item" href="{% url 'checkin' %}">Checkin</a>
+                    {% if user.is_superuser %}
                       <a class="dropdown-item" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
                     {% endif %}
                     <a class="dropdown-item" href="{% url 'manage_dashboard' %}">Profile Dashboard</a>
+                    {% if user.is_staff %}
+                    <a class="dropdown-item" href="{% url 'checkin' %}">Checkin</a>
+                    {% endif %}
                     <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                   </div>
                 </li>
