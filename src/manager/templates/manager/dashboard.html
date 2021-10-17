@@ -129,8 +129,8 @@
 							<li class="list-group-item"><span class="font-weight-bolder">Admin:</span> No</li>
 						{% endif %}
 						{% if user.profile.checked_in %}
-							<li class="list-group-item"><span class="font-weight-bolder">Username:</span> {{ user.profile.team.contest_id }}</li>
-							<li class="list-group-item"><span class="font-weight-bolder">Password:</span> {{ user.profile.team.contest_password }}</li>
+							<li class="list-group-item"><span class="font-weight-bolder">DOMjudge username:</span> {{ user.profile.team.contest_id }}</li>
+							<li class="list-group-item"><span class="font-weight-bolder">DOMjudge password:</span> {{ user.profile.team.contest_password }}</li>
 						{% endif %}
 					</ul>
 				{% else %}
