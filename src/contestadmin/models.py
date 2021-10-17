@@ -20,4 +20,4 @@ class Contest(models.Model):
     ec_processed = models.BooleanField(default=False)
         
     def __str__(self):
-        return ("Programming Contest"+str(self.contest_date))
+        return ("Programming Contest "+str(self.contest_date))
