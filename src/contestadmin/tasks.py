@@ -40,7 +40,7 @@ def create_walkin_teams(division, total):
         else:
             name = 'Walk-in-L-' + str(lower_count+i+1).zfill(3)'''
         name = base_name + str(existing_count+i+1).zfill(3)
-        pin = User.objects.make_random_password(length=4)
+        pin = User.objects.make_random_password(length=6)
         Team.objects.create(name=name, division=division, pin=pin)
         logger.info('Created walk-in team %d' % (i+1))
 
@@ -74,13 +74,6 @@ def generate_contest_files():
             group_file = MEDIA_ROOT + '/contest_files/groups_lower.tsv'
             team_file = MEDIA_ROOT + '/contest_files/teams_lower.tsv'
 
-        '''with open(group_file, 'w', newline='') as group_tsv:
-            group_writer = csv.writer(group_tsv, delimiter='\t',
-                                quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(['File_Version', '1'])
-            for division in Team.DIVISION:
-                writer.writerow([division[0], division[1]])'''
-
         with open(account_file, 'w', newline='') as account_tsv:
             with open(group_file, 'w', newline='') as group_tsv:
                 with open(team_file, 'w', newline='') as team_tsv:
@@ -93,7 +86,9 @@ def generate_contest_files():
 
                     account_writer.writerow(['accounts', '1'])
                     group_writer.writerow(['File_Version', '1'])
-                    group_writer.writerow([division[0], division[1]])
+                    # Upper Division Group -> 10
+                    # Lower Division Group -> 11
+                    group_writer.writerow([division[0]+9, division[1]])
                     team_writer.writerow(['File_Version', '2'])                    
 
                     teams = Team.objects.filter(division=division[0])
@@ -123,18 +118,29 @@ def generate_contest_files():
 @shared_task
 @transaction.atomic
 def check_in_out_users(action):
+    # Check-in
     if action == 1:
-        contestants = Profile.objects.all()
+        users = User.objects.all()
 
-        for contestant in contestants:
-            contestant.checked_in = True
-            contestant.save()
+        for user in users:
+            if user.profile.team is None:
+                continue
+            user.profile.checked_in = True
+            user.save()
+
+            subject = 'Your DOMJudge Credentials'
+            message = render_to_string(
+                'checkin/team_credentials_email.html', {'user': user})
+            user.email_user(subject, message)
+
+            logger.info('Sent credentials to %s' % user.username)
+    # Check-out
     else:
-        contestants = Profile.objects.all()
+        users = User.objects.all()
 
-        for contestant in contestants:
-            contestant.checked_in = False
-            contestant.save()
+        for user in users:
+            user.profile.checked_in = False
+            user.save()
 
 
 @shared_task
@@ -152,32 +158,36 @@ def generate_ec_reports():
             if students.exists():
                 num_courses += 1
                 num_files += 1
-                filename = 'media/ec_files/'+(faculty.email.split('@'))[0]+'_'+course.code+'.csv'
+                filename = MEDIA_ROOT+'/ec_files/'+(faculty.email.split('@'))[0]+'_'+course.code+'.csv'
 
                 with open(filename, 'w', newline='') as csvfile:
                     writer = csv.writer(csvfile, quoting=csv.QUOTE_MINIMAL)
                     writer.writerow(
-                        ['fsu_id', 'last_name', 'first_name', 'questions_answered'])
+                        ['fsu_id', 'last_name', 'first_name', 'questions_answered', 'role'])
                     for student in students:
-                        writer.writerow([student.profile.fsu_id, student.last_name,
-                                        student.first_name, student.profile.team.questions_answered])
+                        if student.profile.role == 1:
+                            role = 'Contestant'
+                        elif student.profile.role == 2:
+                            role = 'Proctor'
+                        elif student.profile.role == 3:
+                            role = 'Question Writer'
+                        else:
+                            role = 'Organizer'
+
+                        if student.profile.team is None:
+                            questions_answered = 0
+                        else:
+                            questions_answered = student.profile.team.questions_answered
+
+                        writer.writerow([
+                            student.profile.fsu_id,
+                            student.last_name,
+                            student.first_name,
+                            questions_answered,
+                            role
+                        ])
             else:
                 continue
-
-        '''if num_files > 0:
-            message = render_to_string('contestadmin/ec_available_email.html', {
-                'faculty': faculty,
-                'domain': domain,
-                'uid': urlsafe_base64_encode(force_bytes(((faculty.email).split('@'))[0])),
-            })
-            
-            send_mail(
-                'Programming Contest EC files',
-                message,
-                DEFAULT_FROM_EMAIL,
-                [faculty.email],
-                fail_silently = False,
-            )'''
     
     logger.info(
         'Processed extra credit files for %d courses' % num_courses)
@@ -216,17 +226,28 @@ def process_contest_results():
     num_teams = 0
     contest = Contest.objects.all().first()
 
-    with open(contest.results.path) as fd:
-        rd= csv.reader(fd, delimiter="\t", quotechar='"')
-        for row in rd:
-            if 'acm-' in row[0]:
-                team= Team.objects.get(contest_id=row[0])
-                team.questions_answered= row[3]
-                team.save()
-                num_teams += 1
+    with open(contest.results.path) as resultsfile:
+        results = csv.reader(resultsfile, delimiter="\t", quotechar='"')
+        for row in results:
+            #if 'acm-' in row[0]:
+            # Exclude header of file
+            if 'results' not in row[0]:
+                if int(row[0]) < 10:
+                    id='acm-00'+row[0]
+                elif int(row[0]) < 100:
+                    id='acm-0'+row[0]
+                else:
+                    id='acm-'+row[0]
+
+                try:
+                    #team= Team.objects.get(contest_id=row[0])
+                    team = Team.objects.get(contest_id=id)
+                    team.questions_answered= row[3]
+                    team.save()
+                    num_teams += 1
+                except:
+                    logger.info('Could not process contest results for %s teams' % id)
             else:
                 pass
 
     logger.info('Processed contest results for %d teams' % num_teams)
-
-
