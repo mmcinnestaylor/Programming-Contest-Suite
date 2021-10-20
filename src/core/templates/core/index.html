@@ -20,7 +20,7 @@
 
   <div class="row justify-content-center">
     <div class="col">
-      <div class="jumbotron mt-4" id="jumbo-announcements">
+      <div class="jumbotron shadow mt-4" id="jumbo-announcements">
         <h1 class="mt-0">Recent Announcement</h1>
         <hr class="my-4">
         {% for announcement in announcements %}
@@ -47,9 +47,9 @@
     </div>
   </div>
 
-  <div class="row justify-content-center">
-    <p class="lead">An <a href="https://icpc.global" target="_blank">ICPC</a> style contest hosted semesterly by the Association for Computing Machinery Florida State University Student Chapter.</p>
-  </div>
+ 
+    <p class="lead text-center mb-1">An <a href="https://icpc.global" target="_blank">ICPC</a> style contest hosted semesterly by the Association for Computing Machinery Florida State University Student Chapter.</p>
+  
   <hr>
   <div class="row justify-content-center">
     <div class="col-10">
@@ -64,9 +64,9 @@
       </p>
     </div>
   </div>
-  <hr>
-  <div class="row justify-content-center">
-    <div class="col-md-4 text-center">
+  
+  <div class="row justify-content-center mt-3">
+    <div class="col-md-5 text-center mb-3">
       <h3>Contest Details</h3>
       {% if contest is not None %}
         <p class="mb-1"><span class="font-weight-bold">Date: </span>{{ contest.contest_date }}</p>
@@ -79,7 +79,7 @@
         <p>Contest schedule not yet set.</p>
       {% endif %}
     </div>
-    <div class="col-md-4 text-center">
+    <div class="col-md-5 text-center">
       <h3>Extra Credit Courses</h3>
       {% if courses|length == 0 %}
         <p>No courses have been confirmed at this time.</p>
