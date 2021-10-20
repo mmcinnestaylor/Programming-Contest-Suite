@@ -130,7 +130,6 @@ services:
             - redis-backend
             - rabbitmq-backend
         deploy:
-            replicas: 2
             rollback_config:
                 parallelism: 0
             update_config:
