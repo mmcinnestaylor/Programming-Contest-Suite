@@ -10,11 +10,11 @@ services:
             - vhost:/etc/nginx/vhost.d
             - /var/run/docker.sock:/tmp/docker.sock:ro
             - ./certs:/etc/nginx/certs:ro
-            - ./config/nginx-proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+            # - ./config/nginx-proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
         networks:
             - backend
         deploy:
-            replicas: 2
+            replicas: 3
             rollback_config:
                 parallelism: 0
             update_config:
