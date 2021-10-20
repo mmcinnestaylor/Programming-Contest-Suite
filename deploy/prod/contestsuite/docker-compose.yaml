@@ -12,7 +12,7 @@ services:
             - frontend
             - nginx-backend
         deploy:
-            replicas: 4
+            replicas: 2
             rollback_config:
                 parallelism: 0
             update_config:
@@ -20,7 +20,7 @@ services:
                 delay: 5s
                 failure_action: rollback            
     django:
-        image: acmfsu/contestsuite:beta2
+        image: acmfsu/contestsuite:1.0.0
         # '/start' is the shell script used to run the service
         command: /app/start
         environment:
@@ -41,8 +41,8 @@ services:
 
             - SQL_HOST=mariadb
             - SQL_PORT=3306
-            - SQL_DATABASE=contestsuite-dev
-            - SQL_USER=dev
+            - SQL_DATABASE=contestsuite
+            - SQL_USER=contestadmin
             - SQL_PASSWORD=seminoles
         volumes:
             - django_app_data:/app/media
@@ -53,7 +53,6 @@ services:
             - redis-backend
             - rabbitmq-backend
         deploy:
-            replicas: 2
             rollback_config:
                 parallelism: 0
             update_config:
@@ -66,13 +65,12 @@ services:
             - django_db_data:/var/lib/mysql
         environment:
             - MARIADB_ROOT_PASSWORD=rootpw
-            - MARIADB_DATABASE=contestsuite-dev
-            - MARIADB_USER=dev
+            - MARIADB_DATABASE=contestsuite
+            - MARIADB_USER=contestadmin
             - MARIADB_PASSWORD=seminoles
         networks:
             - mariadb-backend
         deploy:
-            replicas: 2
             rollback_config:
                 parallelism: 0
             update_config:
@@ -102,7 +100,7 @@ services:
                 delay: 5s
                 failure_action: rollback
     celery_worker:
-        image: acmfsu/contestsuite:beta2
+        image: acmfsu/contestsuite:1.0.0
         command: /app/start-celeryworker
         environment:
             - DEBUG=False
@@ -122,9 +120,11 @@ services:
 
             - SQL_HOST=mariadb
             - SQL_PORT=3306
-            - SQL_DATABASE=contestsuite-dev
-            - SQL_USER=dev
+            - SQL_DATABASE=contestsuite
+            - SQL_USER=contestadmin
             - SQL_PASSWORD=seminoles
+        volumes:
+            - django_app_data:/app/media
         networks:
             - mariadb-backend
             - redis-backend
