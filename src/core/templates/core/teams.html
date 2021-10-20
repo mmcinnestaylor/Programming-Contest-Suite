@@ -39,9 +39,15 @@
 						<td class="text-center">{{ team.questions_answered }}</td>
 						<td class="text-center">
 							<small>
-								{% for member in team.get_members %}
-									&emsp;{{ member }}&emsp;
-								{% endfor %}
+								{% with team.get_members|last as last %}							
+									{% for member in team.get_members %}
+										{% if member == last %}
+											{{ member }}
+										{% else %}
+											{{ member }}, 
+										{% endif %}
+									{% endfor %}
+								{% endwith %}
 							</small>
 						</td>
 					</tr>
