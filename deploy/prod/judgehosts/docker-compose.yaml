@@ -1,106 +1,19 @@
 version: '3.8'
 services:
-    judgehost_0:
-        image: "lalber/swarm-launcher"
+    judgehost:
+        image: 'acmfsu/judgehost:7.3.3'
+        privileged: true
         environment:
-            LAUNCH_IMAGE: "domjudge/judgehost:7.3.3"
-            LAUNCH_PRIVILEGED: "true"
-            LAUNCH_PULL: "true"
-            LAUNCH_ENVIRONMENTS: "DAEMON_ID=0 DOMSERVER_BASEURL=http://domserver/ JUDGEDAEMON_USERNAME=judgehost JUDGEDAEMON_PASSWORD=jdpw CONTAINER_TIMEZONE=America/New_York"
-            LAUNCH_VOLUMES: "/sys/fs/cgroup:/sys/fs/cgroup:ro"
-            LAUNCH_PROJECT_NAME: "jh-0"
-            LAUNCH_SERVICE_NAME: "jh-0"
-            LAUNCH_CONTAINER_NAME: "jh-0"
-            LAUNCH_EXT_NETWORKS: "domserver-jh-backend"
-            LAUNCH_HOSTNAME: "jh"
+            - CONTAINER_TIMEZONE=America/New_York
+            - JUDGEDAEMON_USERNAME=judgehost
+            - JUDGEDAEMON_PASSWORD=jdpw
+            - DOMSERVER_BASEURL=http://domserver/
+            - DOMJUDGE_CREATE_WRITABLE_TEMP_DIR=1
+        volumes:  
+            - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
         networks:
             - domserver-jh-backend
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-        deploy:
-            rollback_config:
-                parallelism: 0
-            update_config:
-                parallelism: 1
-                delay: 5s
-                failure_action: rollback
-    judgehost_1:
-        image: "lalber/swarm-launcher"
-        environment:
-            LAUNCH_IMAGE: "domjudge/judgehost:7.3.3"
-            LAUNCH_PRIVILEGED: "true"
-            LAUNCH_PULL: "true"
-            LAUNCH_ENVIRONMENTS: "DAEMON_ID=1 DOMSERVER_BASEURL=http://domserver/ JUDGEDAEMON_USERNAME=judgehost JUDGEDAEMON_PASSWORD=jdpw CONTAINER_TIMEZONE=America/New_York"
-            LAUNCH_VOLUMES: "/sys/fs/cgroup:/sys/fs/cgroup:ro"
-            LAUNCH_PROJECT_NAME: "jh-1"
-            LAUNCH_SERVICE_NAME: "jh-1"
-            LAUNCH_CONTAINER_NAME: "jh-1"
-            LAUNCH_EXT_NETWORKS: "domserver-jh-backend"
-            LAUNCH_HOSTNAME: "jh"
-        networks:
-            - domserver-jh-backend
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-        deploy:
-            rollback_config:
-                parallelism: 0
-            update_config:
-                parallelism: 1
-                delay: 5s
-                failure_action: rollback
-    judgehost_2:
-        image: "lalber/swarm-launcher"
-        environment:
-            LAUNCH_IMAGE: "domjudge/judgehost:7.3.3"
-            LAUNCH_PRIVILEGED: "true"
-            LAUNCH_PULL: "true"
-            LAUNCH_ENVIRONMENTS: "DAEMON_ID=2 DOMSERVER_BASEURL=http://domserver/ JUDGEDAEMON_USERNAME=judgehost JUDGEDAEMON_PASSWORD=jdpw CONTAINER_TIMEZONE=America/New_York"
-            LAUNCH_VOLUMES: "/sys/fs/cgroup:/sys/fs/cgroup:ro"
-            LAUNCH_PROJECT_NAME: "jh-2"
-            LAUNCH_SERVICE_NAME: "jh-2"
-            LAUNCH_CONTAINER_NAME: "jh-2"
-            LAUNCH_EXT_NETWORKS: "domserver-jh-backend"
-            LAUNCH_HOSTNAME: "jh"
-        networks:
-            - domserver-jh-backend
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-        deploy:
-            rollback_config:
-                parallelism: 0
-            update_config:
-                parallelism: 1
-                delay: 5s
-                failure_action: rollback
-    judgehost_3:
-        image: "lalber/swarm-launcher"
-        environment:
-            LAUNCH_IMAGE: "domjudge/judgehost:7.3.3"
-            LAUNCH_PRIVILEGED: "true"
-            LAUNCH_PULL: "true"
-            LAUNCH_ENVIRONMENTS: "DAEMON_ID=3 DOMSERVER_BASEURL=http://domserver/ JUDGEDAEMON_USERNAME=judgehost JUDGEDAEMON_PASSWORD=jdpw CONTAINER_TIMEZONE=America/New_York"
-            LAUNCH_VOLUMES: "/sys/fs/cgroup:/sys/fs/cgroup:ro"
-            LAUNCH_PROJECT_NAME: "jh-3"
-            LAUNCH_SERVICE_NAME: "jh-3"
-            LAUNCH_CONTAINER_NAME: "jh-3"
-            LAUNCH_EXT_NETWORKS: "domserver-jh-backend"
-            LAUNCH_HOSTNAME: "jh"
-        networks:
-            - domserver-jh-backend
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-        deploy:
-            rollback_config:
-                parallelism: 0
-            update_config:
-                parallelism: 1
-                delay: 5s
-                failure_action: rollback          
 networks:
     domserver-jh-backend:
         external: true
         name: domserver-jh-backend
-
-                                                                                                 
-
-    
