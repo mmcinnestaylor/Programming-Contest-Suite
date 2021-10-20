@@ -197,7 +197,12 @@ def dashboard(request):
     else:
         context['ec_available'] = contest.ec_processed'''
 
-    if Team.objects.exclude(questions_answered=0).count() > 0:
+    '''if Team.objects.exclude(questions_answered=0).count() > 0:
+        context['dj_results_processed'] = True
+    else:
+        context['dj_results_processed'] = False'''
+    
+    if len(os.listdir(MEDIA_ROOT + '/uploads/')) > 0:
         context['dj_results_processed'] = True
     else:
         context['dj_results_processed'] = False
