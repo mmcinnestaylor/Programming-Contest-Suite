@@ -1,4 +1,5 @@
-FROM python:3.9-slim-buster
+FROM python:3.9-slim
+LABEL maintainer="ACM at FSU <contestdev@fsu.acm.org>"
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -21,12 +22,17 @@ RUN pip install -r requirements.txt
 
 COPY ./src app
 
+RUN mkdir -p /app/static
+RUN mkdir -p /app/media/contest_files
+RUN mkdir -p /app/media/ec_files
+RUN mkdir -p /app/media/uploads
+
 WORKDIR /app/
 
-COPY ./deploy/contestsuite/scripts/django/start.sh start
+COPY ./deploy/prod/contestsuite/scripts/django/start.sh start
 RUN sed -i 's/\r$//g' start
 RUN chmod +x start
 
-COPY ./deploy/contestsuite/scripts/celery/worker/start.sh start-celeryworker
+COPY ./deploy/prod/contestsuite/scripts/celery/worker/start.sh start-celeryworker
 RUN sed -i 's/\r$//g' start-celeryworker
 RUN chmod +x start-celeryworker
