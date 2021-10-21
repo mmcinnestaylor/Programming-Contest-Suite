@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+    nginx:
+        image: nginx:1.21-alpine
+        environment:
+            VIRTUAL_HOST: agon.cs.fsu.edu
+        volumes:
+            - ./html:/usr/share/nginx/html:ro
+        deploy:
+            replicas: 2
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+networks:
+    default:
+        external: true
+        name: proxied-apps

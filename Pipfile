@@ -4,12 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-Django = "*"
-mysqlclient = "==1.4.*"
-django-mysql = "*"
+Django = ">=3"
+mysqlclient = "*"
 django-redis = "*"
 django-import-export = "*"
 celery = "*"
+flower = "*"
+gunicorn = "*"
+six = "*"
 
 [dev-packages]
 pylint = "*"

@@ -8,32 +8,39 @@
 		<h1>My Account</h1>
 	</div>
 	<!-- Messages -->
-	{% if messages %}
-		{% for message in messages %}
-			{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-				<div class="alert alert-danger alert-dismissible fade show mt-3">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
-				</div>
-			{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
-				<div class="alert alert-warning alert-dismissible fade show mt-3">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
-				</div>
-			{% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-				<div class="alert alert-success alert-dismissible fade show mt-3">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
-				</div>
-			{% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
-				<div class="alert alert-info alert-dismissible fade show mt-3">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
-				</div>
-			{% endif %}
-		{% endfor %}
-	{% endif %}
+	{% include 'core/messages.html' %}
 	<!-- End Messages -->
+	<!-- Announcements Display -->
+	<div class="row justify-content-center">
+		<div class="col">
+			<div class="jumbotron mt-4">
+				<h2 class="mt-0">Recent Announcement</h2>
+				<hr class="my-4">
+				{% for announcement in announcements %}
+					<div class="card mb-4 shadow-sm">
+						<div class="card-body">
+							<h4 class="card-title mb-0">{{ announcement.title }}</h4>
+							<small class="card-text text-muted">{{ announcement.author.first_name }} | {{ announcement.created_on}} </small>
+							{% if announcement.created_on < announcement.updated_on %}
+								<br>
+								<small class="card-text text-muted">Updated on: {{ announcement.updated_on}} </small>
+							{% endif %}
+							{% if announcement.content|length > 140 %}
+								<p class="card-text lead mt-2">{{announcement.content|slice:":140" }}...</p>
+								<a href="{% url 'announcement_detail' announcement.slug  %}" class="btn btn-primary btn-sm">Read More</a>
+							{% else %}
+								<p class="card-text lead mt-2">{{announcement.content }}</p>
+							{% endif %}
+						</div>
+					</div>
+				{% empty %}
+					<p class="lead">No announcements yet.</p>
+				{% endfor %}
+				<a class="btn btn-primary" href="{% url 'announcements' %}" role="button">Announcements &rarr;</a>
+			</div>
+		</div>
+	</div>
+	<!-- End Announcements Display -->
 	<!-- User Card deck -->
 	<div class="card-deck">
 		<!-- Profile card -->
@@ -122,8 +129,8 @@
 							<li class="list-group-item"><span class="font-weight-bolder">Admin:</span> No</li>
 						{% endif %}
 						{% if user.profile.checked_in %}
-							<li class="list-group-item"><span class="font-weight-bolder">Username:</span> {{ user.profile.team.contest_id }}</li>
-							<li class="list-group-item"><span class="font-weight-bolder">Password:</span> {{ user.profile.team.contest_password }}</li>
+							<li class="list-group-item"><span class="font-weight-bolder">DOMjudge username:</span> {{ user.profile.team.contest_id }}</li>
+							<li class="list-group-item"><span class="font-weight-bolder">DOMjudge password:</span> {{ user.profile.team.contest_password }}</li>
 						{% endif %}
 					</ul>
 				{% else %}
@@ -193,39 +200,7 @@
 		</div>
 		<!-- Team Members card end -->
 	</div>
-	<!-- Team Card deck end -->
-	<!-- Announcements Display -->
-	<div class="row justify-content-center">
-		<div class="col">
-			<div class="jumbotron mt-4">
-				<h2 class="mt-0">Recent Announcements</h2>
-				<hr class="my-4">
-				{% for announcement in announcements %}
-					<div class="card mb-4 shadow-sm">
-						<div class="card-body">
-							<h4 class="card-title mb-0">{{ announcement.title }}</h4>
-							<small class="card-text text-muted">{{ announcement.author.first_name }} | {{ announcement.created_on}} </small>
-							{% if announcement.created_on < announcement.updated_on %}
-								<br>
-								<small class="card-text text-muted">Updated on: {{ announcement.updated_on}} </small>
-							{% endif %}
-							{% if announcement.content|length > 140 %}
-								<p class="card-text lead mt-2">{{announcement.content|slice:":140" }}...</p>
-								<a href="{% url 'announcement_detail' announcement.slug  %}" class="btn btn-primary btn-sm">Read More</a>
-							{% else %}
-								<p class="card-text lead mt-2">{{announcement.content }}</p>
-							{% endif %}
-						</div>
-					</div>
-				{% empty %}
-					<p class="lead">No announcements yet.</p>
-				{% endfor %}
-				<a class="btn btn-primary" href="{% url 'announcements' %}" role="button">Announcements &rarr;</a>
-			</div>
-		</div>
-		
-	</div>
-	<!-- End Announcements Display --> 
+	<!-- Team Card deck end --> 
 	<!-- Confirm Clear Modal -->
 	<div class="modal fade" id="confirmClearModal" tabindex="-1" role="dialog"
 		aria-labelledby="confirmClearModalCenterTitle" aria-hidden="true">

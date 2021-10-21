@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django_mysql.models import ListTextField
 
 from register.models import Team
 

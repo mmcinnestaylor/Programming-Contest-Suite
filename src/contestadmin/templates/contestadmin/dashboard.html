@@ -8,31 +8,7 @@
 		<h1>Contest Dashboard</h1>
 	</div>
 	<!-- Messages -->
-	{% if messages %}
-		{% for message in messages %}
-			{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-				<div class="alert alert-danger alert-dismissible fade show mt-3">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
-				</div>
-			{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
-				<div class="alert alert-warning alert-dismissible fade show mt-3">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
-				</div>
-			{% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-				<div class="alert alert-success alert-dismissible fade show mt-3">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
-				</div>
-			{% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
-				<div class="alert alert-info alert-dismissible fade show mt-3">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
-				</div>
-			{% endif %}
-		{% endfor %}
-	{% endif %}
+	{% include 'core/messages.html' %}
 	<!-- End Messages -->
 
 	<!-- Contest Control Card deck -->
@@ -115,7 +91,7 @@
 			</div>
 		</div>
 		<!-- EC card end -->
-		<!-- Extra card -->
+		<!-- Tools card -->
 		<div class="card mt-4">
 			<div class="card-header font-weight-bold">
 				Tools 
@@ -125,12 +101,12 @@
 					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal"
 						data-target="#walkinModal">Create walk-in teams</button>
 				</div>
-				<div class="row justify-content-center">					
-					<a class="btn btn-primary btn-sm my-1 disabled" href="#" role="button">Update User Role</a>
+				<div class="row justify-content-center">
+					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#checkinModal">Check in/out Users</button>
 				</div>
 			</div>
 		</div>
-		<!-- Extra card end -->
+		<!-- Tools card end -->
 	</div>
 	<!-- EC Control deck end -->
 
@@ -268,6 +244,41 @@
 					</div>
 					<div class="modal-footer">
 						<button class="btn btn-primary" type="submit">Generate</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- End Create Walk-in Teams Modal -->
+
+	<!-- Checkin/Checkout Users Modal -->
+	<div class="modal fade" id="checkinModal" tabindex="-1" role="dialog" aria-labelledby="confirmClearModalCenterTitle"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmClearModalLongTitle">Check in/out Users</h5>
+				</div>
+				<form method="post">
+					{% csrf_token %}
+					<div class="modal-body">
+						{% for field in checkin_form %}
+						<p>
+						{{ field }}<br>
+						<small class="form-text text-muted">
+							{% for error in field.errors %}
+							<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
+							{% endfor %}
+							{% if field.help_text %}
+							{{ field.help_text }}
+							{% endif %}
+						</small>
+						</p>
+						{% endfor %}
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" type="submit">Process</button>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 					</div>
 				</form>

@@ -28,7 +28,7 @@ class ProfileForm(forms.ModelForm):
         }
         help_texts = {
             'fsu_id': 'Excluding @my.fsu.edu ex: ab12c@my.fsu.edu -> ab12c',
-            'fsu_num': 'Last 8 numbers. Exclude spaces.',
+            'fsu_num': 'Last 8 numbers on FSUCard. Exclude spaces.',
         }
         error_messages = {
             'fsu_id': {
@@ -64,5 +64,5 @@ class JoinForm(forms.Form):
     team = forms.ModelChoiceField(queryset=Team.objects.all(
     ), label='Registered Teams', help_text='Teamname : Division where UPPER = 1 and LOWER = 2')
     pin = forms.CharField(
-        max_length=4, label='PIN', help_text='Ask team admin for PIN')
+        max_length=6, label='PIN', help_text='Ask team admin for PIN')
 

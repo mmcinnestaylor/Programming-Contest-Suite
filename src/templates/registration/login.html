@@ -12,47 +12,25 @@
 		{% for error in form.errors %}
 			<div class="alert alert-danger alert-dismissible fade show mt-3">
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
-				<strong>error</strong> Please enter a correct username and password. Note that both fields are case-sensitive and <strong>your account must be confirmed</strong>.
+				<strong>ERROR</strong> Please enter a correct username and password. Note that both fields are case-sensitive and <strong>your account must be confirmed</strong>.
 			</div>
 		{% endfor %}
 	{% endif %}
 
-	{% if messages %}
-		{% for message in messages %}
-			{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-				<div class="alert alert-danger alert-dismissible fade show mt-3">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
-				</div>
-			{% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
-				<div class="alert alert-warning alert-dismissible fade show mt-3">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
-				</div>
-			{% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-				<div class="alert alert-success alert-dismissible fade show mt-3">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
-				</div>
-			{% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
-				<div class="alert alert-info alert-dismissible fade show mt-3">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					{% if message.tags %}<strong>{{ message.tags }}</strong>{% endif %} {{ message }}
-				</div>
-			{% endif %}
-		{% endfor %}
-	{% endif %}
+	<!-- Messages -->
+	{% include 'core/messages.html' %}
+	<!-- End Messages -->
 
 
 	{% if user.is_authenticated %}
 		<div class="alert alert-info alert-dismissible fade show mt-3">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
-			<strong>info</strong> You have already logged in.
+			<strong>INFO</strong> You have already logged in.
 		</div>
 	{% else %}
 		<div class="row mt-3 justify-content-center">
 			<div class="col-sm-3">
-				<form class="w-100"method="post" action="{% url 'login' %}">
+				<form class="w-100" method="post" action="{% url 'login' %}">
 					{% csrf_token %}
 					<table>
 						<tr>
@@ -64,7 +42,7 @@
 							<td>{{ form.password }}</td>
 						</tr>
 					</table>
-					<input class="btn btn-primary btn-sm"type="submit" value="login" />
+					<input class="btn btn-primary btn-sm mt-2"type="submit" value="login" />
 					<input type="hidden" name="next" value="{{ next }}" />
 				</form>
 				<small><a class="text-danger" href="{% url 'password_reset' %}">Lost password?</a></small>				

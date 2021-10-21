@@ -154,9 +154,15 @@ def dashboard(request):
     if request.method == 'POST':
         walkin_form = forms.GenerateWalkinForm(request.POST)
         file_form = forms.ResultsForm(request.POST, request.FILES)
+        checkin_form = forms.CheckinUsersForm(request.POST)
         if walkin_form.is_valid():
             tasks.create_walkin_teams.delay(int(walkin_form.cleaned_data['division']), int(walkin_form.cleaned_data['total']))  
             messages.info(request, 'Create teams task scheduled.', fail_silently=True)
+        elif checkin_form.is_valid():
+            tasks.check_in_out_users.delay(
+                int(checkin_form.cleaned_data['action']))
+            messages.info(request, 'Check in/out task scheduled.',
+                          fail_silently=True)
         elif file_form.is_valid():
             if Contest.objects.all().count() == 0:
                 file_form.save()
@@ -182,6 +188,7 @@ def dashboard(request):
     else:
         walkin_form = forms.GenerateWalkinForm()
         file_form = forms.ResultsForm()
+        checkin_form = forms.CheckinUsersForm()
         
     '''try:
         contest = Contest.objects.all().first().get()
@@ -190,7 +197,12 @@ def dashboard(request):
     else:
         context['ec_available'] = contest.ec_processed'''
 
-    if Team.objects.exclude(questions_answered=0).count() > 0:
+    '''if Team.objects.exclude(questions_answered=0).count() > 0:
+        context['dj_results_processed'] = True
+    else:
+        context['dj_results_processed'] = False'''
+    
+    if len(os.listdir(MEDIA_ROOT + '/uploads/')) > 0:
         context['dj_results_processed'] = True
     else:
         context['dj_results_processed'] = False
@@ -225,6 +237,7 @@ def dashboard(request):
     context['num_lower_reg_participants'] = Profile.objects.filter(team__division=2).exclude(team__name__contains='Walk-in-').count()
     context['num_lower_walkin_participants'] = Profile.objects.filter(team__division=2).filter(team__name__contains='Walk-in-').count()
 
+    context['checkin_form'] = checkin_form
     context['file_form'] = file_form
     context['gen_walkin_form'] = walkin_form
     context['courses'] = Course.objects.all()

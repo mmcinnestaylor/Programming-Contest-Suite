@@ -10,15 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
-import environ
+import os
 
 
-# Build paths inside the project & load environment vars
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
-root = environ.Path(__file__) - 2
-env = environ.Env()
-environ.Env.read_env()
-
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -26,21 +23,30 @@ environ.Env.read_env()
 # SECURITY WARNING: keep the secret key used in production secret!
 # Raises django's ImproperlyConfigured exception if SECRET_KEY not in os.environ
 
-SECRET_KEY = env.str('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY', '86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # False if not in os.environ
 
-DEBUG = env.bool('DEBUG', default=False)
+if os.environ.get('DEBUG'):
+    DEBUG = os.environ.get('DEBUG') == 'True'
+else:
+    DEBUG = True
+#DEBUG = os.environ.get('DEBUG'=='True', True)
 
-
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
+if DEBUG:
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '[::1]']
+else:
+    ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
+    
+#ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', ['.localhost', '127.0.0.1', '[::1]'])
 
 
 # Debug Toolbar Access 
 
 if DEBUG:
     INTERNAL_IPS = [
+        'localhost',
         '0.0.0.0',
         '127.0.0.1',
     ]
@@ -64,7 +70,6 @@ INSTALLED_APPS = [
     'manager.apps.ManagerConfig',
     'register.apps.RegisterConfig',
     # 3rd party packages
-    'django_mysql',
     'import_export',
 ]
 
@@ -91,7 +96,7 @@ ROOT_URLCONF = 'contestsuite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [root('templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -113,28 +118,53 @@ WSGI_APPLICATION = 'contestsuite.wsgi.application'
 # Parse database connection url strings like psql://user:pass@127.0.0.1:8458/db
 # read os.environ['DATABASE_URL'] and raises ImproperlyConfigured exception if not found
 
-DATABASES = {'default': {'ATOMIC_REQUESTS': False,
-             'AUTOCOMMIT': True,
-             'CONN_MAX_AGE': 0,
-             'ENGINE': 'django.db.backends.mysql',
-             'HOST': env.str('DATABASE_URL'),
-             'NAME': env.str('DATABASE_NAME'),
-             'OPTIONS': {'charset': 'utf8mb4'},
-             'PASSWORD': env.str('DATABASE_PASSWORD'),
-             'PORT': 3306,
-             'TEST': {'CHARSET': 'utf8mb4',
-                      'COLLATION': None,
-                      'MIGRATE': True,
-                      'MIRROR': None,
-                      'NAME': None},
-             'TIME_ZONE': 'America/New_York',
-             'USER': env.str('DATABASE_USER')}}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': os.environ.get('SQL_HOST', 'localhost'),
+        'PORT': os.environ.get('SQL_PORT', '3306'),
+        'NAME': os.environ.get('SQL_DATABASE', 'contestsuite'),
+        'USER': os.environ.get('SQL_USER', 'dev'),
+        'PASSWORD': os.environ.get('SQL_PASSWORD','seminoles'),
+        'OPTIONS': {'charset': 'utf8mb4'},
+        'TIME_ZONE': 'America/New_York',
+        'AUTOCOMMIT': True,
+        'CONN_MAX_AGE': 0,
+    }
+}
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+
+# Celery
+# https://docs.celeryproject.org/en/stable/getting-started/first-steps-with-celery.html#configuration
+ 
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER', 'amqp://127.0.0.1:5672')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_BACKEND', 'redis://127.0.0.1:6379/1')
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TIMEZONE = 'America/New_York'
+CELERY_ENABLE_UTC = True
 
 
 # Cache
 # https://docs.djangoproject.com/en/2.2/ref/settings/#caches
 
-CACHES = {'default': env.cache('REDIS_CACHE_URL')}
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.environ.get('CACHE_LOCATION', 'redis://127.0.0.1:6379/0'),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+if DEBUG:
+    CACHE_TIMEOUT = 0
+else:
+    CACHE_TIMEOUT = int(os.environ.get('CACHE_TIMEOUT', 300))
 
 
 # Password validation
@@ -173,47 +203,48 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_ROOT = root('static')
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_URL = '/static/'
 
-STATIC_URL = env.str('STATIC_URL', default='/static/')
 
-MEDIA_ROOT = root('media')
+# Uploaded files (TSV)
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
+
 LOGIN_REDIRECT_URL = '/manage/'
 
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+# Sessions
+# https://docs.djangoproject.com/en/3.2/topics/http/sessions/
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_SAVE_EVERY_REQUEST = True
 
-#SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+if not DEBUG:
+    SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+
+# Messages
+# https://docs.djangoproject.com/en/3.2/ref/contrib/messages/
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 
-# Email settings
+# Email
 # https://docs.djangoproject.com/en/3.1/topics/email/
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  
-# EMAIL_HOST = ''
-# EMAIL_PORT = 
-# EMAIL_HOST_USER = ''
-# EMAIL_HOST_PASSWORD = ''
-# EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'ACM Programming Contest <contest@fsu.acm.org>' 
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = os.environ.get('MAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')  
+    EMAIL_HOST = os.environ.get('MAIL_HOST', None)
+    EMAIL_PORT = int(os.environ.get('MAIL_PORT', 465))
+    EMAIL_HOST_USER = os.environ.get('MAIL_USER', None)
+    EMAIL_HOST_PASSWORD = os.environ.get('MAIL_PASSWORD', None)
+    EMAIL_USE_SSL = False
+    EMAIL_USE_TLS = True
 
-
-# Celery Settings
-# https://docs.celeryproject.org/en/stable/getting-started/first-steps-with-celery.html#configuration
- 
-CELERY_BROKER_URL = env.str('CELERY_BROKER_URL')
-CELERY_RESULT_BACKEND = env.str('CELERY_RESULT_BACKEND')
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TIMEZONE = 'America/New_York'
-CELERY_ENABLE_UTC = True
+DEFAULT_FROM_EMAIL = 'ACM Programming Contest<acm@cs.fsu.edu>'  

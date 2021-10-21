@@ -1,0 +1,154 @@
+version: '3.8'
+
+services:
+    nginx:
+        image: nginx:1.21-alpine
+        environment:
+            VIRTUAL_HOST: contest.cs.fsu.edu
+        volumes:
+            - ./config/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
+            - django_static_data:/usr/share/nginx/html/static:ro
+        networks:
+            - frontend
+            - nginx-backend
+        deploy:
+            replicas: 2
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback            
+    django:
+        image: acmfsu/contestsuite:1.0.0
+        # '/start' is the shell script used to run the service
+        command: /app/start
+        environment:
+            - DEBUG=False
+            - ALLOWED_HOSTS=contest.cs.fsu.edu,0.0.0.0
+            - SECRET_KEY=86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
+
+            - CACHE_TIMEOUT=300
+            - CACHE_LOCATION=redis://redis:6379/0
+            - CELERY_BACKEND=redis://redis:6379/1
+            - CELERY_BROKER=amqp://rabbitmq:5672
+
+            - MAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+            - MAIL_HOST=smtpsubdomain.example.com
+            - MAIL_PORT=465
+            - MAIL_USER=user@example.com
+            - MAIL_PASSWORD=examplepass
+
+            - SQL_HOST=mariadb
+            - SQL_PORT=3306
+            - SQL_DATABASE=contestsuite
+            - SQL_USER=contestadmin
+            - SQL_PASSWORD=seminoles
+        volumes:
+            - django_app_data:/app/media
+            - django_static_data:/app/static
+        networks:
+            - nginx-backend
+            - mariadb-backend
+            - redis-backend
+            - rabbitmq-backend
+        deploy:
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+    mariadb:
+        image: mariadb:10.6-focal
+        volumes:
+            - django_db_data:/var/lib/mysql
+        environment:
+            - MARIADB_ROOT_PASSWORD=rootpw
+            - MARIADB_DATABASE=contestsuite
+            - MARIADB_USER=contestadmin
+            - MARIADB_PASSWORD=seminoles
+        networks:
+            - mariadb-backend
+        deploy:
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+    redis:
+        image: redis:5-buster
+        networks:
+            - redis-backend
+        deploy:
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+    rabbitmq:
+        image: rabbitmq:3
+        networks:
+            - rabbitmq-backend
+        deploy:
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+    celery_worker:
+        image: acmfsu/contestsuite:1.0.0
+        command: /app/start-celeryworker
+        environment:
+            - DEBUG=False
+            - ALLOWED_HOSTS=contest.cs.fsu.edu,0.0.0.0
+            - SECRET_KEY=86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
+
+            - CACHE_TIMEOUT=300
+            - CACHE_LOCATION=redis://redis:6379/0
+            - CELERY_BACKEND=redis://redis:6379/1
+            - CELERY_BROKER=amqp://rabbitmq:5672
+
+            - MAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+            - MAIL_HOST=smtpsubdomain.example.com
+            - MAIL_PORT=465
+            - MAIL_USER=user@example.com
+            - MAIL_PASSWORD=examplepass
+
+            - SQL_HOST=mariadb
+            - SQL_PORT=3306
+            - SQL_DATABASE=contestsuite
+            - SQL_USER=contestadmin
+            - SQL_PASSWORD=seminoles
+        volumes:
+            - django_app_data:/app/media
+        networks:
+            - mariadb-backend
+            - redis-backend
+            - rabbitmq-backend
+        deploy:
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+volumes:
+    django_app_data:
+    django_db_data:
+    django_static_data:
+networks:
+    frontend:
+        external: true
+        name: proxied-apps
+    nginx-backend:
+        name: nginx-backend
+    mariadb-backend:
+        name: mariadb-backend
+    redis-backend:
+        name: redis-backend
+    rabbitmq-backend:
+        name: rabbitmq-backend

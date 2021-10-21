@@ -19,10 +19,7 @@ def dashboard(request):
     context = {}
     context['courses'] = request.user.profile.courses.all()
     context['team_members'] = User.objects.filter(profile__team=request.user.profile.team)
-    try:
-        context['announcements'] = (Announcement.objects.filter(status=1))[:3]
-    except:
-        context['announcements'] = []
+    context['announcements'] = (Announcement.objects.filter(status=1))[:1]
 
     # Generate account some useful account notifications
     if not request.user.profile.has_team():
@@ -148,7 +145,6 @@ def join_team(request):
 
                     # Update team
                     request.user.profile.team.num_members += 1
-                    request.user.profile.team.members.append(request.user.get_full_name())
                     request.user.profile.team.save()
 
                     messages.success(
@@ -192,8 +188,6 @@ def leave_team(request):
             
             # Update the team
             request.user.profile.team.num_members -= 1
-            request.user.profile.team.members.remove(
-                request.user.get_full_name())
             request.user.profile.team.save()
 
             # Update user
@@ -203,7 +197,6 @@ def leave_team(request):
     # If user only a team member, then simply leave the team
     else:
         request.user.profile.team.num_members -= 1
-        request.user.profile.team.members.remove(request.user.get_full_name())
         request.user.profile.team.save()
 
         request.user.profile.team = None
@@ -220,6 +213,14 @@ def leave_team(request):
 @transaction.atomic
 def delete_team(request):
     try:
+        members = Profile.objects.filter(team=request.user.profile.team)
+        
+        # Remove all non team admins from team
+        for member in members:
+            if not member.team_admin:
+                member.team = None
+                member.save()
+
         request.user.profile.team.delete()
         request.user.profile.team = None
         request.user.profile.team_admin = False
@@ -242,7 +243,6 @@ def remove_member(request, username):
         
         # Update team    
         member.profile.team.num_members -= 1
-        member.profile.team.members.remove(member.get_full_name())
         member.profile.team.save()
 
         #Update user being removed

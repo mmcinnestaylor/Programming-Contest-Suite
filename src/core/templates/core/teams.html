@@ -6,9 +6,8 @@
 
 {% block content %}
 {% cache cache_timeout teams %}
-	<div class="row justify-content-center">
-		<h1>Registered Teams</h1>
-	</div>
+	<h1 class="text-center">Registered Teams</h1>
+
 	<div class="row">
 		<h2>Upper Division</h2>
 	</div>
@@ -35,13 +34,19 @@
 				<tbody class="bg-light">
 					{% for team in upper_teams %}
 					<tr>
-						<td>{{ team.name }}</td>
+						<td class="text-center">{{ team.name }}</td>
 						<td class="text-center">{{ team.questions_answered }}</td>
-						<td>
+						<td class="text-center">
 							<small>
-								{% for member in team.members %}
-									{{ member }}&emsp;&emsp;
-								{% endfor %}
+								{% with team.get_members|last as last %}							
+									{% for member in team.get_members %}
+										{% if member == last %}
+											{{ member }}
+										{% else %}
+											{{ member }}, 
+										{% endif %}
+									{% endfor %}
+								{% endwith %}
 							</small>
 						</td>
 					</tr>
@@ -78,11 +83,11 @@
 				<tbody class="bg-light">
 					{% for team in lower_teams %}
 					<tr>
-						<td>{{ team.name }}</td>
-						<td>{{ team.questions_answered }}</td>
-						<td>
+						<td class="text-center">{{ team.name }}</td>
+						<td class="text-center">{{ team.questions_answered }}</td>
+						<td class="text-center">
 							<small>
-								{% for member in team.members %}
+								{% for member in team.get_members %}
 									{{ member }}&emsp;&emsp;
 								{% endfor %}
 							</small>
@@ -93,5 +98,5 @@
 			</table>
 		</div>
 	</div>
-	{% endcache %}
+{% endcache %}
 {% endblock %}

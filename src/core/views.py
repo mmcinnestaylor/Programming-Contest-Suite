@@ -1,9 +1,11 @@
 from django.shortcuts import render
 
+
+from announcements.models import Announcement
 from contestadmin.models import Contest
 from contestsuite.settings import CACHE_TIMEOUT
 from register.models import Team
-from manager.models import Profile
+from manager.models import Course, Profile
 
 # Create your views here.
 
@@ -16,6 +18,10 @@ def index(request):
         context['contest'] = Contest.objects.first()
     except:
         context['contest'] = None
+    
+    context['announcements'] = (Announcement.objects.filter(status=1))[:1]
+    context['courses'] = Course.objects.all()    
+    
 
     return render(request, 'core/index.html', context)
 
