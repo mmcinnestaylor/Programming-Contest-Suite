@@ -72,4 +72,4 @@ Docker stacks:
 
 Judgehosts:  
 
-	docker-dompose down
+	docker-compose down
