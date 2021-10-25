@@ -23,36 +23,38 @@
 	</div>
 	<div class="row justify-content-center mt-3">
 		<div class="col-10">
-			<table class="table table-sm table-striped shadow rounded">
-				<thead class="thead-dark text-center">
-					<tr>
-						<th scope="col">Team Name</th>
-						<th scope="col">Questions Answered</th>
-						<th scope="col">Team Members</th>
-					</tr>
-				</thead>
-				<tbody class="bg-light">
-					{% for team in upper_teams %}
-					<tr>
-						<td class="text-center">{{ team.name }}</td>
-						<td class="text-center">{{ team.questions_answered }}</td>
-						<td class="text-center">
-							<small>
-								{% with team.get_members|last as last %}							
-									{% for member in team.get_members %}
-										{% if member == last %}
-											{{ member }}
-										{% else %}
-											{{ member }}, 
-										{% endif %}
-									{% endfor %}
-								{% endwith %}
-							</small>
-						</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
+			<div class="table-responsive">
+				<table class="table table-sm table-striped shadow rounded">
+					<thead class="thead-dark text-center">
+						<tr>
+							<th scope="col">Team Name</th>
+							<th scope="col">Questions Answered</th>
+							<th scope="col">Team Members</th>
+						</tr>
+					</thead>
+					<tbody class="bg-light">
+						{% for team in upper_teams %}
+						<tr>
+							<td class="text-center">{{ team.name }}</td>
+							<td class="text-center">{{ team.questions_answered }}</td>
+							<td class="text-center">
+								<small>
+									{% with team.get_members|last as last %}							
+										{% for member in team.get_members %}
+											{% if member == last %}
+												{{ member }}
+											{% else %}
+												{{ member }},&puncsp;
+											{% endif %}
+										{% endfor %}
+									{% endwith %}
+								</small>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 
@@ -72,30 +74,38 @@
 	<br>
 	<div class="row justify-content-center">
 		<div class="col-10">
-			<table class="table table-sm table-striped shadow ">
-				<thead class="thead-dark text-center">
-					<tr>
-						<th scope="col">Team Name</th>
-						<th scope="col">Questions Answered</th>
-						<th scope="col">Team Members</th>
-					</tr>
-				</thead>
-				<tbody class="bg-light">
-					{% for team in lower_teams %}
-					<tr>
-						<td class="text-center">{{ team.name }}</td>
-						<td class="text-center">{{ team.questions_answered }}</td>
-						<td class="text-center">
-							<small>
-								{% for member in team.get_members %}
-									{{ member }}&emsp;&emsp;
-								{% endfor %}
-							</small>
-						</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
+			<div class="table-responsive">
+				<table class="table table-sm table-striped shadow ">
+					<thead class="thead-dark text-center">
+						<tr>
+							<th scope="col">Team Name</th>
+							<th scope="col">Questions Answered</th>
+							<th scope="col">Team Members</th>
+						</tr>
+					</thead>
+					<tbody class="bg-light">
+						{% for team in lower_teams %}
+						<tr>
+							<td class="text-center">{{ team.name }}</td>
+							<td class="text-center">{{ team.questions_answered }}</td>
+							<td class="text-center">
+								<small>
+									{% with team.get_members|last as last %}
+										{% for member in team.get_members %}
+											{% if member == last %}
+												{{ member }}
+											{% else %}
+												{{ member }},&puncsp;
+											{% endif %}
+										{% endfor %}
+									{% endwith %}
+								</small>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 {% endcache %}
