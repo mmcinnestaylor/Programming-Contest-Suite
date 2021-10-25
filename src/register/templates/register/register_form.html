@@ -1,10 +1,12 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}Contest Registration{% endblock %}
+{% block title %}{{ page_title }}{% endblock %}
 
 {% block content %}
-<h1 class="text-center">Contest Registration</h1>
+
+<h1 class="text-center">{{ heading }} Registration</h1>
+
 <!-- Messages -->
 {% include 'core/messages.html' %}
 <!-- End Messages -->

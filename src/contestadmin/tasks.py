@@ -132,11 +132,11 @@ def check_in_out_users(action):
 
             
             if action == 1:
-                subject = 'Programming Contest DOMJudge Credentials'
+                subject = 'Programming Contest DOMjudge Credentials'
                 message = render_to_string(
                     'checkin/team_credentials_email.html', {'user': user})
             else:
-                subject = 'Practice Contest DOMJudge Credentials'
+                subject = 'Practice Contest DOMjudge Credentials'
                 message = render_to_string(
                     'checkin/team_credentials_practice_email.html', {'user': user})
             user.email_user(subject, message)

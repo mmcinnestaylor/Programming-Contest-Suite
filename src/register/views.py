@@ -70,6 +70,8 @@ def account(request):
     else:
         form = forms.ExtendedUserCreationForm()
 
+    context['page_title'] = 'Contest Registration'
+    context['heading'] = 'Contest'
     context['form'] = form
     return render(request, 'register/register_form.html', context)
 
@@ -141,6 +143,6 @@ def team(request):
         form = forms.TeamForm()
 
     context['page_title'] = 'Team Registration'
-    context['heding'] = 'Team'
+    context['heading'] = 'Team'
     context['form'] = form
     return render(request, 'register/register_form.html', context)
