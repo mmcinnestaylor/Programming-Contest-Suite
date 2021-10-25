@@ -50,16 +50,16 @@ def create_walkin_teams(division, total):
 @shared_task
 @transaction.atomic
 def generate_contest_files():
-    count = 1
+    count = 0
     teams = Team.objects.all()
 
     logger.info('Starting team credential creation')
 
     for team in teams:
+        count += 1
         team.contest_id = 'acm-' + str(count).zfill(3)
         team.contest_password = User.objects.make_random_password(length=6)
         team.save()
-        count += 1
 
     logger.info('Created credentials for %d teams' % count)
 
@@ -119,18 +119,26 @@ def generate_contest_files():
 @transaction.atomic
 def check_in_out_users(action):
     # Check-in
-    if action == 1:
+    if action == 1 or action == 2:
         users = User.objects.all()
 
         for user in users:
-            if user.profile.team is None:
+
+            if user.profile.team == None or user.profile.checked_in == True:
                 continue
+
             user.profile.checked_in = True
             user.save()
 
-            subject = 'Your DOMJudge Credentials'
-            message = render_to_string(
-                'checkin/team_credentials_email.html', {'user': user})
+            
+            if action == 1:
+                subject = 'Programming Contest DOMJudge Credentials'
+                message = render_to_string(
+                    'checkin/team_credentials_email.html', {'user': user})
+            else:
+                subject = 'Practice Contest DOMJudge Credentials'
+                message = render_to_string(
+                    'checkin/team_credentials_practice_email.html', {'user': user})
             user.email_user(subject, message)
 
             logger.info('Sent credentials to %s' % user.username)

@@ -7,8 +7,9 @@ from contestadmin.models import Contest
 
 class CheckinUsersForm(forms.Form):
     ACTION = (
-        (1, 'Checkin'),
-        (2, 'Checkout')
+        (1, 'Live Checkin'),
+        (2, 'Practice Checkin'),
+        (3, 'Checkout')
     )
 
     action = forms.ChoiceField(choices=ACTION)
