@@ -70,8 +70,6 @@ def account(request):
     else:
         form = forms.ExtendedUserCreationForm()
 
-    context['page_title'] = 'Contest Registration'
-    context['heading'] = 'Contest'
     context['form'] = form
     return render(request, 'register/register_form.html', context)
 

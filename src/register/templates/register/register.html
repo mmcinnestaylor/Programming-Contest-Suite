@@ -1,20 +1,19 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Registration Information{% endblock %}
 
 {% block content %}
 
-<div class="row justify-content-center">
-	<h1>Contest Registration</h1>
-</div>
+<h1 class="text-center">Contest Registration</h1>
+
 <div class="row justify-content-center">
 	<div class="jumbotron shadow bg-white mt-4">
 		<h3 class="text-center">Important notes!</h3>
 		<ul>
-			<li>In order to compete, you <span class="font-weight-bold">MUST</span> be attached to a contest team. Please reference the Team section of the <a href="{% url 'register_account' %}" target="_blank">FAQ</a> regarding competing alone or with your peers.</li>
-			<li>In order to receive extra credit for participation you <span class="font-weight-bold">MUST</span> add both your FSU ID and courses using the Account Dashboard. Please reference the Dashboard section of the <a href="{% url 'register_account' %}" target="_blank">FAQ</a> for details.</li>
-			<li>Your email address does <span class="font-weight-bold">NOT</span> have to be an FSU email</li>
+			<li>In order to compete, you <span class="font-weight-bold">MUST</span> be attached to a contest team. Please reference the Teams section of the <a href="{% url 'faq' %}" target="_blank">FAQ</a> regarding competing alone or with your peers.</li>
+			<li>In order to receive extra credit for participation you <span class="font-weight-bold">MUST</span> add both your FSU ID and courses to your account. Please reference the Account section of the <a href="{% url 'faq' %}" target="_blank">FAQ</a> for details.</li>
+			<li>Your email address does <span class="font-weight-bold">NOT</span> need to be an FSU email</li>
 		</ul>
 	</div>
 </div>
