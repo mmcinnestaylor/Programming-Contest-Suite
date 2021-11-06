@@ -2,9 +2,14 @@
 
 The Programming Contest Suite is a set of tools for running [ICPC](https://icpc.global) style programming competitions hosted by the [Association for Computing Machinery Florida State University Student Chapter](https://fsu.acm.org). The PCS is a [Django](https://www.djangoproject.com/) powered contest account registration &  management application working alongside the [DOMJudge](https://www.domjudge.org/) jury system.
 
-## Getting Started
-Ensure the target development or production machine has a functioning installiation of [Docker](https://www.docker.com) with `docker-compose` and `docker-swarm`.
-### Development Deployment  
+## Installation
+Ensure the target machine has a functioning installation of [Docker](https://www.docker.com) with `docker-compose` and `docker-swarm`. Obtain a copy of the project by cloning the reposity, or downloading one of our [official releases](https://github.com/FSU-ACM/Programming-Contest-Suite/releases).  
+
+#### Clone  
+	git clone https://github.com/FSU-ACM/Programming-Contest-Suite.git  
+
+## Deployment  
+### Development    
 From the project root, navigate to the development folder:  
 
 	cd deploy/dev
@@ -18,7 +23,7 @@ Launch the project in dev mode:
 	docker-compose up
 
 NOTE: In order to monitor the debug logs, as well as view any emails the suite sends while in debug, it is suggested to NOT use the `-d` flag with the `docker-compose up` command.
-### Production Deployment
+### Production  
 The following steps are intended for deploying the suite on the Chapter's server, Agon.   
 
 Initialize the swarm:  
