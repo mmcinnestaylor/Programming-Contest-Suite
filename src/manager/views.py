@@ -168,12 +168,14 @@ def join_team(request):
 @user_passes_test(has_team, login_url='/manage/')
 @transaction.atomic
 def leave_team(request):
+    # If user is the team admin.
     if request.user.profile.team_admin:
         # If admin tries to leave a solo team, then just delete it
         if request.user.profile.team.num_members == 1:
             request.user.profile.team.delete()
             request.user.profile.team = None
             request.user.profile.team_admin = False
+            request.user.profile.checked_in = False
             request.user.save()
         # If admin leaves a team with 2 or more people, then reassign admin credential first
         else:
@@ -187,19 +189,22 @@ def leave_team(request):
                     break
             
             # Update the team
-            request.user.profile.team.num_members -= 1
+            request.user.profile.team.num_members = max(
+                request.user.profile.team.num_members - 1, 0)
             request.user.profile.team.save()
 
             # Update user
             request.user.profile.team_admin = False
             request.user.profile.team = None
+            request.user.profile.checked_in = False
             request.user.profile.save()
     # If user only a team member, then simply leave the team
     else:
-        request.user.profile.team.num_members -= 1
+        request.user.profile.team.num_members = max(request.user.profile.team.num_members - 1, 0)
         request.user.profile.team.save()
 
         request.user.profile.team = None
+        request.user.profile.checked_in = False
         request.user.save()
 
     messages.success(
@@ -219,11 +224,13 @@ def delete_team(request):
         for member in members:
             if not member.team_admin:
                 member.team = None
+                member.checked_in = False
                 member.save()
 
         request.user.profile.team.delete()
         request.user.profile.team = None
         request.user.profile.team_admin = False
+        request.user.profile.checked_in = False
         request.user.save()
 
         messages.success(request, 'You have deleted the team.', fail_silently=True)
