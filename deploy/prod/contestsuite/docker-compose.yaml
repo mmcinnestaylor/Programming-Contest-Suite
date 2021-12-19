@@ -4,6 +4,7 @@ services:
     nginx:
         image: nginx:1.21-alpine
         environment:
+            LETSENCRYPT_HOST: contest.cs.fsu.edu
             VIRTUAL_HOST: contest.cs.fsu.edu
         volumes:
             - ./config/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
