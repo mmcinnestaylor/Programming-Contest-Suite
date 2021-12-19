@@ -6,7 +6,7 @@ services:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true
     ports:
       - 80:80
-      - 433:433
+      - 443:443
     volumes:
       - certs:/etc/nginx/certs:ro
       - conf:/etc/nginx/conf.d
@@ -15,6 +15,14 @@ services:
     networks:
       - acme
       - backend
+    deploy:
+        replicas: 3
+        rollback_config:
+            parallelism: 0
+        update_config:
+            parallelism: 1
+            delay: 5s
+            failure_action: rollback
 
   docker-gen:
     image: helder/docker-gen:latest
@@ -31,6 +39,10 @@ services:
     networks:
       - acme
       - backend
+    deploy:
+        update_config:
+            delay: 5s
+            failure_action: rollback
 
   acme-companion:
     image: nginxproxy/acme-companion:latest
@@ -44,7 +56,11 @@ services:
       - vhost:/etc/nginx/vhost.d
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
-      - acme      
+      - acme 
+    deploy:
+        update_config:
+            delay: 5s
+            failure_action: rollback     
 
 volumes:
   acme:
