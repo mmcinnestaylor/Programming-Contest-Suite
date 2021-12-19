@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.core.exceptions import ValidationError
 
 from .models import Team
 
@@ -16,6 +17,8 @@ class ExtendedUserCreationForm(UserCreationForm):
         fields = ['first_name', 'last_name', 'email', 'username', 'password1', 'password2']
 
 class TeamForm(forms.ModelForm):
+    name = forms.CharField(max_length=30)
+
     class Meta:
         model = Team
         fields = ['name', 'division']
@@ -28,3 +31,13 @@ class TeamForm(forms.ModelForm):
                 'max_length': "This team name is too long.",
             },
         }
+    
+    def clean_name(self):
+        reserved_names = ['Walk-in-U', 'Walk-in-L']
+        team_name = self.cleaned_data['name']
+
+        for name in reserved_names:
+            if name in team_name:
+                raise ValidationError('Team name not allowed.')
+
+        return team_name

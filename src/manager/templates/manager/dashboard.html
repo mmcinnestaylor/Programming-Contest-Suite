@@ -125,7 +125,11 @@
 							<li class="list-group-item"><span class="font-weight-bolder">Admin:</span> Yes</li>
 							<li class="list-group-item"><span class="font-weight-bolder">PIN:</span> {{ user.profile.team.pin }}</li>
 						{% else %}
+
 							<li class="list-group-item"><span class="font-weight-bolder">Admin:</span> No</li>
+						{% endif %}
+						{% if user.profile.team.is_walkin %}
+							<li class="list-group-item"><span class="font-weight-bolder">PIN:</span> {{ user.profile.team.pin }}</li>
 						{% endif %}
 						{% if user.profile.checked_in %}
 							<li class="list-group-item"><span class="font-weight-bolder">DOMjudge username:</span> {{ user.profile.team.contest_id }}</li>
