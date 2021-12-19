@@ -3,6 +3,7 @@ services:
     domserver:
         image: domjudge/domserver:7.3.3
         environment:
+            - LETSENCRYPT_HOST=domjudge.cs.fsu.edu
             - VIRTUAL_HOST=domjudge.cs.fsu.edu
 
             - CONTAINER_TIMEZONE=America/New_York

@@ -4,6 +4,7 @@ services:
     nginx:
         image: nginx:1.21-alpine
         environment:
+            LETSENCRYPT_HOST: contest.cs.fsu.edu
             VIRTUAL_HOST: contest.cs.fsu.edu
         volumes:
             - ./config/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
@@ -79,6 +80,8 @@ services:
                 failure_action: rollback
     redis:
         image: redis:5-buster
+        volumes:
+            - redis_data:/data
         networks:
             - redis-backend
         deploy:
@@ -90,6 +93,8 @@ services:
                 failure_action: rollback
     rabbitmq:
         image: rabbitmq:3
+        volumes:
+            - rabbit_data:/var/lib/rabbitmq
         networks:
             - rabbitmq-backend
         deploy:
@@ -140,6 +145,8 @@ volumes:
     django_app_data:
     django_db_data:
     django_static_data:
+    rabbit_data:
+    redis_data:
 networks:
     frontend:
         external: true
