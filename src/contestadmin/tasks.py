@@ -104,7 +104,7 @@ def generate_contest_files():
                         team_writer.writerow([
                             int((team.contest_id).strip("acm-")), 
                             '', 
-                            team.division, 
+                            team.division + 9, 
                             team.name, 
                             'Florida State University', 
                             'FSU', 
