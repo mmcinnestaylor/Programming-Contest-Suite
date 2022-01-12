@@ -51,8 +51,8 @@ networks:
         external: true
         name: proxied-apps
     bastion-jh-backend:
-        name: domserver-jh-backend
+        name: bastion-jh-backend
         attachable: true
     bastion-db-backend:
-        name: domserver-db-backend
+        name: bastion-db-backend
     
