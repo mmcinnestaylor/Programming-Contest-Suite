@@ -1,0 +1,58 @@
+version: '3.8'
+services:
+    domserver:
+        image: domjudge/domserver:7.3.3
+        environment:
+            - LETSENCRYPT_HOST=bastion.cs.fsu.edu
+            - VIRTUAL_HOST=bastion.cs.fsu.edu
+
+            - CONTAINER_TIMEZONE=America/New_York
+            
+            - MYSQL_HOST=mariadb
+            - MYSQL_DATABASE=domjudge
+            - MYSQL_USER=domjudge
+            - MYSQL_PASSWORD=djpw
+            - MYSQL_ROOT_PASSWORD=rootpw
+        volumes:
+            - ./config/initial_admin_password.secret:/opt/domjudge/domserver/etc/initial_admin_password.secret:ro 
+        networks:
+            - frontend
+            - bastion-jh-backend
+            - bastion-db-backend
+        deploy:
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+    mariadb:
+        image: mariadb:10.6-focal
+        environment:
+            - MARIADB_DATABASE=domjudge
+            - MARIADB_USER=domjudge
+            - MARIADB_PASSWORD=djpw
+            - MARIADB_ROOT_PASSWORD=rootpw
+        volumes:
+            - domserver_db_data:/var/lib/mysql
+        networks:
+            - bastion-db-backend
+        deploy:
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback        
+volumes:
+    domserver_db_data:
+networks:
+    frontend:
+        external: true
+        name: proxied-apps
+    bastion-jh-backend:
+        name: domserver-jh-backend
+        attachable: true
+    bastion-db-backend:
+        name: domserver-db-backend
+    
