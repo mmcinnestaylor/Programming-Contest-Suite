@@ -13,7 +13,23 @@ services:
             - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
         networks:
             - domserver-jh-backend
+    jh_bas:
+        image: 'acmfsu/judgehost:7.3.3'
+        privileged: true
+        environment:
+            - CONTAINER_TIMEZONE=America/New_York
+            - JUDGEDAEMON_USERNAME=judgehost
+            - JUDGEDAEMON_PASSWORD=jdpw
+            - DOMSERVER_BASEURL=http://domserver/
+            - DOMJUDGE_CREATE_WRITABLE_TEMP_DIR=1
+        volumes:  
+            - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+        networks:
+            - bastion-jh-backend
 networks:
     domserver-jh-backend:
         external: true
         name: domserver-jh-backend
+    bastion-jh-backend:
+        external: true
+        name: bastion-jh-backend
