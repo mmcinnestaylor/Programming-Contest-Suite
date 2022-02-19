@@ -12,7 +12,7 @@ logger = get_task_logger(__name__)
 
 
 @shared_task
-def email_annoucement(id, status):
+def email_annoucement(id):
     try:
         announcement = Announcement.objects.get(id=id)
     except:
@@ -21,10 +21,6 @@ def email_annoucement(id, status):
         i=0
         users = User.objects.all()
         messages = []
-        if status == 'new':
-            prefix = 'ANNOUNCEMENT: '
-        else:
-            prefix = 'UPDATE: '
         
         for user in users:
             i += 1
@@ -32,7 +28,7 @@ def email_annoucement(id, status):
             message = render_to_string(
             'announcements/new_announcement_email.html', {'announcement': announcement})
 
-            messages.append((prefix + announcement.title, message, 'ACM Programming Contest<acm@cs.fsu.edu>', [user.email]))
+            messages.append((announcement.title, message, 'ACM Programming Contest<acm@cs.fsu.edu>', [user.email]))
 
         messages = tuple(messages)
         send_mass_mail(messages, fail_silently=False)

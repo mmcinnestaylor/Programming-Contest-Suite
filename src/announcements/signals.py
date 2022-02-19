@@ -9,10 +9,7 @@ from .tasks import email_annoucement
 def send_announcement(sender, instance, created, **kwargs):
 	# Publish
 	if instance.status == 1:
-		if created:
-			email_annoucement.delay(instance.id, 'new')
-		else:
-			email_annoucement.delay(instance.id, 'update')
+		email_annoucement.delay(instance.id)
 	# Draft
 	else:
 		pass
