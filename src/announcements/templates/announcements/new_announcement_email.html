@@ -1,4 +1,10 @@
 {% autoescape off %}
+{{ announcement.author.first_name }} | {{ announcement.created_on}}
+{% if announcement.created_on < announcement.updated_on %}
+Updated on: {{ announcement.updated_on}}
+{% endif %}
+-----
+
 {{ announcement.content }}
 
 Cheers,
