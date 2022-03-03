@@ -2,6 +2,10 @@
 {% load cache %} 
 {% load static %}
 
+{% block head %}
+<meta name="robots" content="noindex">
+{% endblock %}
+
 {% block title %}{{ object.title }}{% endblock %}
 
 {% block content %}

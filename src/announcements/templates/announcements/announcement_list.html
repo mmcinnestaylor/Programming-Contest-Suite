@@ -2,12 +2,15 @@
 {% load cache %}
 {% load static %}
 
+{% block head %}
+<meta name="robots" content="noindex">
+{% endblock %}
+
 {% block title %}Announcements{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <h1>Contest Announcements</h1>
-</div>
+<h1 class="text-center">Contest Announcements</h1>
+
 {% if is_paginated %}
     {% cache cache_timeout announcements page_obj.number %}
         <div class="row justify-content-center">
