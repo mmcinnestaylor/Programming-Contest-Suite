@@ -86,9 +86,9 @@ def generate_contest_files():
 
                     account_writer.writerow(['accounts', '1'])
                     group_writer.writerow(['File_Version', '1'])
-                    # Upper Division Group -> 10
-                    # Lower Division Group -> 11
-                    group_writer.writerow([division[0]+9, division[1]])
+                    # Upper Division Group -> 6
+                    # Lower Division Group -> 7
+                    group_writer.writerow([division[0]+5, division[1]])
                     team_writer.writerow(['File_Version', '2'])                    
 
                     teams = Team.objects.filter(division=division[0])
@@ -104,7 +104,7 @@ def generate_contest_files():
                         team_writer.writerow([
                             int((team.contest_id).strip("acm-")), 
                             '', 
-                            team.division + 9, 
+                            team.division + 5, 
                             team.name, 
                             'Florida State University', 
                             'FSU', 
@@ -171,7 +171,7 @@ def generate_ec_reports():
                 with open(filename, 'w', newline='') as csvfile:
                     writer = csv.writer(csvfile, quoting=csv.QUOTE_MINIMAL)
                     writer.writerow(
-                        ['fsu_id', 'last_name', 'first_name', 'questions_answered', 'role'])
+                        ['fsu_id', 'last_name', 'first_name', 'questions_answered', 'team_division', 'role'])
                     for student in students:
                         if student.profile.role == 1:
                             role = 'Contestant'
@@ -183,15 +183,22 @@ def generate_ec_reports():
                             role = 'Organizer'
 
                         if student.profile.team is None:
-                            questions_answered = 0
+                            questions_answered = 'none'
+                            team_division = 'none'
                         else:
                             questions_answered = student.profile.team.questions_answered
+
+                            if student.profile.team.division == 1:
+                                team_division = 'Upper'
+                            else:
+                                team_division = 'Lower'
 
                         writer.writerow([
                             student.profile.fsu_id,
                             student.last_name,
                             student.first_name,
                             questions_answered,
+                            team_division,
                             role
                         ])
             else:
@@ -201,7 +208,7 @@ def generate_ec_reports():
         'Processed extra credit files for %d courses' % num_courses)
 
 
-@ shared_task
+@shared_task
 def email_faculty(domain):
     faculty_members = Faculty.objects.all()
     fpath = MEDIA_ROOT + '/ec_files/'
@@ -228,8 +235,8 @@ def email_faculty(domain):
 
 
 
-@ shared_task
-@ transaction.atomic
+@shared_task
+@transaction.atomic
 def process_contest_results():
     num_teams = 0
     contest = Contest.objects.all().first()
