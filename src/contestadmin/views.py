@@ -190,17 +190,6 @@ def dashboard(request):
         file_form = forms.ResultsForm()
         checkin_form = forms.CheckinUsersForm()
         
-    '''try:
-        contest = Contest.objects.all().first().get()
-    except:
-        context['ec_available'] = False
-    else:
-        context['ec_available'] = contest.ec_processed'''
-
-    '''if Team.objects.exclude(questions_answered=0).count() > 0:
-        context['dj_results_processed'] = True
-    else:
-        context['dj_results_processed'] = False'''
     
     if len(os.listdir(MEDIA_ROOT + '/uploads/')) > 0:
         context['dj_results_processed'] = True
@@ -218,27 +207,43 @@ def dashboard(request):
         context['dj_files_available'] = False
     
     
+    # Users card data
     context['users_registered'] = User.objects.all().count()
     context['users_verified'] = User.objects.filter(is_active=True).count()
     context['added_fsu_num'] = Profile.objects.exclude(fsu_num=None).count()
     context['added_fsu_id'] = Profile.objects.exclude(fsu_id=None).count()
     context['added_courses'] = Profile.objects.exclude(courses=None).count()
 
+    # Teams card data
     context['total_teams'] = Team.objects.all().count()
     context['registered_teams'] = Team.objects.exclude(name__contains='Walk-in-').count()
     context['total_walkin'] = Team.objects.filter(name__contains='Walk-in-').count()
     context['walkin_used'] = Team.objects.filter(name__contains='Walk-in-').exclude(num_members=0).count()
 
+    # Upper division card data
     context['num_upper_teams'] = Team.objects.filter(division=1).exclude(name__contains='Walk-in-').count()
     context['num_upper_reg_participants'] = Profile.objects.filter(team__division=1).exclude(team__name__contains='Walk-in-').count()
+    context['num_upper_walkin_teams'] = Team.objects.filter(
+        division=1).filter(name__contains='Walk-in-').count()
+    context['num_upper_walkin_used'] = Team.objects.filter(team__division=1).filter(
+        name__contains='Walk-in-').exclude(num_members=0).count()
     context['num_upper_walkin_participants'] = Profile.objects.filter(team__division=1).filter(team__name__contains='Walk-in-').count()
 
+    # Lower division card data
     context['num_lower_teams'] = Team.objects.filter(division=2).exclude(name__contains='Walk-in-').count()
     context['num_lower_reg_participants'] = Profile.objects.filter(team__division=2).exclude(team__name__contains='Walk-in-').count()
+    context['num_lower_walkin_teams'] = Team.objects.filter(
+        division=2).filter(name__contains='Walk-in-').count()
+    context['num_lower_walkin_used'] = Team.objects.filter(team__division=2).filter(
+        name__contains='Walk-in-').exclude(num_members=0).count()
     context['num_lower_walkin_participants'] = Profile.objects.filter(team__division=2).filter(team__name__contains='Walk-in-').count()
 
+    # Course crard data
+    context['courses'] = Course.objects.all()
+
+    # Forms
     context['checkin_form'] = checkin_form
     context['file_form'] = file_form
     context['gen_walkin_form'] = walkin_form
-    context['courses'] = Course.objects.all()
+
     return render(request, 'contestadmin/dashboard.html', context)
