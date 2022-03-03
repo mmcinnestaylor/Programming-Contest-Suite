@@ -21,7 +21,7 @@ services:
                 delay: 5s
                 failure_action: rollback            
     django:
-        image: acmfsu/contestsuite:1.0.0
+        image: acmfsu/contestsuite:latest
         # '/start' is the shell script used to run the service
         command: /app/start
         environment:
@@ -105,7 +105,7 @@ services:
                 delay: 5s
                 failure_action: rollback
     celery_worker:
-        image: acmfsu/contestsuite:1.0.0
+        image: acmfsu/contestsuite:latest
         command: /app/start-celeryworker
         environment:
             - DEBUG=False
