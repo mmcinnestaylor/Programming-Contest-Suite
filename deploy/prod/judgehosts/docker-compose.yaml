@@ -3,6 +3,7 @@ services:
     judgehost:
         image: 'acmfsu/judgehost:7.3.3'
         privileged: true
+        restart: always
         environment:
             - CONTAINER_TIMEZONE=America/New_York
             - JUDGEDAEMON_USERNAME=judgehost
@@ -16,6 +17,7 @@ services:
     jh_bas:
         image: 'acmfsu/judgehost:7.3.3'
         privileged: true
+        restart: always
         environment:
             - CONTAINER_TIMEZONE=America/New_York
             - JUDGEDAEMON_USERNAME=judgehost
