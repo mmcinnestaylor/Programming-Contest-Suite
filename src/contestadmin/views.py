@@ -225,7 +225,7 @@ def dashboard(request):
     context['num_upper_reg_participants'] = Profile.objects.filter(team__division=1).exclude(team__name__contains='Walk-in-').count()
     context['num_upper_walkin_teams'] = Team.objects.filter(
         division=1).filter(name__contains='Walk-in-').count()
-    context['num_upper_walkin_used'] = Team.objects.filter(team__division=1).filter(
+    context['num_upper_walkin_used'] = Team.objects.filter(division=1).filter(
         name__contains='Walk-in-').exclude(num_members=0).count()
     context['num_upper_walkin_participants'] = Profile.objects.filter(team__division=1).filter(team__name__contains='Walk-in-').count()
 
@@ -234,7 +234,7 @@ def dashboard(request):
     context['num_lower_reg_participants'] = Profile.objects.filter(team__division=2).exclude(team__name__contains='Walk-in-').count()
     context['num_lower_walkin_teams'] = Team.objects.filter(
         division=2).filter(name__contains='Walk-in-').count()
-    context['num_lower_walkin_used'] = Team.objects.filter(team__division=2).filter(
+    context['num_lower_walkin_used'] = Team.objects.filter(division=2).filter(
         name__contains='Walk-in-').exclude(num_members=0).count()
     context['num_lower_walkin_participants'] = Profile.objects.filter(team__division=2).filter(team__name__contains='Walk-in-').count()
 
