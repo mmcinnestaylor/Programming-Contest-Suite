@@ -14,7 +14,7 @@
 					Hello {{ first_name }} {{ last_name }}
 				</div>
 				<div class="card-body">
-				<p class="card-text">The zip file linked below contains CSVs with participant information for each of the courses you registered with the contest. Each row in a CSV file contains the following fields: fsu_id, last_name, first_name, questions_answered, role. Each field is separated by a single comma without whitespace, and each row is delimited by a newline. The role field will have one of the following values: contestant, proctor, question writer, organizer. You will only receive reports for classes where at least one student checked-in to the contest. </p>
+				<p class="card-text">The zip file linked below contains CSVs with participant information for each of the courses you registered with the contest. Each row in a CSV file contains the following fields: fsu_id, last_name, first_name, questions_answered, team_division, role. Each field is separated by a single comma without whitespace, and each row is delimited by a newline. The role field will have one of the following values: contestant, proctor, question writer, organizer. If a student checked into the contest but subsequently removed themself from the team used at check-in before we processed the results, then the team_division and questions_answered fields will contain the value 'none'. You will only receive reports for classes where at least one student checked-in to the contest. </p>
 				<a href="{% url 'fac_ec_files_dl' uidb64=uid  %}" class="btn btn-primary"><i class="fa fa-download mx-1" aria-hidden="true"></i>Download</a>
 				</div>
 			</div>
