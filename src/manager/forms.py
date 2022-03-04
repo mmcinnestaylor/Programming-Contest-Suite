@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.core.exceptions import ValidationError
 
 
 from .models import Profile, Course
@@ -8,6 +9,30 @@ from register.models import Team
 
 
 class UserForm(forms.ModelForm):
+    email = forms.EmailField()
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(UserForm, self).__init__(*args, **kwargs)
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+
+        # Check if email address is attached to an existing user
+        if User.objects.filter(email=email).exists():
+            try:
+                user = User.objects.get(email=email)
+            except:
+                raise ValidationError('Unable to validate email.')
+            else:
+                # Email address associated with another account
+                if user.username != self.user.username:
+                    raise ValidationError('Email already in use.')
+                # Email address associated with user's account    
+                else:
+                    return email
+        return email
+    
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email')

@@ -45,7 +45,7 @@ def manage_profile(request):
 
     if request.method == 'POST':
         # Forms for both user and profile models
-        user_form = forms.UserForm(request.POST, instance=request.user)
+        user_form = forms.UserForm(request.POST, instance=request.user, user=request.user)
         profile_form = forms.ProfileForm(request.POST, instance=request.user.profile)
 
         if user_form.is_valid() and profile_form.is_valid():
@@ -57,7 +57,7 @@ def manage_profile(request):
         else:
             messages.error(request, 'Please correct the error(s) below.')
     else:
-        user_form = forms.UserForm(instance=request.user)
+        user_form = forms.UserForm(instance=request.user, user=request.user)
         profile_form = forms.ProfileForm(instance=request.user.profile)
 
     context['user_form'] = user_form

@@ -7,7 +7,11 @@ from .models import Team
 
 # Extend built-in User form to include email, first name, and last name fields
 class ExtendedUserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=True)
+    def validate_email(address):
+        if User.objects.filter(email=address).exists():
+            raise ValidationError('Email already in use.')
+    
+    email = forms.EmailField(required=True, validators=[validate_email])
     # name lengths as specified by Django 3.0.* documentation
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=150, required=True)
@@ -15,6 +19,7 @@ class ExtendedUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'username', 'password1', 'password2']
+   
 
 class TeamForm(forms.ModelForm):
     name = forms.CharField(max_length=30)
