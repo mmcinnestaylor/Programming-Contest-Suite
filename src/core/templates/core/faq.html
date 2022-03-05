@@ -23,15 +23,16 @@
   
     <div id="collapseOneContest" class="collapse show" aria-labelledby="headingOneContest" data-parent="#accordionContest">
       <div class="card-body">
-        The contest is a series of challenging coding questions
-        that require critical thinking and coding know-how.
-        Each question has a prompt consisting of flavor text and a
-        description of the challenge. You'll get the some constraints
-        on the input, as well as some sample input and corresponding output.
-        From there, your team will need to work together to write code that
-        will produce the correct output for any input we could throw at you.
-        Responses are scored on how quickly you solved the problem relative
-        to the contest with points deducted for each incorrect submission.
+        <p>
+          The contest is a series of challenging coding questions that require critical thinking and coding know-how. Each
+          question has a prompt consisting of flavor text and a description of the challenge. You'll get the some constraints on
+          the input, as well as some sample input and corresponding output.
+        </p>
+        <p>
+          From there, your team will need to work together to write code that will produce the correct output for any input we
+          could provide you. Responses are scored on how quickly you solved the problem relative to the start of the contest with points
+          deducted for each incorrect submission.
+        </p>
       </div>
     </div>
   </div>
@@ -47,8 +48,28 @@
     </div>
     <div id="collapseTwoContest" class="collapse" aria-labelledby="headingTwoContest" data-parent="#accordionContest">
       <div class="card-body">
-        If you are currently enrolled in CDA3100, COP3014, COP3363, or
-        COP3330, you qualify to register for the Lower Division. The Lower Division will have easier questions better suited for less experienced programmers. Those who qualify to register for the Lower Division are still welcome to register for the Upper Division. The Upper Division will feature more diffcult questions which are appropriate for undergraduate juniors and seniors, graduate students, and even department faculty.
+        <h6>Lower Division</h6>
+        Easier questions better suited for beginner programmers.
+        <ul>
+          <li>
+            FSU students who are enrolled in CDA3100, COP3014, COP3363, COP3330.
+          </li>
+          <li>
+            Individuals with only an introductory programming background. 
+          </li>
+        </ul>
+        <h6>Upper Division</h6>
+        More difficult questions appropriate for experienced programmers.
+        <ul>
+          <li>
+            FSU students who have taken a CS course beyond those listed above (typically Junior and Senior CS undergrads).
+          </li>
+          <li>
+            Graduate CS students, CS Faculty, and experienced programmers
+          </li>
+        </ul>
+        Those who qualify to register for the Lower Division are still welcome to register for the
+        Upper Division.
       </div>
     </div>
   </div>
@@ -102,6 +123,52 @@
       </div>
     </div>
   </div>
+  <!-- Sixth Question-->
+  <div class="card">
+    <div class="card-header" id="headingSixContest">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left text-dark collapsed" type="button" data-toggle="collapse"
+          data-target="#collapseSixContest" aria-expanded="false" aria-controls="collapseSixContest">
+          <h5 class="mb-0">Where is the contest held?</h5>
+        </button>
+      </h2>
+    </div>
+    <div id="collapseSixContest" class="collapse" aria-labelledby="headingSixContest" data-parent="#accordionContest">
+      <div class="card-body">
+        In person contests are held in the <a href="https://www.facilities.fsu.edu/space/buildings/profile.php?bldg=0116"
+          target="_blank" rel="external">Love Building (LOV)</a> at FSU. The building's address can be found in this site's
+        footer.
+      </div>
+    </div>
+  </div>
+  <!-- Seventh Question-->
+  <div class="card">
+    <div class="card-header" id="headingSevenContest">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left text-dark collapsed" type="button" data-toggle="collapse"
+          data-target="#collapseSevenContest" aria-expanded="false" aria-controls="collapseSevenContest">
+          <h5 class="mb-0">How do I check in on contest day?</h5>
+        </button>
+      </h2>
+    </div>
+    <div id="collapseSevenContest" class="collapse" aria-labelledby="headingSevenContest" data-parent="#accordionContest">
+      <div class="card-body">
+        <h6>In Person Contests</h6>
+        <p>
+          The contest staff will direct you to a check in station once doors open on contest day. Follow
+          the on screen prompts at the check in station to complete the process.
+        </p>
+        <p>
+          You will have the option of swiping your FSUCard or entering your registered email at check in. In order to use your FSUCard, you must complete the FSU num section of
+          your profile in the Account Dashboard.
+        </p>
+        <h6>Virtual Contests</h6>
+        <p>
+          Check in is handled automatically by the contest staff. 
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- DOMJUDGE-->
@@ -138,35 +205,33 @@
     </div>
     <div id="collapseTwoDJ" class="collapse" aria-labelledby="headingTwoDJ" data-parent="#accordionDJ">
       <div class="card-body">
-        <ul>
-          <li>
-            Teams are ranked by the number of questions they have solved. If multiple teams have answered the same
-            number
-            of questions, then they are ranked by a point system based on least total time to submit a correct solution
-            for the questions, as well as fewest attempts to get the correct solution.
-          </li>
-          <li>
-            You receive points when you successfully solve a problem, and the amount of points is based on how many
-            minutes since the contest has started. For every incorrect solution you submit, you receive a penalty of 20
-            minutes to your final score for that problem. You may submit as many times as you like, but EACH incorrect
-            solution will add additional time penalties. For example, if you submit a correct solution to a problem 10
-            minutes after the contest has started, but submitted an incorrect solution beforehand, then your final score
-            will be 30.
-          </li>
-          <li>
-            Teams who answer the same number of questions will be ranked on the lowest score, since it is based on time
-            since the contest has started + time penalties per questions. This also means that you could have a "lower"
-            score than another team who is ranked higher, however they solved more questions than your team, thus
-            putting
-            them ahead.
-          </li>
-        </ul>
+        <p>
+          Teams are ranked by the number of questions they have solved. If multiple teams have answered the same
+          number
+          of questions, then they are ranked by a point system based on least total time to submit a correct solution
+          for the questions, as well as fewest attempts to get the correct solution.
+        </p>
+        <p>
+          You receive points when you successfully solve a problem, and the amount of points is based on how many
+          minutes since the contest has started. For every incorrect solution you submit, you receive a penalty of 20
+          minutes to your final score for that problem. You may submit as many times as you like, but EACH incorrect
+          solution will add additional time penalties. For example, if you submit a correct solution to a problem 10
+          minutes after the contest has started, but submitted an incorrect solution beforehand, then your final score
+          will be 30.
+        </p>
+        <p>
+          Teams who answer the same number of questions will be ranked on the lowest score, since it is based on time
+          since the contest has started + time penalties per questions. This also means that you could have a "lower"
+          score than another team who is ranked higher, however they solved more questions than your team, thus
+          putting
+          them ahead.
+        </p>
       </div>
     </div>
   </div>
   <!-- Third Question-->
   <div class="card">
-    <div class="card-header" id="headingOneDJ">
+    <div class="card-header" id="headingThreeDJ">
       <h2 class="mb-0">
         <button class="btn btn-link btn-block text-left text-dark collapsed" type="button" data-toggle="collapse"
           data-target="#collapseThreeDJ" aria-expanded="false" aria-controls="collapseThreeDJ">
@@ -192,7 +257,8 @@
     </div>
     <div id="collapseFourDJ" class="collapse" aria-labelledby="headingFourDJ" data-parent="#accordionDJ">
       <div class="card-body">
-        Upon successful checkin on contest day you will receive an email with your DOMjudge credentials. You may also view the credentials in the Team section of your Account Dashboard after a successful checkin.
+        Upon successful check in on contest day you will receive an email with your DOMjudge credentials. You may also view the
+        credentials in the Team section of your Account Dashboard after checking in.
       </div>
     </div>
   </div>
@@ -208,7 +274,9 @@
     </div>
     <div id="collapseFiveDJ" class="collapse" aria-labelledby="headingFiveDJ" data-parent="#accordionDJ">
       <div class="card-body">
-        You can access the server by clicking on the 'Contest Server' link in the 'Resources' dropdown menu which is located in the top navigation bar above. Once the page loads, locate the 'Login' button in the top navication bar, and enter the credentials you received upon checkin.
+        You can access the server by clicking on the 'Contest Server' link in the 'Resources' dropdown menu which is located in
+        the top navigation bar above. Once the page loads, locate the 'Login' button in the top navication bar, and enter the
+        credentials you received upon check in.
       </div>
     </div>
   </div>
@@ -231,12 +299,10 @@
       <div class="card-body">
         In order to participate in the contest you must complete two steps:
         <ul class="mb-0">
-          <li>Register an account</li>
+          <li>Create an account</li>
           <li>Join or create a team (solo teams are allowed)</li>
         </ul>
-        You can register an account by clicking the 'Register' link in the top navigation bar. Once registered, you will
-        need to confirm you account by following the instructions in the confirmation email sent to the address you
-        provided. Check out the Teams section in this FAQ for information regarding joining or creating a team.
+        Check out the Account and Teams sections of this FAQ for more information.
       </div>
     </div>
   </div>
@@ -261,33 +327,55 @@
 <!-- ACCOUNT -->
 <h3 class="mt-3">Account</h3>
 <div class="accordion mt-3" id="accordionAccount">
+  
   <!-- First Question-->
   <div class="card">
     <div class="card-header" id="headingOneAccount">
       <h2 class="mb-0">
         <button class="btn btn-link btn-block text-left text-dark collapsed" type="button" data-toggle="collapse"
           data-target="#collapseOneAccount" aria-expanded="false" aria-controls="collapseOneAccount">
-          <h5 class="mb-0">How do I sign up for extra credit?</h5>
+          <h5 class="mb-0">How do I create an account?</h5>
         </button>
       </h2>
     </div>
     <div id="collapseOneAccount" class="collapse" aria-labelledby="headingOneAccount" data-parent="#accordionAccount">
       <div class="card-body">
-        After registering your account and confirming it, head over to your Account Dashboard. From there you first need to add your FSU ID to your profile by clicking 'Edit' in the Profile section. Then, locate the Courses section in your Account Dashboard, and click 'Add'. You will be presented with a list of courses which have been confirmed by the contest organizers. Click the selection box of any available course in which you are currently registered, and then click the 'Select' button. 
+        Click the 'Register' link in the top navigation bar. Once created, you will need to confirm you account by following the
+        instructions in the confirmation email sent to the address you provided.
       </div>
     </div>
   </div>
   <!-- Second Question-->
   <div class="card">
-    <div class="card-header" id="headingOneAccount">
+    <div class="card-header" id="headingTwoAccount">
       <h2 class="mb-0">
         <button class="btn btn-link btn-block text-left text-dark collapsed" type="button" data-toggle="collapse"
           data-target="#collapseTwoAccount" aria-expanded="false" aria-controls="collapseTwoAccount">
-          <h5 class="mb-0">What if my course isn't available to select?</h5>
+          <h5 class="mb-0">How do I sign up for extra credit?</h5>
         </button>
       </h2>
     </div>
     <div id="collapseTwoAccount" class="collapse" aria-labelledby="headingTwoAccount" data-parent="#accordionAccount">
+      <div class="card-body">
+        After registering your account and confirming it, head over to your Account Dashboard. From there you first need to add
+        your FSU ID to your profile by clicking 'Edit' in the Profile section. Then, locate the Courses section in your Account
+        Dashboard, and click 'Add'. You will be presented with a list of courses which have been confirmed by the contest
+        organizers. Click the selection box of any available course in which you are currently registered, and then click the
+        'Select' button.
+      </div>
+    </div>
+  </div>
+  <!-- Third Question-->
+  <div class="card">
+    <div class="card-header" id="headingThreeAccount">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left text-dark collapsed" type="button" data-toggle="collapse"
+          data-target="#collapseThreeAccount" aria-expanded="false" aria-controls="collapseThreeAccount">
+          <h5 class="mb-0">What if my course isn't available to select?</h5>
+        </button>
+      </h2>
+    </div>
+    <div id="collapseThreeAccount" class="collapse" aria-labelledby="headingThreeAccount" data-parent="#accordionAccount">
       <div class="card-body">
         Don't worry! We add courses only as we receive confirmation from the course instructor. If your course isn't
         listed, first confirm with your instructor that they are indeed offering extra credit for participation. If they
@@ -313,8 +401,8 @@
     </div>
     <div id="collapseOneTeams" class="collapse" aria-labelledby="headingOneTeams" data-parent="#accordionTeams">
       <div class="card-body">
-        Contest teams are used to generate the user accounts for our DOMjudge judging platform. In order to access DOMjudge
-        and submit code solutions, your contest account must be tied to a team. Once your contest account is registered
+        Teams are used to generate the user accounts for our DOMjudge judging platform. In order to access DOMjudge
+        and submit code solutions, your account must be tied to a team. Once your contest account is created
         and verified, you can choose to either create or join a team from the Account Dashboard.
       </div>
     </div>
@@ -331,7 +419,17 @@
     </div>
     <div id="collapseTwoTeams" class="collapse" aria-labelledby="headingTwoTeams" data-parent="#accordionTeams">
       <div class="card-body">
-        In your Account Dashboard, locate the Team section. If you have not yet joined a team, you will see buttons to 'Join registered team' and 'Create new team'. Click the create button, and a form will load where you can enter a team name, and select the division in which your team will compete. Once you click Submit your team will be created, and you will be set as the team admin. As the team admin, you will be able to see the team's PIN, which you can share with others you wish to join your team.
+        <p>
+          In your Account Dashboard, locate the Team section. If you have not yet joined a team, you will see buttons to 'Join
+          registered team' and 'Create new team'. Click the create button, and a form will load where you can enter a team name,
+          and select the division in which your team will compete. Once you click Submit your team will be created, and you will
+          be set as the team admin.
+        </p>
+        <p>
+          As the team admin, you will be able to see the team's PIN, which you can share with others you
+          wish to join your team.
+        </p>
+         
       </div>
     </div>
   </div>
@@ -347,9 +445,16 @@
     </div>
     <div id="collapseThreeTeams" class="collapse" aria-labelledby="headingThreeTeams" data-parent="#accordionTeams">
       <div class="card-body">
-        In your Account Dashboard, locate the Team section. If you have not yet joined a team, you will see buttons to
-        'Join registered team' and 'Create new team'. Click the join button, and a form will load where you can select a
-        team name from a dropdown menu of all currently registered teams. You will also need to provide the team PIN which must be obtained from the team admin. Currently, you must coordinate with the team admin outside of the registration platform. Once you click Submit, assuming you have provided the correct PIN, you will be added to the team.
+        <p>
+          In your Account Dashboard, locate the Team section. If you have not yet joined a team, you will see buttons to
+          'Join registered team' and 'Create new team'. Click the join button, and a form will load where you can select a
+          team name from a dropdown menu of all currently registered teams.
+        </p>
+        <p>
+          You will need to provide the team PIN which must be obtained from the team admin. Currently, you must coordinate with
+          the team admin outside of the registration platform. Once you click Submit, assuming you have provided the correct PIN,
+          you will be added to the team.
+        </p> 
       </div>
     </div>
   </div>
@@ -381,7 +486,43 @@
     </div>
     <div id="collapseFiveTeams" class="collapse" aria-labelledby="headingFiveTeams" data-parent="#accordionTeams">
       <div class="card-body">
-        In short, yes. We use a one to one mapping of contest teams to DOMjudge user accounts. Therefore a team with multiple members will share a single set of DOMjudge credentials. Additionally, the number of correctly answered questions in DOMjudge is mapped back to the contest team, which is then used in processing participation for extra credit.
+        In short, yes. We use a one to one mapping of contest teams to DOMjudge user accounts. Therefore a team with multiple
+        members will share a single set of DOMjudge credentials. Additionally, the number of correctly answered questions in
+        DOMjudge is mapped back to the contest team, which is then used in processing participation for extra credit.
+      </div>
+    </div>
+  </div>
+  <!-- Sixth Question-->
+  <div class="card">
+    <div class="card-header" id="headingSixTeams">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left text-dark collapsed" type="button" data-toggle="collapse"
+          data-target="#collapseSixTeams" aria-expanded="false" aria-controls="collapseSixTeams">
+          <h5 class="mb-0">I missed the team registration deadline, can I still compete?</h5>
+        </button>
+      </h2>
+    </div>
+    <div id="collapseSixTeams" class="collapse" aria-labelledby="headingSixTeams" data-parent="#accordionTeams">
+      <div class="card-body">
+          <p>Yes! You may do either of the following:</p>
+          <h6>Join an existing (registered) team</h6>
+          <p>
+            You may join an already registered team even after the deadline and up until checking in to the contest. Simply follow
+            the procedure in 'How do I join an existing team?'.
+          </p>
+          <h6>Join a walk-in team</h6>
+          <p>
+            We provide a limited number of walk-in teams for both divisions which are available on contest day on a first come first served basis.
+          </p>
+          <ul>
+            <li>
+              You can be assigned a walk-in team by selecting 'No' at the registered teams prompt during check in. 
+            </li>
+            <li>
+              If multiple people want to join the same walk-in team, one person must first check in and select 'No' at the registered teams prompt. After they are added to a walk-in team, they must then share the team's PIN, located in the Account Dashboard, with their group. The remaining individuals should follow the procedure outlined in 'How do I join an existing team?' before checking in.
+            </li>
+          </ul>
+        
       </div>
     </div>
   </div>
