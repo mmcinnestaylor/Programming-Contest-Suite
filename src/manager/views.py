@@ -33,7 +33,7 @@ def dashboard(request):
             request, 'Your FSU ID is blank. You must add it to your profile in order to receive extra credit. Check out the FAQ for more information.')
     if request.user.profile.fsu_num is None or request.user.profile.fsu_num == '':
         messages.info(
-            request, 'Your FSU number is blank. You must add it to your profile in order to swipe check in on contest day. Check out the FAQ for more information.')
+            request, 'Your FSU number is blank. You must add it to your profile in order to swipe check in using your FSUCard on contest day. Check out the FAQ for more information.')
 
     return render(request, 'manager/dashboard.html', context)
 

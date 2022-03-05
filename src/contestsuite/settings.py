@@ -247,4 +247,4 @@ else:
     EMAIL_USE_SSL = False
     EMAIL_USE_TLS = True
 
-DEFAULT_FROM_EMAIL = 'ACM Programming Contest<acm@cs.fsu.edu>'  
+DEFAULT_FROM_EMAIL = 'ACM@FSU Programming Contest<acm@cs.fsu.edu>'  
