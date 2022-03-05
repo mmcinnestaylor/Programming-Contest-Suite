@@ -34,7 +34,7 @@ class ActivateAccount(View):
             user.save()
             
             login(request, user)
-            messages.success(request, ('Your registration has been confirmed!'))
+            messages.success(request, ('Your account has been confirmed!'))
             return redirect('manage_dashboard')
         else:
             messages.warning(request, ('The confirmation link was invalid, possibly because it has already been used.'))
@@ -62,7 +62,7 @@ def account(request):
             tasks.send_validation_email.delay(current_site.domain, user.username)
 
             messages.success(
-                request, 'Account registered! Please check your inbox for an account confirmation email.')
+                request, 'Account created! Please check your inbox for an account confirmation email.')
             return redirect('login')
 
         messages.error(
@@ -77,8 +77,6 @@ def account(request):
 
 
 # key error on password1, more research required
-# https://stackoverflow.com/questions/34962398/keyerror-at-registration-value-password1/34963664
-
 '''def group(request):
     context = {}
     UserFormSet = formset_factory(forms.ExtendedUserCreationForm, extra=3)

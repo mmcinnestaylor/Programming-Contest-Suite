@@ -1,11 +1,11 @@
 {% autoescape off %}
 Hello {{ user.first_name }},
 
-Thank you for registering for this semester's contest! Please follow the link below to confirm your registration:
+Thank you for signing up for this semester's contest! Please follow the link below to confirm your account:
 
 https://{{ domain }}{% url 'activate' uidb64=uid token=token %}
 
-Check out the FAQ for information regarding how to complete your profile, and sign up for extra credit:
+Check out the FAQ for information regarding how to complete your registration, and sign up for extra credit:
 
 https://{{ domain }}{% url 'faq' %}
 
