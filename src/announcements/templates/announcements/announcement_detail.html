@@ -19,7 +19,7 @@
           <br>
           <small class="card-text text-muted">Updated on: {{ announcement.updated_on}}</small>
         {% endif %}
-        <p class="card-text mt-2">{{ object.content | safe }}</p>
+        <p class="card-text mt-2">{{ object.content | linebreaksbr }}</p>
         <a href="{% url 'announcements' %}" class="btn btn-primary btn-sm">&larr; Back</a>
       </div> 
     </div>
