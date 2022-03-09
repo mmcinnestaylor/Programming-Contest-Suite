@@ -4,9 +4,8 @@
 {% block title %}Contest Dashboard{% endblock %}
 
 {% block content %}
-	<div class="row justify-content-center">
-		<h1>Contest Dashboard</h1>
-	</div>
+	<h1 class="text-center">Contest Dashboard</h1>
+
 	<!-- Messages -->
 	{% include 'core/messages.html' %}
 	<!-- End Messages -->
@@ -20,7 +19,7 @@
 			</div>
 			<div class="card-body overflow-auto">
 				<div class="row justify-content-center">
-					<a class="btn btn-primary btn-sm my-1" href="{% url 'gen_dj_files' %}" role="button">Generate Domjudge TSVs</a>
+					<a class="btn btn-primary btn-sm my-1" href="{% url 'gen_dj_files' %}" role="button">Generate DOMjudge TSVs</a>
 					{% if dj_files_available %}					
 						<a class="btn text-dark" href="{% url 'download_dj_files' %}" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
 					{% else %}
