@@ -90,6 +90,8 @@
 							{% endfor %}
 						</tbody>
 					</table>
+				{% elif total_num_courses == 0 %}
+					<p class="text-center">No courses have been confirmed at this time.</p>
 				{% else %}
 					<div class="row justify-content-center">
 						<a class="btn btn-outline-info btn-sm" href="{% url 'manage_courses' %}" role="button">Add</a>

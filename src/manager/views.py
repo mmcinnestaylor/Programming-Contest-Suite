@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from . import forms
 from .utils import team_admin, has_no_team, has_team
-from .models import Profile
+from .models import Course, Profile
 from announcements.models import Announcement
 from register.models import Team 
 
@@ -18,6 +18,7 @@ from register.models import Team
 def dashboard(request):
     context = {}
     context['courses'] = request.user.profile.courses.all()
+    context['total_num_courses'] = Course.objects.count()
     context['team_members'] = User.objects.filter(profile__team=request.user.profile.team)
     context['announcements'] = (Announcement.objects.filter(status=1))[:1]
 
