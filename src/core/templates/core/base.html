@@ -35,7 +35,9 @@
 
       gtag('config', 'G-R68Q4E2KTL');
     </script>
-    <title>{% block title %}{% endblock %} | ACM at FSU Programming Contest</title>
+    {% block title %}
+    <title>{% block section %}{% endblock %} | ACM at FSU Programming Contest</title>
+    {% endblock %}
   </head>
   
   <body>
