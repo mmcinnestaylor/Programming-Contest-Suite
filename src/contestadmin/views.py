@@ -3,6 +3,7 @@ import os
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import user_passes_test
 from django.db import transaction
 from django.http import HttpResponse
 from django.utils.encoding import force_text
@@ -15,6 +16,7 @@ from zipfile import ZipFile
 
 from . import forms
 from . import tasks
+from .utils import contestadmin_auth
 from contestadmin.models import Contest
 from contestsuite.settings import MEDIA_ROOT
 from manager.models import Course, Faculty, Profile
@@ -146,7 +148,7 @@ class GenerateExtraCreditReports(View):
         return redirect('admin_dashboard')
 
 
-@staff_member_required
+@user_passes_test(contestadmin_auth, login_url='/', redirect_field_name=None)
 @transaction.atomic
 def dashboard(request):
     context = {}
