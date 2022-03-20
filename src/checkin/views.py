@@ -35,7 +35,7 @@ def checkin(request):
 				else:
 					walk_in_team = Team.objects.filter(name__contains='Walk-in-L-').filter(num_members=0).first()
 				
-				# If an empty walkin-is is not found, notify user.
+				# If an empty walk-in is not found, notify user.
 				if walk_in_team is None:
 					messages.error(request, 'There are no Walk-in teams available.', fail_silently=True)
 					return redirect('checkin_result')
@@ -51,14 +51,15 @@ def checkin(request):
 						user = User.objects.get(profile__fsu_num=fsu_number)
 					except:
 						messages.error(
-							request, 'Check in failed. FSU number not found.', fail_silently=True)
+							request, 'Check in failed. FSU number not found. ', fail_silently=True)
+						messages.info(request, 'Retry using email check in.', fail_silently=True)
 					else:
 						if user.profile.checked_in:
 							messages.info(request, 'You are already checked in.',
 							              fail_silently=True)
 						elif user.profile.team is None and not is_walkin:
 							messages.info(
-								request, 'You are not a member of a registered team. Join a registered team, or select YES at the walk-in prompt.', fail_silently=True)
+								request, 'You are not a member of a registered team. Join a registered team, or select NO at the registered team prompt.', fail_silently=True)
 						else:
 							user.profile.checked_in = True
 							if is_walkin == True:
@@ -96,7 +97,7 @@ def checkin(request):
 					if user.profile.checked_in:
 						messages.info(request, 'You are already checked in.', fail_silently=True)
 					elif user.profile.team is None and not is_walkin:
-						messages.info(request, 'You are not a member of a registered team. Join a registered team, or select YES at the walk-in prompt.', fail_silently=True)
+						messages.info(request, 'You are not a member of a registered team. Join a registered team, or select NO at the registered team prompt.', fail_silently=True)
 					else:
 						user.profile.checked_in = True
 						if is_walkin == True:
