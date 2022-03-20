@@ -1,17 +1,20 @@
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import transaction
 from django.shortcuts import render, redirect
 
 from . import forms
 from . import tasks
+from .utils import checkin_auth
 from register.models import Team
 
 # Create your views here.
 
 
-@staff_member_required
+@login_required
+@user_passes_test(checkin_auth, login_url='/', redirect_field_name=None)
 @transaction.atomic
 def checkin(request):
 	context = {}
@@ -130,6 +133,7 @@ def checkin(request):
 	return render(request, 'checkin/checkin.html', context)
 
 
-@staff_member_required
+@login_required
+@user_passes_test(checkin_auth, login_url='/', redirect_field_name=None)
 def checkin_result(request):
 	return render(request, 'checkin/checkin_result.html')

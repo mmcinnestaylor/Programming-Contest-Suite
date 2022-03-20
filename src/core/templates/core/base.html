@@ -85,11 +85,13 @@
                 <div class="dropdown-menu dropdown-menu-right">
                   {% if user.is_superuser %}
                     <a class="dropdown-item" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+                    <a class="dropdown-item" href="{% url 'checkin' %}">Check-in</a>
+                    <hr>
+                  {% elif user.profile.is_volunteer %}
+                    <a class="dropdown-item" href="{% url 'checkin' %}">Check-in</a>
+                    <hr>
                   {% endif %}
                   <a class="dropdown-item" href="{% url 'manage_dashboard' %}">Account</a>
-                  {% if user.is_staff %}
-                  <a class="dropdown-item" href="{% url 'checkin' %}">Checkin</a>
-                  {% endif %}
                   <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                 </div>
               </li>

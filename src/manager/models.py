@@ -76,11 +76,10 @@ class Profile(models.Model):
         return (str(self.user.first_name) + ' ' + str(self.user.last_name))
 
     def has_team(self):
-        if self.team is None:
-            return False
-        return True
+        return self.team is not None
 
     def has_courses(self):
-        if self.courses.count() == 0:
-            return False
-        return True
+        return self.courses.count() != 0
+
+    def is_volunteer(self):
+        return self.role > 1
