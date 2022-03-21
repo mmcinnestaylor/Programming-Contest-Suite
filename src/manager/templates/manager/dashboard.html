@@ -13,23 +13,26 @@
 	<div class="row justify-content-center">
 		<div class="col">
 			{% for announcement in announcements %}
-				<div class="card mt-4 shadow-sm">
-					<div class="card-header font-weight-bold">
-						Recent Announcement
-					</div>
-					<div class="card-body">
-						<h4 class="card-title mb-0">{{ announcement.title }}</h4>
-						<small class="card-text text-muted">{{ announcement.author.first_name }} | {{ announcement.created_on}} </small>
-						{% if announcement.created_on < announcement.updated_on %}
-							<br>
-							<small class="card-text text-muted">Updated on: {{ announcement.updated_on}} </small>
-						{% endif %}
-						{% if announcement.content|length > 140 %}
-							<p class="card-text lead mt-2">{{announcement.content|slice:":140" }}...</p>
-							<a href="{% url 'announcement_detail' announcement.slug  %}" class="btn btn-primary btn-sm">Read More</a>
-						{% else %}
-							<p class="card-text lead mt-2">{{announcement.content }}</p>
-						{% endif %}
+				<div class="alert alert-dismissible fade show mt-3 mb-2 p-0 shadow-sm">
+					<div class="card m-0">
+						<div class="card-header font-weight-bold">
+							Recent Announcement
+							<button type="button" class="close" data-dismiss="alert">&times;</button>
+						</div>
+						<div class="card-body">
+							<h4 class="card-title mb-0">{{ announcement.title }}</h4>
+							<small class="card-text text-muted">{{ announcement.author.first_name }} | {{ announcement.created_on}} </small>
+							{% if announcement.created_on < announcement.updated_on %}
+								<br>
+								<small class="card-text text-muted">Updated on: {{ announcement.updated_on}} </small>
+							{% endif %}
+							{% if announcement.content|length > 140 %}
+								<p class="card-text lead mt-2">{{announcement.content|slice:":140" }}...</p>
+								<a href="{% url 'announcement_detail' announcement.slug  %}" class="btn btn-primary btn-sm">Read More</a>
+							{% else %}
+								<p class="card-text lead mt-2">{{announcement.content }}</p>
+							{% endif %}
+						</div>
 					</div>
 				</div>
 			{% empty %}
