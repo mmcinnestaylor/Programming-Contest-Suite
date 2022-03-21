@@ -6,7 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="author" content="Marlan McInnes-Taylor">
-    <meta name="description" content="ACM@FSU Programming Contest Registration & Management">
+    {% block description %}
+    <meta name="description" content="ACM at FSU Programming Contest Registration & Management">
+    {% endblock %}
     <meta name="keywords"
       content="ACM ICPC, ACM Programming Contest, FSU ICPC, FSU ACM ICPC, FSU Programming Contest, FSU ACM Programming Contest, FSU CS Programming Contest, Florida State ICPC, Florida State Programming Contest, Florida State CS Programming Contest, Florida State ACM Programming Contest, Florida State University Programming Contest, Florida State University ACM Programming Contest, Florida State University ICPC, Florida State University CS Programming Contest">
     <link rel="stylesheet" 
@@ -67,10 +69,10 @@
                 Resources
               </a>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="https://domjudge.cs.fsu.edu" target="_blank">Contest Server</a>
+                <a class="dropdown-item" href="https://domjudge.cs.fsu.edu" target="_blank" rel="external">Contest Server</a>
                 <a class="dropdown-item" href="https://drive.google.com/drive/folders/1pjZk22HGTOjvedz932kHox6-rTz5JqoE?usp=sharing"
-                  target="_blank">Example Questions</a>
-                <a class="dropdown-item" href="https://bit.ly/JoinProgClub" target="_blank">Programming Club</a>
+                  target="_blank" rel="external">Example Questions</a>
+                <a class="dropdown-item" href="https://bit.ly/JoinProgClub" target="_blank" rel="external">Programming Club</a>
               </div>
             </li>
             <li class="nav-item">
@@ -131,14 +133,14 @@
           <div class="col-md-4 text-center text-md-left ">
     
             <div class="py-0">
-              <h3 class="my-4 text-white"><a class="mx-2 font-italic text-primary" href="https://fsu.acm.org" target="_blank">ACM at FSU</a></h3>
+              <h3 class="my-4 text-white"><a class="mx-2 font-italic text-primary" href="https://fsu.acm.org" target="_blank" rel="external">ACM at FSU</a></h3>
               <p class="footer-links">
-                <i class="fa fa-envelope text-white mx-2"></i><a href="mailto:contest@fsu.acm.org" class="text-warning">contest@fsu.acm.org</a>
+                <i class="fa fa-envelope text-white mx-2"></i><a href="mailto:contest@fsu.acm.org" class="text-warning" rel="external">contest@fsu.acm.org</a>
               </p>
               <div class="mx-auto pt-2">
-                <a href="https://www.facebook.com/ACMatFSU/" target="_blank"><i class="fab fa-facebook fa-lg text-white mr-3"></i></a>
-                <a href="https://discord.gg/4z3hNMA" target="_blank"><i class="fab fa-discord fa-lg text-white mx-3"></i></a>
-                <a href="https://github.com/FSU-ACM" target="_blank"><i class="fab fa-github fa-lg text-white mx-3"></i></a>
+                <a href="https://www.facebook.com/ACMatFSU/" target="_blank" rel="external"><i class="fab fa-facebook fa-lg text-white mr-3"></i></a>
+                <a href="https://discord.gg/4z3hNMA" target="_blank" rel="external"><i class="fab fa-discord fa-lg text-white mx-3"></i></a>
+                <a href="https://github.com/FSU-ACM" target="_blank" rel="external"><i class="fab fa-github fa-lg text-white mx-3"></i></a>
                 <a href="{% url 'announcements_feed' %}"><i class="fa fa-rss fa-lg text-white mx-3"></i></a>
               </div>              
             </div>
@@ -153,10 +155,10 @@
                   Tallahassee, FL 32304</p>
               </div>
               <div class="mb-2">
-                <a class="text-danger" href="https://cs.fsu.edu" target="_blank">FSU Dept of Computer Science</a>
+                <a class="text-danger" href="https://cs.fsu.edu" target="_blank" rel="external">FSU Dept of Computer Science</a>
               </div>
               <div class="mt-2 pt-1">
-                <a class="text-white" href="https://icpc.global/" target="_blank">International Programming Contest</a>
+                <a class="text-white" href="https://icpc.global/" target="_blank" rel="external">International Programming Contest</a>
                 
               </div>
 
@@ -167,7 +169,7 @@
           <div class="col-md-4 text-white my-4 text-center text-md-left ">
             <span class=" font-weight-bold">About the Contest</span>
             <p class="text-info my-2">The ACM Programming Contest is a coding competition that emphasizes problem solving executed in code.</p>
-            <a class="text-light" href="https://www.mmcinnestaylor.com" target="_blank">Built with &hearts; by Marlan Mc-T</a>
+            <a class="text-light" href="https://www.mmcinnestaylor.com" target="_blank" rel="external">Built with &hearts; by Marlan Mc-T</a>
           </div>
         </div>
       </div>
