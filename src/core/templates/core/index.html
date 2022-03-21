@@ -22,7 +22,7 @@
 
   <div class="row justify-content-center">
     <div class="col">
-      <div class="jumbotron shadow mt-4" id="jumbo-announcements">
+      <div class="jumbotron shadow mt-4 p-4" id="jumbo-announcements">
         <h1 class="mt-0">Recent Announcement</h1>
         <hr class="my-4">
         {% for announcement in announcements %}
@@ -49,8 +49,7 @@
     </div>
   </div>
 
- 
-    <p class="lead text-center mb-1">An <a href="https://icpc.global" target="_blank">ICPC</a> style contest hosted semesterly by the Association for Computing Machinery Florida State University Student Chapter.</p>
+  <p class="lead text-center mb-1">An <a href="https://icpc.global" target="_blank">ICPC</a> style contest hosted semesterly by the Association for Computing Machinery Florida State University Student Chapter.</p>
   
   <hr>
   <div class="row justify-content-center">
@@ -66,17 +65,38 @@
       </p>
     </div>
   </div>
+
+  {% if contest is not None and contest.team_deadline is not None %}
+    <div class="row justify-content-center">
+      <div class=" col-sm col-md-6">
+        <div class="card bg-secondary">
+          <h5 class="text-center text-warning">Team Registration Deadline</h5>
+          <date class="text-center text-light">{{ contest.team_deadline | date }} @ {{ contest.team_deadline | time }}</date>
+        </div>
+      </div>
+    </div> 
+  {% endif %}
   
   <div class="row justify-content-center mt-3">
     <div class="col-md-5 text-center mb-3">
       <h3>Contest Details</h3>
       {% if contest is not None %}
         <p class="mb-1"><span class="font-weight-bold">Date: </span>{{ contest.contest_date }}</p>
-        <p class="mb-1"><span class="font-weight-bold">Doors Open: </span>{{ contest.contest_doors }}</p>
-        <p class="mb-1"><span class="font-weight-bold">Contest Start: </span>{{ contest.contest_start }}</p>
-        <p class="mb-1"><span class="font-weight-bold">Scoreboard Freeze: </span>{{ contest.contest_freeze }}</p>
-        <p class="mb-1"><span class="font-weight-bold">Contest End: </span>{{ contest.contest_end }}</p>
-        <p class="mb-1"><span class="font-weight-bold">Awards Ceremony: </span>{{ contest.contest_awards }}</p>
+        {% if contest.contest_doors is not None %}
+          <p class="mb-1"><span class="font-weight-bold">Doors Open: </span>{{ contest.contest_doors }}</p>
+        {% endif %}
+        {% if contest.contest_start is not None %}
+          <p class="mb-1"><span class="font-weight-bold">Contest Start: </span>{{ contest.contest_start }}</p>
+        {% endif %}
+        {% if contest.contest_freeze is not None %}
+          <p class="mb-1"><span class="font-weight-bold">Scoreboard Freeze: </span>{{ contest.contest_freeze }}</p>
+        {% endif %}
+        {% if contest.contest_end is not None %}
+          <p class="mb-1"><span class="font-weight-bold">Contest End: </span>{{ contest.contest_end }}</p>
+        {% endif %}
+        {% if contest.contest_awards is not None %}
+          <p class="mb-1"><span class="font-weight-bold">Awards Ceremony: </span>{{ contest.contest_awards }}</p>
+        {% endif %}
       {% else %}
         <p>Contest schedule not yet set.</p>
       {% endif %}
