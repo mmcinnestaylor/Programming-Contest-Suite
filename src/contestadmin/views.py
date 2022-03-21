@@ -211,6 +211,7 @@ def dashboard(request):
     # Users card data
     context['users_registered'] = User.objects.all().count()
     context['users_verified'] = User.objects.filter(is_active=True).count()
+    context['users_checkedin'] = Profile.objects.filter(checked_in=True).count()
     context['added_fsu_num'] = Profile.objects.exclude(fsu_num=None).count()
     context['added_fsu_id'] = Profile.objects.exclude(fsu_id=None).count()
     context['added_courses'] = Profile.objects.exclude(courses=None).count()
@@ -218,12 +219,15 @@ def dashboard(request):
     # Teams card data
     context['total_teams'] = Team.objects.all().count()
     context['registered_teams'] = Team.objects.exclude(name__contains='Walk-in-').count()
+    context['active_teams'] = [ team.is_active() for team in Team.objects.exclude(name__contains='Walk-in-')].count(True)
     context['total_walkin'] = Team.objects.filter(name__contains='Walk-in-').count()
     context['walkin_used'] = Team.objects.filter(name__contains='Walk-in-').exclude(num_members=0).count()
 
     # Upper division card data
     context['num_upper_teams'] = Team.objects.filter(division=1).exclude(name__contains='Walk-in-').count()
+    context['num_upper_active_teams'] = [ team.is_active() for team in Team.objects.filter(division=1).exclude(name__contains='Walk-in-')].count(True)
     context['num_upper_reg_participants'] = Profile.objects.filter(team__division=1).exclude(team__name__contains='Walk-in-').count()
+    context['num_upper_reg_checkedin_participants'] = Profile.objects.filter(team__division=1).filter(checked_in=True).exclude(team__name__contains='Walk-in-').count()
     context['num_upper_walkin_teams'] = Team.objects.filter(
         division=1).filter(name__contains='Walk-in-').count()
     context['num_upper_walkin_used'] = Team.objects.filter(division=1).filter(
@@ -232,7 +236,9 @@ def dashboard(request):
 
     # Lower division card data
     context['num_lower_teams'] = Team.objects.filter(division=2).exclude(name__contains='Walk-in-').count()
+    context['num_lower_active_teams'] = [ team.is_active() for team in Team.objects.filter(division=2).exclude(name__contains='Walk-in-')].count(True)
     context['num_lower_reg_participants'] = Profile.objects.filter(team__division=2).exclude(team__name__contains='Walk-in-').count()
+    context['num_lower_reg_checkedin_participants'] = Profile.objects.filter(team__division=2).filter(checked_in=True).exclude(team__name__contains='Walk-in-').count()
     context['num_lower_walkin_teams'] = Team.objects.filter(
         division=2).filter(name__contains='Walk-in-').count()
     context['num_lower_walkin_used'] = Team.objects.filter(division=2).filter(

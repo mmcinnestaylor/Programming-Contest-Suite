@@ -38,3 +38,12 @@ class Team(models.Model):
             member_names.append(member.first_name+' '+member.last_name)
 
         return member_names
+
+    def is_active(self):
+        members = User.objects.filter(profile__team=self)
+
+        for member in members:
+            if member.profile.checked_in == True:
+                return True
+        
+        return False

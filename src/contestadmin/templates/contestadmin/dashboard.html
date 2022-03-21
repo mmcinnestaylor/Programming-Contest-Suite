@@ -120,6 +120,7 @@
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item"><span class="font-weight-bolder">Total:</span> {{ users_registered }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">Verified:</span> {{ users_verified }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Checked-in:</span> {{ users_checkedin }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">Added FSU num:</span> {{ added_fsu_num }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">Added FSU ID:</span> {{ added_fsu_id }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">Added Courses:</span> {{ added_courses }}</li>
@@ -135,9 +136,10 @@
 			<div class="card-body overflow-auto">
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item"><span class="font-weight-bolder">Total:</span> {{ total_teams }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Registered:</span> {{ registered_teams }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Walk-ins total:</span> {{ total_walkin }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Walk-ins used:</span> {{ walkin_used }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Registered Total:</span> {{ registered_teams }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Registered Active:</span> {{ active_teams }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Walk-ins Total:</span> {{ total_walkin }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Walk-ins Used:</span> {{ walkin_used }}</li>
 					
 				</ul>
 			</div>
@@ -156,7 +158,9 @@
 			<div class="card-body overflow-auto">
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item"><span class="font-weight-bolder">Registered Teams:</span> {{ num_upper_teams }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Registered Active:</span> {{ num_upper_active_teams }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">Registered Participants:</span> {{ num_upper_reg_participants }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Registered Check-ins:</span> {{ num_upper_reg_checkedin_participants }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">Walk-in Teams:</span> {{ num_upper_walkin_teams }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">Walk-in Teams used:</span> {{ num_upper_walkin_used }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">Walk-in Participants:</span> {{ num_upper_walkin_participants }}</li>
@@ -172,7 +176,9 @@
 			<div class="card-body overflow-auto">
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item"><span class="font-weight-bolder">Registered Teams:</span> {{ num_lower_teams }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Registered Active:</span> {{ num_lower_active_teams }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">Registered Participants:</span> {{ num_lower_reg_participants }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Registered Check-ins:</span> {{ num_lower_reg_checkedin_participants }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">Walk-in Teams:</span> {{ num_lower_walkin_teams }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">Walk-in Teams used:</span> {{ num_lower_walkin_used }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">Walk-in Participants:</span> {{ num_lower_walkin_participants }}</li>
