@@ -71,14 +71,20 @@ services:
             - contestsuite-dev
     redis:
         image: redis:5-buster
+        volumes:
+            - redis_data:/data
         networks:
             - contestsuite-dev
     rabbitmq:
         image: rabbitmq:3
+        volumes:
+            - rabbit_data:/var/lib/rabbitmq
         networks:
             - contestsuite-dev       
 volumes:
     django_db_data:
+    redis_data:
+    rabbit_data:
 networks:
     contestsuite-dev:
         name: contestsuite-dev

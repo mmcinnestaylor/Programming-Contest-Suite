@@ -101,7 +101,7 @@ def clear_courses(request):
 
 # Only team admin can access view
 @login_required
-@user_passes_test(team_admin, login_url='/manage/')
+@user_passes_test(team_admin, login_url='/manage/', redirect_field_name=None)
 @transaction.atomic
 def manage_team(request):
     context = {}
@@ -127,7 +127,7 @@ def manage_team(request):
 
 # Only person not on a team can access view
 @login_required
-@user_passes_test(has_no_team, login_url='/manage/')
+@user_passes_test(has_no_team, login_url='/manage/', redirect_field_name=None)
 @transaction.atomic
 def join_team(request):
     context = {}
@@ -166,7 +166,7 @@ def join_team(request):
 
 # Only person on a team can access view.
 @login_required
-@user_passes_test(has_team, login_url='/manage/')
+@user_passes_test(has_team, login_url='/manage/', redirect_field_name=None)
 @transaction.atomic
 def leave_team(request):
     # If user is the team admin.
@@ -215,7 +215,7 @@ def leave_team(request):
 
 # Only team admin can access delete view
 @login_required
-@user_passes_test(team_admin, login_url='/manage/')
+@user_passes_test(team_admin, login_url='/manage/', redirect_field_name=None)
 @transaction.atomic
 def delete_team(request):
     try:

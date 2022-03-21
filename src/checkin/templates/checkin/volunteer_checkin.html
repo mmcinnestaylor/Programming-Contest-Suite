@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block section %}Volunteer Check-in{% endblock %}
+
+{% block content %}
+
+<h1 class="text-center">Volunteer Check-in</h1>
+
+<!-- Messages -->
+{% include 'core/messages.html' %}
+<!-- End Messages -->
+<div class="row justify-content-center">
+    <form method="post" id="checkinForm">
+        {% csrf_token %}
+        {% for field in volunteer_form %}
+        <p>
+            <h5 class="mb-0">{{ field.label_tag }}</h5>
+            {{ field }}<br>
+            <small class="form-text text-muted">
+                {% for error in field.errors %}
+                <p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
+                {% endfor %}
+                {% if field.help_text %}
+                {{ field.help_text }}
+                {% endif %}
+            </small>
+        </p>
+        {% endfor %}
+        <button class="btn btn-sm btn-primary" type="submit">Submit</button>
+        <a class="btn btn-light btn-sm mx-1" href="{% url 'volunteer_checkin' %}" role="button">Refresh form</a>    
+    </form>
+</div>
+
+{% endblock %}

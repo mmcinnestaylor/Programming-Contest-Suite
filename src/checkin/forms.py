@@ -16,9 +16,8 @@ class SwipeCheckinForm(forms.Form):
 
     # determines if the swipe is valid
     def valid_read(self):
-        if len(self.cleaned_data['fsu_num']) > 2 and self.cleaned_data['fsu_num'][1] == 'B':
-            return True
-        return False
+        return len(self.cleaned_data['fsu_num']) > 2 and self.cleaned_data['fsu_num'][1] == 'B'
+
 
     # returns last 8 numbers of fsu number
     def parse(self):
@@ -33,3 +32,8 @@ class WalkinForm(forms.Form):
     )
     
     division = forms.ChoiceField(choices=DIVISIONS, widget=forms.RadioSelect(), required=False)
+
+
+class VolunteerForm(forms.Form):
+    username = forms.CharField(max_length=150, label='Username', help_text='Your account username.')
+    pin = forms.CharField(max_length=8, label='Volunteer PIN', help_text='Provided by contest organizers.', widget=forms.PasswordInput())

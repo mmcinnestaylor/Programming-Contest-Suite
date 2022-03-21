@@ -11,13 +11,15 @@ class Contest(models.Model):
     """
 
     contest_date = models.DateField(auto_now=False)
-    contest_doors = models.TimeField(auto_now=False)
-    contest_start = models.TimeField(auto_now=False)
-    contest_freeze = models.TimeField(auto_now=False)
-    contest_end = models.TimeField(auto_now=False)
-    contest_awards = models.TimeField(auto_now=False)
+    contest_doors = models.TimeField(auto_now=False, blank=True, null=True)
+    contest_start = models.TimeField(auto_now=False, blank=True, null=True)
+    contest_freeze = models.TimeField(auto_now=False, blank=True, null=True)
+    contest_end = models.TimeField(auto_now=False, blank=True, null=True)
+    contest_awards = models.TimeField(auto_now=False, blank=True, null=True)
+    team_deadline = models.DateTimeField(auto_now=False, blank=True, null=True)
     results = models.FileField(upload_to='uploads/', blank=True)
     ec_processed = models.BooleanField(default=False)
+    volunteer_pin = models.CharField(max_length=8, default=User.objects.make_random_password(length=8))
         
     def __str__(self):
         return ("Programming Contest "+str(self.contest_date))

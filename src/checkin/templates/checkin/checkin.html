@@ -6,13 +6,11 @@
 <script src="{% static 'checkin/js/common.js' %}"></script>
 {% endblock %}
 
-{% block title %}Contest Checkin{% endblock %}
+{% block section %}Contest Check-in{% endblock %}
 
 {% block content %}
 
-<div class="row justify-content-center">
-	<h1>Contest Checkin</h1>
-</div>
+<h1 class="text-center">Contest Check-in</h1>
 
 <!-- Messages -->
 {% include 'core/messages.html' %}
@@ -20,22 +18,23 @@
 
 <div class="jumbotron text-center mt-4" style="background-color: #787878; margin-top: 1em;">
 	<div id="walkin_prompt">
-		<h2 class="text-warning">Are you a walk-in contestant?</h2>
-		<button type="button" class="btn btn-light btn-lg mx-1" onclick="walkin_prompt(false)">No</button>
-		<button type="button" class="btn btn-primary btn-lg mx-1" onclick="walkin_prompt(true)">Yes</button>
+		<h2 class="text-warning">Are you a member of a registered team?</h2>
+		<button type="button" class="btn btn-light btn-lg mx-1" onclick="walkin_prompt(true)">No</button>
+		<button type="button" class="btn btn-primary btn-lg mx-1" onclick="walkin_prompt(false)">Yes</button>
 	</div>
 
-	<div id="checkin_form" style="display:none">
-		<form method="post" id="swipeForm">
+	<div id="checkinDiv" style="display:none">
+		<form method="post" id="checkinForm">
 			{% csrf_token %}
-			<div class="" id="walkinDiv" style="display:none">
-				<span class="h5">Walk-in:</span>
+			<div class="" id="walkinDiv" onchange="show_next()" style="display:none">
+				<!-- <span class="h5">Walk-in:</span> -->
+				<h2 class="text-warning">Select Division</h2>
 				{% for field in walkin_form %}
 					{{ field }}
-				{% endfor %}
+				{% endfor %}	
 			</div>
 
-			<div id="swipeDiv" onload="read_swipe()">
+			<div id="swipeDiv" onload="read_swipe()" style="display:none">
 				<div class="row justify-content-center">
 					{% for field in swipe_form %}
 					<p>
@@ -82,7 +81,8 @@
 		</form>		
 		<br>
 		<a class="btn btn-light btn-lg mx-1" href="{% url 'checkin' %}" role="button">Refresh form</a>
-		<button type="button" class="btn btn-primary btn-lg mx-1" id="formSwap" onclick="swap_form()">Email checkin</button>
+		<button type="button" class="btn btn-primary btn-lg mx-1" id="walkinNext" onclick="show_swipe()" style="display:none">Next</button>
+		<button type="button" class="btn btn-primary btn-lg mx-1" id="formSwap" onclick="swap_form()" style="display:none">Email check-in</button>
 	</div>
 </div>
 {% endblock %}

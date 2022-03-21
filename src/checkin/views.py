@@ -1,17 +1,21 @@
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import transaction
 from django.shortcuts import render, redirect
 
 from . import forms
 from . import tasks
+from .utils import checkin_auth
+from contestadmin.models import Contest
 from register.models import Team
 
 # Create your views here.
 
 
-@staff_member_required
+@login_required
+@user_passes_test(checkin_auth, login_url='/', redirect_field_name=None)
 @transaction.atomic
 def checkin(request):
 	context = {}
@@ -32,7 +36,7 @@ def checkin(request):
 				else:
 					walk_in_team = Team.objects.filter(name__contains='Walk-in-L-').filter(num_members=0).first()
 				
-				# If an empty walkin-is is not found, notify user.
+				# If an empty walk-in is not found, notify user.
 				if walk_in_team is None:
 					messages.error(request, 'There are no Walk-in teams available.', fail_silently=True)
 					return redirect('checkin_result')
@@ -48,14 +52,15 @@ def checkin(request):
 						user = User.objects.get(profile__fsu_num=fsu_number)
 					except:
 						messages.error(
-							request, 'Check in failed. FSU number not found.', fail_silently=True)
+							request, 'Check in failed. FSU number not found. ', fail_silently=True)
+						messages.info(request, 'Retry using email check in.', fail_silently=True)
 					else:
-						if user.profile.checked_in:
+						if user.profile.checked_in and not checkin_auth(user):
 							messages.info(request, 'You are already checked in.',
 							              fail_silently=True)
 						elif user.profile.team is None and not is_walkin:
 							messages.info(
-								request, 'You are not a member of a registered team. Join a registered team, or select YES at the walk-in prompt.', fail_silently=True)
+								request, 'You are not a member of a registered team. Join a registered team, or select NO at the registered team prompt.', fail_silently=True)
 						else:
 							user.profile.checked_in = True
 							if is_walkin == True:
@@ -90,10 +95,10 @@ def checkin(request):
 					messages.error(
 						request, 'Check in failed. Email address not found.', fail_silently=True)
 				else:
-					if user.profile.checked_in:
+					if user.profile.checked_in and not checkin_auth(user):
 						messages.info(request, 'You are already checked in.', fail_silently=True)
 					elif user.profile.team is None and not is_walkin:
-						messages.info(request, 'You are not a member of a registered team. Join a registered team, or select YES at the walk-in prompt.', fail_silently=True)
+						messages.info(request, 'You are not a member of a registered team. Join a registered team, or select NO at the registered team prompt.', fail_silently=True)
 					else:
 						user.profile.checked_in = True
 						if is_walkin == True:
@@ -130,6 +135,48 @@ def checkin(request):
 	return render(request, 'checkin/checkin.html', context)
 
 
-@staff_member_required
+@login_required
+@user_passes_test(checkin_auth, login_url='/', redirect_field_name=None)
 def checkin_result(request):
 	return render(request, 'checkin/checkin_result.html')
+
+
+@login_required
+@user_passes_test(checkin_auth, login_url='/', redirect_field_name=None)
+def volunteer_checkin(request):
+	context = {}
+
+	if request.method == 'POST':
+		volunteer_form = forms.VolunteerForm(request.POST)
+
+		if volunteer_form.is_valid():
+			try:
+				user = User.objects.get(username=volunteer_form.cleaned_data['username'])
+			except:
+				messages.error(request, 'Username not found', fail_silently=True)
+			else:
+				try:
+					contest = Contest.objects.first()
+				except:
+					contest = None
+				
+				if contest is None:
+					messages.warning(request, 'Unable to verify PIN. Please try again later.', fail_silently=True)
+				else:
+					if volunteer_form.cleaned_data['pin'] == contest.volunteer_pin:
+						user.profile.checked_in = True
+						user.save()
+
+						if user.profile.has_team():
+							# Email user DOMjudge credentials
+							tasks.send_credentials.delay(user.username)
+
+						messages.success(request, str(user.first_name)+' you have been checked in. Thanks again for volunteering!', fail_silently=True)
+						return redirect('volunteer_checkin')
+					else:
+						messages.error(request, 'Incorrect PIN provided.', fail_silently=True)
+	else:
+		volunteer_form = forms.VolunteerForm()
+
+	context['volunteer_form'] = volunteer_form
+	return render(request, 'checkin/volunteer_checkin.html', context)
