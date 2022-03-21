@@ -88,6 +88,9 @@
                     <a class="dropdown-item" href="{% url 'checkin' %}">Check-in</a>
                     <hr>
                   {% elif user.profile.is_volunteer %}
+                    {% if user.profile.role == 4%}
+                      <a class="dropdown-item" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+                    {% endif %}
                     <a class="dropdown-item" href="{% url 'checkin' %}">Check-in</a>
                     <hr>
                   {% endif %}
