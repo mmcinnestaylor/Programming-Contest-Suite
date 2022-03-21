@@ -58,6 +58,20 @@
 					<li class="list-group-item"><span class="font-weight-bolder">Email:</span> {{ user.email }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">FSU ID:</span> {{ user.profile.fsu_id }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">FSU Number:</span> {{ user.profile.fsu_num }}</li>
+					{% if user.profile.checked_in %}
+						<li class="list-group-item"><span class="font-weight-bolder">Checked-in:</span> Yes</li>
+					{% else %}
+						<li class="list-group-item"><span class="font-weight-bolder">Checked-in:</span> No</li>
+					{% endif %}
+					{% if user.profile.role == 1 %}
+						<li class="list-group-item"><span class="font-weight-bolder">Role:</span> Contestant</li>
+					{% elif user.profile.role == 2 %}
+						<li class="list-group-item"><span class="font-weight-bolder">Role:</span> Proctor</li>
+					{% elif user.profile.role == 3 %}
+						<li class="list-group-item"><span class="font-weight-bolder">Role:</span> Question Writer</li>
+					{% else %}
+						<li class="list-group-item"><span class="font-weight-bolder">Role:</span> Organizer</li>
+					{% endif %}
 				</ul>
 			</div>
 			<div class="card-footer">
