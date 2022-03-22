@@ -257,7 +257,7 @@
 								<tr>
 									<th scope="col">Code</th>
 									<th scope="col">Name</th>
-									<th scope="col" class="text-center">Instructor</th>
+									<th scope="col">Instructor</th>
 									<th scope="col" class="text-center">Students</th>
 								</tr>
 							</thead>
@@ -266,7 +266,7 @@
 								<tr>
 									<td>{{ course.code }}</td>
 									<td>{{ course.name }}</td>
-									<td class="text-center">{{ course.instructor.last_name }}</td>
+									<td>{{ course.instructor.last_name }}</td>
 									<td class="text-center">{{ course.num_registered }}</td>
 								</tr>
 								{% endfor %}
