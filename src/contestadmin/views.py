@@ -245,7 +245,10 @@ def dashboard(request):
         name__contains='Walk-in-').exclude(num_members=0).count()
     context['num_lower_walkin_participants'] = Profile.objects.filter(team__division=2).filter(team__name__contains='Walk-in-').count()
 
-    # Course crard data
+    # Volunteer card data
+    context['volunteers'] = [user for user in Profile.objects.order_by('role').all() if user.is_volunteer()]
+    
+    # Course card data
     context['courses'] = Course.objects.all()
 
     # Forms
