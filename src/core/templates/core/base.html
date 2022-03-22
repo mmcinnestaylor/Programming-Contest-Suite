@@ -86,7 +86,7 @@
                 <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown">{{ user.first_name }}</a>
                 <div class="dropdown-menu dropdown-menu-right">
                   {% if user.is_superuser %}
-                    <a class="dropdown-item" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+                    <a class="dropdown-item" href="{% url 'admin_dashboard' %}">Contest Dashboard</a>
                     <a class="dropdown-item" href="{% url 'checkin' %}">Contest Check-in</a>
                     <a class="dropdown-item" href="{% url 'volunteer_checkin' %}">Volunteer Check-in</a>
                     <hr>
