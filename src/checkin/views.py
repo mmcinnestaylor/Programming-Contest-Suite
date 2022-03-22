@@ -143,6 +143,7 @@ def checkin_result(request):
 
 @login_required
 @user_passes_test(checkin_auth, login_url='/', redirect_field_name=None)
+@transaction.atomic
 def volunteer_checkin(request):
 	context = {}
 

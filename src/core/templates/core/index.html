@@ -49,7 +49,7 @@
     </div>
   </div>
 
-  <p class="lead text-center mb-1">An <a href="https://icpc.global" target="_blank">ICPC</a> style contest hosted semesterly by the Association for Computing Machinery Florida State University Student Chapter.</p>
+  <p class="lead text-center mb-1">An <a href="https://icpc.global" target="_blank" rel="external">ICPC</a> style contest hosted semesterly by the Association for Computing Machinery Florida State University Student Chapter.</p>
   
   <hr>
   <div class="row justify-content-center">
@@ -71,7 +71,7 @@
       <div class=" col-sm col-md-6">
         <div class="card bg-secondary">
           <h5 class="text-center text-warning">Team Registration Deadline</h5>
-          <date class="text-center text-light">{{ contest.team_deadline | date }} @ {{ contest.team_deadline | time }}</date>
+          <p class="text-center text-light">{{ contest.team_deadline | date }} @ {{ contest.team_deadline | time }}</p>
         </div>
       </div>
     </div> 
@@ -81,6 +81,15 @@
     <div class="col-md-5 text-center mb-3">
       <h3>Contest Details</h3>
       {% if contest is not None %}
+        {% if contest.participation is not None %}
+          {% if contest.participation == 1 %}
+            <p class="mb-1"><span class="font-weight-bold">Participation: </span>In-Person Only</p>
+          {% elif contest.participation == 2 %}
+            <p class="mb-1"><span class="font-weight-bold">Participation: </span>Virtual Only</p>
+          {% else %}
+            <p class="mb-1"><span class="font-weight-bold">Participation: </span>In-Person or Virtual</p>
+          {% endif %}
+        {% endif %}
         <p class="mb-1"><span class="font-weight-bold">Date: </span>{{ contest.contest_date }}</p>
         {% if contest.contest_doors is not None %}
           <p class="mb-1"><span class="font-weight-bold">Doors Open: </span>{{ contest.contest_doors }}</p>
