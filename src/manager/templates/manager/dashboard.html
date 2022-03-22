@@ -156,8 +156,8 @@
 							<li class="list-group-item"><span class="font-weight-bolder">PIN:</span> {{ user.profile.team.pin }}</li>
 						{% endif %}
 						{% if user.profile.checked_in %}
-							<li class="list-group-item"><span class="font-weight-bolder">DOMjudge username:</span> {{ user.profile.team.contest_id }}</li>
-							<li class="list-group-item"><span class="font-weight-bolder">DOMjudge password:</span> {{ user.profile.team.contest_password }}</li>
+							<li class="list-group-item"><span class="font-weight-bolder">DOMjudge Username:</span> {{ user.profile.team.contest_id }}</li>
+							<li class="list-group-item"><span class="font-weight-bolder">DOMjudge Password:</span> {{ user.profile.team.contest_password }}</li>
 						{% endif %}
 					</ul>
 				{% else %}
@@ -195,9 +195,9 @@
 					<table class="table table-sm">
 						<thead>
 							<tr>
-								<th scope="col">First name</th>
-								<th scope="col">Last name</th>
-								<th scope="col">Checked in</th>
+								<th scope="col">First Name</th>
+								<th scope="col">Last Name</th>
+								<th scope="col" class="text-center">Checked-in</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -206,9 +206,9 @@
 								<td>{{ member.first_name }}</td>
 								<td>{{ member.last_name }}</td>
 								{% if member.profile.checked_in %}
-									<td>Yes</td>
+									<td class="text-center">Yes</td>
 								{% else %}
-									<td>No</td>
+									<td class="text-center">No</td>
 								{% endif %}
 							</tr>
 							{% endfor %}
