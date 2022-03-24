@@ -193,8 +193,13 @@ def generate_ec_reports():
                             else:
                                 team_division = 'Lower'
 
+                        if student.profile.fsu_id is None:
+                            fsu_id = 'none'
+                        else:
+                            fsu_id = student.profile.fsu_id
+
                         writer.writerow([
-                            student.profile.fsu_id,
+                            fsu_id,
                             student.last_name,
                             student.first_name,
                             questions_answered,
@@ -214,9 +219,13 @@ def email_faculty(domain):
     fpath = MEDIA_ROOT + '/ec_files/'
 
     for faculty in faculty_members:
+        found_files = False
+
         for fname in os.listdir(fpath):
             uid=((faculty.email).split('@'))[0]
             if uid in fname: #not faculty_nanmer
+                found_files = True
+
                 message = render_to_string('contestadmin/ec_available_email.html', {
                     'faculty': faculty,
                     'domain': domain,
@@ -232,7 +241,21 @@ def email_faculty(domain):
                 )
 
                 break
+        
+        if not found_files:
+            message = render_to_string('contestadmin/no_ec_available_email.html', {
+                'faculty': faculty,
+                'domain': domain,
+                'uid': urlsafe_base64_encode(force_bytes(uid)),
+            })
 
+            send_mail(
+                'Programming Contest EC files',
+                message,
+                DEFAULT_FROM_EMAIL,
+                [faculty.email],
+                fail_silently=False,
+            )
 
 
 @shared_task

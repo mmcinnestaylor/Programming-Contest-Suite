@@ -1,0 +1,11 @@
+{% autoescape off %}
+Hello {{ faculty.first_name }},
+
+Thank you for offering extra credit in your course(s) for Programming Contest participation. After processing the contest results, we determined that either no students added your course(s) to their profile, or no students who did add the course(s) checked in to the contest. Therefore, no documents containing participation information are available for you to access. An overview of your courses is still available via the link below.
+
+https://{{ domain }}{% url 'fac_ec_dashboard' uidb64=uid %}
+
+Cheers,
+The Programming Contest Team
+contest@fsu.acm.org
+{% endautoescape %}
