@@ -7,7 +7,7 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 
 from . import forms
-from .utils import team_admin, has_no_team, has_team
+from .utils import team_admin, has_no_team, has_team, has_fsuid
 from .models import Course, Profile
 from announcements.models import Announcement
 from register.models import Team 
@@ -67,6 +67,7 @@ def manage_profile(request):
 
 
 @login_required
+@user_passes_test(has_fsuid, login_url='/manage/', redirect_field_name=None)
 @transaction.atomic
 def manage_courses(request):
     context = {}
@@ -89,6 +90,7 @@ def manage_courses(request):
 
 # Remove all courses user has selected for extra credit
 @login_required
+@user_passes_test(has_fsuid, login_url='/manage/', redirect_field_name=None)
 @transaction.atomic
 def clear_courses(request):
     request.user.profile.courses.clear()
