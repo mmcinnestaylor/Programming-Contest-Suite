@@ -91,11 +91,22 @@ class FacultyDashboard(View):
 
         if faculty_member is not None:
             context = {}
+            context['courses'] = Course.objects.filter(instructor=faculty_member)
             context['first_name'] = faculty_member.first_name
             context['last_name'] = faculty_member.last_name
             context['uid'] = uidb64
+            context['ec_files_available'] = False
+
+            fpath = MEDIA_ROOT + '/ec_files/'
+            faculty_id = faculty_member.email.split('@')[0]
+            for fname in os.listdir(fpath):
+                if faculty_id in fname:
+                    context['ec_files_available'] = True
+                    break
 
             return render(request,'contestadmin/faculty_dashboard.html', context)
+        else:
+            return HttpResponse('Unable to access faculty dashboard. Please try again later or contact the ACM team.')
     
     def download(self, uidb64):
         try:
