@@ -39,6 +39,9 @@ class Course(models.Model):
     def __str__(self):
         return (str(self.code) + ' : ' + str(self.name) + ' - ' + str(self.instructor.last_name) + ', ' + str(self.instructor.first_name)[0])
 
+    def num_checkedin(self):
+        return Profile.objects.filter(courses=self).filter(checked_in=True).count()
+
     def num_registered(self):
         return Profile.objects.filter(courses=self).count()
 

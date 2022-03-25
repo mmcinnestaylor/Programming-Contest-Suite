@@ -5,17 +5,175 @@
 
 {% block content %}
 	<h1 class="text-center">Faculty Dashboard</h1>
-	<div class="row justify-content-center mt-4">
-		<div class="col-8">
-			<div class="card">
-				<div class="card-header lead">
-					Hello {{ first_name }} {{ last_name }}
-				</div>
-				<div class="card-body">
-				<p class="card-text">The zip file linked below contains CSVs with participant information for each of the courses you registered with the contest. Each row in a CSV file contains the following fields: fsu_id, last_name, first_name, questions_answered, team_division, role. Each field is separated by a single comma without whitespace, and each row is delimited by a newline. The role field will have one of the following values: contestant, proctor, question writer, organizer. If a student checked into the contest but subsequently removed themself from the team used at check-in before we processed the results, then the team_division and questions_answered fields will contain the value 'none'. You will only receive reports for classes where at least one student checked-in to the contest. </p>
-				<a href="{% url 'fac_ec_files_dl' uidb64=uid  %}" class="btn btn-primary"><i class="fa fa-download mx-1" aria-hidden="true"></i>Download</a>
+	<!-- File Download and Description Card deck -->
+	<div class="card-deck">
+		<!-- File Download card -->
+		<div class="card mt-4">
+			<div class="card-header lead">
+				{{ first_name }} {{ last_name }}
+			</div>
+			<div class="card-body overflow-auto">
+				<p class="card-text">
+					The zip file linked below contains CSVs with participant information for each of the courses you confirmed with the contest. You will only receive reports for classes where at least one student checked in to the contest either as a contestant or volunteer. Additionally, only individuals who checked in to the contest will appear in a file.
+				</p>
+				<p class="card-text">
+					For in-person contests, we strive to ensure that individuals who are marked as checked-in actually attended the contest by requiring that check-in is performed in-person. We do not verify the identity of the individuals who check-in, so if Student A possesses Student B's credentials, then Student A could hypothetically check in on behalf of student B.      
+				</p>
+			</div>
+			<div class="card-footer">
+				{% if ec_files_available %}
+					<a href="{% url 'fac_ec_files_dl' uidb64=uid  %}" class="btn btn-primary"><i class="fa fa-download mx-1" aria-hidden="true"></i>Download</a>
+				{% else %}
+					<a href="" class="btn btn-primary disabled"><i class="fa fa-download mx-1" aria-hidden="true"></i>Download</a>
+				{% endif %}
+			</div>
+		</div>
+		<!-- File Download card end -->
+		<!-- File Description card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				File Format
+			</div>
+			<div class="card-body overflow-auto">
+				<p class="card-text">
+					Each row in a CSV file contains the following fields in the order listed:  
+				</p>
+				<ul class="card-text">
+					<li>fsu_id</li>
+					<li>last_name</li>
+					<li>first_name</li>
+					<li>questions_answered</li>
+					<li>team_division</li>
+					<li>role</li>
+				</ul>
+				<p class="card-text">
+					Each field is separated by a single comma without whitespace, and each row is delimited by a newline.
+				</p>
+				<p class="card-text">
+					The fsu_id field will have a value of "none" if the student did not add the ID to their profile.
+				</p>
+			</div>
+		</div>
+		<!-- File Description card end -->
+	</div>
+	<!-- File Download and Description Card deck end -->
+
+	<!-- Role, Division, and QA Card deck -->
+	<div class="card-deck">
+		<!-- Roles card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Role Descriptions
+			</div>
+			<div class="card-body overflow-auto">
+				<ul class="card-text" style="list-style-type: none;  margin: 0;  padding: 0;">
+					<li>
+						<div class="font-weight-bold">Contestant</div> A student who competed in the contest either alone or with teammates.
+					</li>
+					<li>
+						<div class="font-weight-bold">Proctor</div> A contest volunteer who assisted with room monitoring, check-in, preparing/serving food, or any other activity required to host the event.
+					</li>
+					<li>
+						<div class="font-weight-bold">Question Writer</div> A contest volunteer who wrote one or more questions used in the contest packets,	and offered question clarifications to contestants for the duration of the contest.
+					</li>
+					<li>
+						<div class="font-weight-bold">Organizer</div> A contest volunteer who helped plan, coordinate, and host the contest. Typically involves managing question writers, proctors, and high level contest details.
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!-- Roles card end -->
+		<!-- Division and QA card -->
+		<div class="card mt-4">
+			<div class="card-header font-weight-bold">
+				Division &amp; Questions Answered 
+			</div>
+			<div class="card-body overflow-auto">
+				<h5>Division<span class="text-danger">&dagger;</span></h5>
+				<ul class="card-text">
+					<li><span class="font-weight-bold">Upper:</span> competed in the Upper Division
+					</li>
+					<li><span class="font-weight-bold">Lower:</span> competed in the Lower Division
+					</li>
+					<li><span class="font-weight-bold">none:</span> reserved for contest volunteers </li>
+				</ul>
+
+				<p>The Lower Division is intended for students in CDA3100, COP3014, COP3363, or COP3330 who are typically first or second year undergrads. All other students are expected to participate in the Upper Division.</p>
+				
+				<h5>Questions Answered<span class="text-danger">&dagger;</h5>
+				<p class="card-text">
+					<ul>
+						<li>
+							<span class="font-weight-bold">[0, total_questions]:</span> a value of 0 represents a contestant who checked in, but did not correctly solve any of the questions in the packet.
+						</li>
+						<li>
+							<span class="font-weight-bold">none:</span> reserved for contest volunteers
+						</li>
+					</ul>
+				</p>
+			</div>
+		</div>
+		<!-- Division and QA card end -->
+	</div>
+	<!-- Role, Division, and QA Card deck end -->
+
+	<!-- Volunteer Summary Card note-->
+	<div class="row justify-content-center mt-2">
+		<div class="col-10">
+			<small>
+				<span class="text-danger">&dagger;</span>
+				NOTE: An individual who has a role other than Contestant may still be attached to a contest team in our registration system. In this instance, values for questions_answered and team_division will not be "none". This does NOT necessarily mean that the individual took part in solving any of the questions. 
+			</small>
+		</div>
+	</div>
+	
+	<!-- Course Summary card -->
+	<div class="card mt-3 mb-3">
+		<div class="card-header font-weight-bold">
+			Course Overview
+		</div>
+		<div class="card-body overflow-auto">
+			<div class="row justify-content-center">
+				<div class="col-10">
+					<div class="table-responsive">
+						<table class="table table-sm">
+							<thead class="thead-light">
+								<tr>
+									<th scope="col">Code</th>
+									<th scope="col">Name</th>
+									<th scope="col" class="text-center">
+										Checked-in<span class="text-danger">&Dagger;</span>
+									</th>
+									<th scope="col" class="text-center">
+										Registered<span class="text-danger">&Dagger;</span>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for course in courses %}
+								<tr>
+									<td>{{ course.code }}</td>
+									<td>{{ course.name }}</td>
+									<td class="text-center">{{ course.num_checkedin }}</td>
+									<td class="text-center">{{ course.num_registered }}</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
+		</div>
+	</div>
+	<!-- Course Summary card end -->
+
+	<!-- Course Summary Card note-->
+	<div class="row justify-content-center mt-2">
+		<div class="col-10">
+			<small>
+				<span class="text-danger">&Dagger;</span>
+				NOTE: The Registered value represents the number of individuals who signed up in for the contest and added the given course to their profile. The Checked-in value repsresents the number of individuals who signed up, added the given course, and checked in to the contest. 
+			</small>
 		</div>
 	</div>
 {% endblock %}

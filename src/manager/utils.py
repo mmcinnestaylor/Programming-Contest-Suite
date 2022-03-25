@@ -12,3 +12,7 @@ def team_admin(user):
 
 def not_registered(user):
 	return not user.is_authenticated
+
+
+def has_fsuid(user):
+	return user.profile.fsu_id is not None

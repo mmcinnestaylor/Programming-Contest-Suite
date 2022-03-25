@@ -88,7 +88,11 @@
 				Courses
 			</div>
 			<div class="card-body overflow-auto">
-				{% if user.profile.has_courses %}
+				{% if total_num_courses == 0 %}
+					<p class="text-center">No courses have been confirmed at this time.</p>
+				{% elif user.profile.fsu_id is None %}
+					<p>Your FSU ID is blank. Please add it to your profile in order to add or edit your courses. </p>
+				{% elif user.profile.has_courses %}
 					<table class="table table-sm">
 						<thead>
 							<tr>
@@ -107,8 +111,6 @@
 							{% endfor %}
 						</tbody>
 					</table>
-				{% elif total_num_courses == 0 %}
-					<p class="text-center">No courses have been confirmed at this time.</p>
 				{% else %}
 					<div class="row justify-content-center">
 						<a class="btn btn-outline-info btn-sm" href="{% url 'manage_courses' %}" role="button">Add</a>
@@ -116,13 +118,13 @@
 				{% endif %}
 			</div>
 			<div class="card-footer">
-				{% if user.profile.has_courses %}
+				{% if user.profile.fsu_id is None or not user.profile.has_courses %}
+					<a href="#" role="button" class="btn btn-info btn-sm disabled">Edit</a>
+					<a href="#" role="button" class="btn btn-danger btn-sm disabled">Clear</a>
+				{% else %}
 					<a class="btn btn-info btn-sm" href="{% url 'manage_courses' %}" role="button">Edit</a>
 					<button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
 						data-target="#confirmClearModal">Clear</button>
-				{% else %}
-					<button type="button" class="btn btn-info btn-sm disabled">Edit</button>
-					<button type="button" class="btn btn-danger btn-sm disabled">Clear</button>
 				{% endif %}
 			</div>
 		</div>
@@ -156,8 +158,8 @@
 							<li class="list-group-item"><span class="font-weight-bolder">PIN:</span> {{ user.profile.team.pin }}</li>
 						{% endif %}
 						{% if user.profile.checked_in %}
-							<li class="list-group-item"><span class="font-weight-bolder">DOMjudge username:</span> {{ user.profile.team.contest_id }}</li>
-							<li class="list-group-item"><span class="font-weight-bolder">DOMjudge password:</span> {{ user.profile.team.contest_password }}</li>
+							<li class="list-group-item"><span class="font-weight-bolder">DOMjudge Username:</span> {{ user.profile.team.contest_id }}</li>
+							<li class="list-group-item"><span class="font-weight-bolder">DOMjudge Password:</span> {{ user.profile.team.contest_password }}</li>
 						{% endif %}
 					</ul>
 				{% else %}
@@ -180,7 +182,7 @@
 						<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#confirmLeaveModal">Leave</button>
 					{% endif %}
 				{% else %}
-					<button type="button" class="btn btn-warning btn-sm disabled">Leave</button>
+					<a href="#" role="button" class="btn btn-warning btn-sm disabled">Leave</a>
 				{% endif %}
 			</div>
 		</div>
@@ -195,9 +197,9 @@
 					<table class="table table-sm">
 						<thead>
 							<tr>
-								<th scope="col">First name</th>
-								<th scope="col">Last name</th>
-								<th scope="col">Checked in</th>
+								<th scope="col">First Name</th>
+								<th scope="col">Last Name</th>
+								<th scope="col" class="text-center">Checked-in</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -206,9 +208,9 @@
 								<td>{{ member.first_name }}</td>
 								<td>{{ member.last_name }}</td>
 								{% if member.profile.checked_in %}
-									<td>Yes</td>
+									<td class="text-center">Yes</td>
 								{% else %}
-									<td>No</td>
+									<td class="text-center">No</td>
 								{% endif %}
 							</tr>
 							{% endfor %}

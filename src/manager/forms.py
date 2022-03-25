@@ -9,7 +9,12 @@ from register.models import Team
 
 
 class UserForm(forms.ModelForm):
-    email = forms.EmailField()
+    first_name = forms.CharField(
+        required=True, max_length=30, help_text='30 characters max')
+    last_name = forms.CharField(
+        required=True, max_length=150, help_text='150 characters max')
+    email = forms.EmailField(help_text='Does NOT need to be your FSU email')
+
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)

@@ -189,7 +189,59 @@
 	</div>
 	<!-- Division Stats Card deck end -->
 
-	
+	<!-- Volunteer Summary card -->
+	<div class="card mt-4 mb-3">
+		<div class="card-header font-weight-bold">
+			Volunteers
+		</div>
+		<div class="card-body overflow-auto">
+			<div class="row justify-content-center">
+				<div class="col-10">
+					<div class="table-responsive">
+						<table class="table table-sm">
+							<thead class="thead-light">
+								<tr>
+									<th scope="col">Role</th>
+									<th scope="col">Name</th>
+									<th scope="col" class="text-center">Checked-in</th>
+									<th scope="col" class="text-center">Added Courses</th>
+									
+								</tr>
+							</thead>
+							<tbody>
+								{% for volunteer in volunteers %}
+								<tr>
+									{% if volunteer.role == 2 %}
+										<td>Proctor</td>
+									{% elif volunteer.role == 3 %}
+										<td>Question Writer</td>
+									{% else %}
+										<td>Organizer</td>
+									{% endif %}
+									
+									<td>{{ volunteer.user.get_full_name }}</td>
+
+									{% if volunteer.checked_in %}
+										<td class="text-center">Yes</td>
+									{% else %}
+										<td class="text-center">No</td>
+									{% endif %}
+
+									{% if volunteer.has_courses %}
+										<td class="text-center">Yes</td>
+									{% else %}
+										<td class="text-center">No</td>
+									{% endif %}
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Volunteer Summary card end -->
 
 	<!-- Course Summary card -->
 	<div class="card mt-4 mb-3">
@@ -199,31 +251,34 @@
 		<div class="card-body overflow-auto">
 			<div class="row justify-content-center">
 				<div class="col-10">
-					<table class="table table-sm">
-						<thead class="thead-light">
-							<tr>
-								<th scope="col">Code</th>
-								<th scope="col">Name</th>
-								<th scope="col">Instructor</th>
-								<th scope="col">Students</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for course in courses %}
-							<tr>
-								<td>{{ course.code }}</td>
-								<td>{{ course.name }}</td>
-								<td>{{ course.instructor.last_name }}</td>
-								<td>{{ course.num_registered }}</td>
-							</tr>
-							{% endfor %}
-						</tbody>
-					</table>
+					<div class="table-responsive">
+						<table class="table table-sm">
+							<thead class="thead-light">
+								<tr>
+									<th scope="col">Code</th>
+									<th scope="col">Name</th>
+									<th scope="col">Instructor</th>
+									<th scope="col" class="text-center">Students</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for course in courses %}
+								<tr>
+									<td>{{ course.code }}</td>
+									<td>{{ course.name }}</td>
+									<td>{{ course.instructor.last_name }}</td>
+									<td class="text-center">{{ course.num_registered }}</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<!-- Course Summary card end -->
+
 
 	<!-- Create Walk-in Teams Modal -->
 	<div class="modal fade" id="walkinModal" tabindex="-1" role="dialog"
