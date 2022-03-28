@@ -1,3 +1,4 @@
 #!/bin/bash
 
-python3 ../../../../src/manage.py runserver localhost:8000
+export DEBUG=True
+exec python3 ../../../../src/manage.py runserver localhost:8000
