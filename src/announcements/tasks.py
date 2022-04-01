@@ -6,6 +6,7 @@ from celery import shared_task
 from celery.utils.log import get_task_logger
 
 from .models import Announcement
+from contestsuite.settings import DEFAULT_FROM_EMAIL
 
 
 logger = get_task_logger(__name__)
@@ -28,7 +29,7 @@ def email_annoucement(id):
             message = render_to_string(
             'announcements/new_announcement_email.html', {'announcement': announcement})
 
-            messages.append((announcement.title, message, 'ACM Programming Contest<acm@cs.fsu.edu>', [user.email]))
+            messages.append((announcement.title, message, DEFAULT_FROM_EMAIL, [user.email]))
 
         messages = tuple(messages)
         send_mass_mail(messages, fail_silently=False)
