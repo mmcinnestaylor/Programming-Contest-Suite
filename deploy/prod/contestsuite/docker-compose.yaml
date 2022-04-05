@@ -156,6 +156,7 @@ volumes:
     django_app_data:
     django_db_data:
     django_static_data:
+    flower_data:
     rabbit_data:
     redis_data:
 networks:
