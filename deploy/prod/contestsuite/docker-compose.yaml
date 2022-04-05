@@ -106,7 +106,7 @@ services:
         volumes:
             - flower_data:/data
         networks:
-            - nginx_backend
+            - nginx-backend
             - rabbitmq-backend
     mariadb:
         image: mariadb:10.6-focal
