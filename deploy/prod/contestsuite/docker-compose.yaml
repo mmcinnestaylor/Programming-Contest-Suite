@@ -6,6 +6,7 @@ services:
         environment:
             LETSENCRYPT_HOST: contest.cs.fsu.edu
             VIRTUAL_HOST: contest.cs.fsu.edu
+            VIRTUAL_PATH: /
         volumes:
             - ./config/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
             - django_static_data:/usr/share/nginx/html/static:ro
@@ -60,6 +61,53 @@ services:
                 parallelism: 1
                 delay: 5s
                 failure_action: rollback
+    celery_worker:
+        image: acmfsu/contestsuite:latest
+        command: /app/start-celeryworker
+        environment:
+            - DEBUG=False
+            - ALLOWED_HOSTS=contest.cs.fsu.edu,0.0.0.0
+            - SECRET_KEY=86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
+
+            - CACHE_TIMEOUT=300
+            - CACHE_LOCATION=redis://redis:6379/0
+            - CELERY_BACKEND=redis://redis:6379/1
+            - CELERY_BROKER=amqp://rabbitmq:5672
+
+            - MAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+            - MAIL_HOST=smtpsubdomain.example.com
+            - MAIL_PORT=465
+            - MAIL_USER=user@example.com
+            - MAIL_PASSWORD=examplepass
+
+            - SQL_HOST=mariadb
+            - SQL_PORT=3306
+            - SQL_DATABASE=contestsuite
+            - SQL_USER=contestadmin
+            - SQL_PASSWORD=seminoles
+        volumes:
+            - django_app_data:/app/media
+        networks:
+            - mariadb-backend
+            - redis-backend
+            - rabbitmq-backend
+        deploy:
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+    flower:
+        image: mher/flower:latest
+        command: celery --broker=amqp://rabbitmq:5672// flower --broker_api=http://guest:guest@rabbitmq:15672/api/vhost --url_prefix=flower --basic_auth=contestadmin:seminoles1!
+        environment:
+            - CELERY_TIMEZONE=America/New_York
+        volumes:
+            - flower_data:/data
+        networks:
+            - nginx_backend
+            - rabbitmq-backend
     mariadb:
         image: mariadb:10.6-focal
         volumes:
@@ -92,47 +140,10 @@ services:
                 delay: 5s
                 failure_action: rollback
     rabbitmq:
-        image: rabbitmq:3
+        image: rabbitmq:3-management-alpine
         volumes:
             - rabbit_data:/var/lib/rabbitmq
         networks:
-            - rabbitmq-backend
-        deploy:
-            rollback_config:
-                parallelism: 0
-            update_config:
-                parallelism: 1
-                delay: 5s
-                failure_action: rollback
-    celery_worker:
-        image: acmfsu/contestsuite:latest
-        command: /app/start-celeryworker
-        environment:
-            - DEBUG=False
-            - ALLOWED_HOSTS=contest.cs.fsu.edu,0.0.0.0
-            - SECRET_KEY=86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
-
-            - CACHE_TIMEOUT=300
-            - CACHE_LOCATION=redis://redis:6379/0
-            - CELERY_BACKEND=redis://redis:6379/1
-            - CELERY_BROKER=amqp://rabbitmq:5672
-
-            - MAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
-            - MAIL_HOST=smtpsubdomain.example.com
-            - MAIL_PORT=465
-            - MAIL_USER=user@example.com
-            - MAIL_PASSWORD=examplepass
-
-            - SQL_HOST=mariadb
-            - SQL_PORT=3306
-            - SQL_DATABASE=contestsuite
-            - SQL_USER=contestadmin
-            - SQL_PASSWORD=seminoles
-        volumes:
-            - django_app_data:/app/media
-        networks:
-            - mariadb-backend
-            - redis-backend
             - rabbitmq-backend
         deploy:
             rollback_config:

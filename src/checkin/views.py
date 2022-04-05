@@ -82,7 +82,7 @@ def checkin(request):
 							messages.success(request, str(user.first_name) +
 							                 ', you are checked in!', fail_silently=True)
 							messages.info(
-								request, 'Check your registered email or account dashboard for DOMJudge credentials.', fail_silently=True)
+								request, 'Check your registered email or account dashboard for DOMjudge credentials.', fail_silently=True)
 				else:
 					messages.error(
 						request, 'Invalid card read. Please try again.', fail_silently=True)
@@ -117,7 +117,7 @@ def checkin(request):
 						# Email user DOMjudge credentials
 						tasks.send_credentials.delay(user.username)
 						messages.success(request, str(user.first_name) + ', you are checked in!', fail_silently=True)
-						messages.info(request, 'Check your registered email or account dashboard for DOMJudge credentials.', fail_silently=True)
+						messages.info(request, 'Check your registered email or account dashboard for DOMjudge credentials.', fail_silently=True)
 			
 			else:
 				messages.error(request, 'Invalid form submission. Please resubmit your information.', fail_silently=True)
