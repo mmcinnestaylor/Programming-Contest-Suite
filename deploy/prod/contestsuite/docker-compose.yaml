@@ -100,11 +100,11 @@ services:
                 failure_action: rollback
     flower:
         image: mher/flower:latest
-        command: celery --broker=amqp://rabbitmq:5672// flower --port=80 --broker_api=http://guest:guest@rabbitmq:15672/api/vhost --basic_auth=contestadmin:seminoles1!
-        environment:
-            VIRTUAL_HOST: contest.cs.fsu.edu
-            VIRTUAL_PATH: /flower/
+        command: celery --broker=amqp://rabbitmq:5672// flower --broker_api=http://guest:guest@rabbitmq:15672/api/vhost --url_prefix=flower --basic_auth=contestadmin:seminoles1!
+        volumes:
+            - flower_data:/data
         networks:
+            - nginx_backend
             - rabbitmq-backend
     mariadb:
         image: mariadb:10.6-focal
