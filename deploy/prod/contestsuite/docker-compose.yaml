@@ -101,6 +101,8 @@ services:
     flower:
         image: mher/flower:latest
         command: celery --broker=amqp://rabbitmq:5672// flower --broker_api=http://guest:guest@rabbitmq:15672/api/vhost --url_prefix=flower --basic_auth=contestadmin:seminoles1!
+        environment:
+            - CELERY_TIMEZONE=America/New_York
         volumes:
             - flower_data:/data
         networks:
