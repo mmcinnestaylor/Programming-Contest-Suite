@@ -9,7 +9,6 @@ mysqlclient = "*"
 django-redis = "*"
 django-import-export = "*"
 celery = "*"
-flower = "*"
 gunicorn = "*"
 six = "*"
 
