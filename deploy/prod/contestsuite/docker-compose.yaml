@@ -85,6 +85,9 @@ services:
             - SQL_DATABASE=contestsuite
             - SQL_USER=contestadmin
             - SQL_PASSWORD=seminoles
+
+            # Discord
+            - ANNOUNCEMENT_WEBHOOK_URL=https://discord.com/api/channel_webhook_url
         volumes:
             - django_app_data:/app/media
         networks:

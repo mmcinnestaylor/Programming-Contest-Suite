@@ -50,6 +50,9 @@ services:
             - SQL_DATABASE=contestsuite
             - SQL_USER=dev
             - SQL_PASSWORD=seminoles
+            
+            # Discord
+            - ANNOUNCEMENT_WEBHOOK_URL=https://discord.com/api/channel_webhook_url
         volumes:
             - ../../src/media:/app/media
         networks:

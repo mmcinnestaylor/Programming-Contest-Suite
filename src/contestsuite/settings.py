@@ -248,3 +248,9 @@ else:
     EMAIL_USE_TLS = True
 
 DEFAULT_FROM_EMAIL = 'ACM at FSU Programming Contest<acm@cs.fsu.edu>'  
+
+
+# Discord
+# https://discordpy.readthedocs.io/en/stable/
+
+ANNOUNCEMENT_WEBHOOK_URL = os.environ.get('ANNOUNCEMENT_WEBHOOK_URL', None)
