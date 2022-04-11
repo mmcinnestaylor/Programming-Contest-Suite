@@ -12,6 +12,7 @@ celery = "*"
 gunicorn = "*"
 six = "*"
 "discord.py" = "*"
+requests = "*"
 
 [dev-packages]
 pylint = "*"
