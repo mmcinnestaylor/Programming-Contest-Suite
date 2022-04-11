@@ -410,8 +410,8 @@
     </div>
     <div id="collapseOneAccount" class="collapse" aria-labelledby="headingOneAccount" data-parent="#accordionAccount">
       <div class="card-body">
-        Click the 'Register' link in the top navigation bar. Once created, you will need to confirm you account by following the
-        instructions in the confirmation email sent to the address you provided.
+        Click the <a href="{% url 'register_base' %}">Register</a> link in the top navigation bar. Once created, you will need to activate you account by following the
+        instructions in the activation email sent to the address you provided.
       </div>
     </div>
   </div>
@@ -421,17 +421,15 @@
       <h2 class="mb-0">
         <button class="btn btn-link btn-block text-left text-dark collapsed" type="button" data-toggle="collapse"
           data-target="#collapseTwoAccount" aria-expanded="false" aria-controls="collapseTwoAccount">
-          <h5 class="mb-0">How do I sign up for extra credit?</h5>
+          <h5 class="mb-0">I didn't receive an account activation email, what now?</h5>
         </button>
       </h2>
     </div>
     <div id="collapseTwoAccount" class="collapse" aria-labelledby="headingTwoAccount" data-parent="#accordionAccount">
       <div class="card-body">
-        After registering your account and confirming it, head over to your Account Dashboard. From there you first need to add
-        your FSU ID to your profile by clicking 'Edit' in the Profile section. Then, locate the Courses section in your Account
-        Dashboard, and click 'Add'. You will be presented with a list of courses which have been confirmed by the contest
-        organizers. Click the selection box of any available course in which you are currently registered, and then click the
-        'Select' button.
+        If an account activation email does not show up in your inbox or spam/junk email folder within a few minutes of creating
+        your account, then reach out to the contest staff. Contact information is available <a
+          href="{% url 'contact' %}">here</a>.
       </div>
     </div>
   </div>
@@ -441,11 +439,31 @@
       <h2 class="mb-0">
         <button class="btn btn-link btn-block text-left text-dark collapsed" type="button" data-toggle="collapse"
           data-target="#collapseThreeAccount" aria-expanded="false" aria-controls="collapseThreeAccount">
-          <h5 class="mb-0">What if my course isn't available to select?</h5>
+          <h5 class="mb-0">How do I sign up for extra credit?</h5>
         </button>
       </h2>
     </div>
     <div id="collapseThreeAccount" class="collapse" aria-labelledby="headingThreeAccount" data-parent="#accordionAccount">
+      <div class="card-body">
+        After creating your account and activating it, head over to your Account Dashboard. From there you first need to add
+        your FSU ID to your profile by clicking 'Edit' in the Profile section. Then, locate the Courses section in your Account
+        Dashboard, and click 'Add'. You will be presented with a list of courses which have been confirmed by the contest
+        organizers. Click the selection box of any available course in which you are currently registered, and then click the
+        'Select' button.
+      </div>
+    </div>
+  </div>
+  <!-- Fourth Question-->
+  <div class="card">
+    <div class="card-header" id="headingFourAccount">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left text-dark collapsed" type="button" data-toggle="collapse"
+          data-target="#collapseFourAccount" aria-expanded="false" aria-controls="collapseFourAccount">
+          <h5 class="mb-0">What if my course isn't available to select?</h5>
+        </button>
+      </h2>
+    </div>
+    <div id="collapseFourAccount" class="collapse" aria-labelledby="headingFourAccount" data-parent="#accordionAccount">
       <div class="card-body">
         Don't worry! We add courses only as we receive confirmation from the course instructor. If your course isn't
         listed, first confirm with your instructor that they are indeed offering extra credit for participation. If they

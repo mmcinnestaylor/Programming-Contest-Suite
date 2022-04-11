@@ -62,7 +62,9 @@ def account(request):
             tasks.send_validation_email.delay(current_site.domain, user.username)
 
             messages.success(
-                request, 'Account created! Please check your inbox for an account confirmation email.')
+                request, 'Account created! Please check your inbox for an account activation email.')
+            messages.info(
+                request, 'If your activation email does not arrive in the next few minutes, please check your spam/junk email folder. Head over to our Contact Us page if you need additional help.')
             return redirect('login')
 
         messages.error(
