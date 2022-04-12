@@ -102,6 +102,7 @@ services:
             - contestsuite-dev       
 volumes:
     django_db_data:
+    flower_data:
     redis_data:
     rabbit_data:
 networks:
