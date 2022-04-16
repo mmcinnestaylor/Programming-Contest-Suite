@@ -50,6 +50,9 @@ services:
             - SQL_DATABASE=contestsuite
             - SQL_USER=dev
             - SQL_PASSWORD=seminoles
+            
+            # Discord
+            - ANNOUNCEMENT_WEBHOOK_URL=https://discord.com/api/channel_webhook_url
         volumes:
             - ../../src/media:/app/media
         networks:
@@ -63,6 +66,8 @@ services:
         command: celery --broker=amqp://rabbitmq:5672// flower --broker_api=http://guest:guest@rabbitmq:15672/api/vhost
         ports:
             - 5555:5555
+        volumes:
+            - flower_data:/data
         networks:
             - contestsuite-dev
         depends_on:
@@ -97,6 +102,7 @@ services:
             - contestsuite-dev       
 volumes:
     django_db_data:
+    flower_data:
     redis_data:
     rabbit_data:
 networks:

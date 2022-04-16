@@ -1,7 +1,7 @@
 {% autoescape off %}
 Hello {{ user.first_name }},
 
-Thank you for signing up for this semester's contest! Please follow the link below to confirm your account:
+Thank you for signing up for this semester's contest! Please follow the link below to activate your account:
 
 https://{{ domain }}{% url 'activate' uidb64=uid token=token %}
 

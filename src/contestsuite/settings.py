@@ -32,16 +32,17 @@ if os.environ.get('DEBUG'):
     DEBUG = os.environ.get('DEBUG') == 'True'
 else:
     DEBUG = True
-#DEBUG = os.environ.get('DEBUG'=='True', True)
+
 
 if DEBUG:
     ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '[::1]']
 else:
-    ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
+    if os.environ.get('ALLOWED_HOSTS'):
+        ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
+    else:
+        ALLOWED_HOSTS = []
+        
     
-#ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', ['.localhost', '127.0.0.1', '[::1]'])
-
-
 # Debug Toolbar Access 
 
 if DEBUG:
@@ -221,7 +222,6 @@ LOGIN_REDIRECT_URL = '/manage/'
 # https://docs.djangoproject.com/en/3.2/topics/http/sessions/
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_SAVE_EVERY_REQUEST = True
 
 if not DEBUG:
     SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -248,3 +248,9 @@ else:
     EMAIL_USE_TLS = True
 
 DEFAULT_FROM_EMAIL = 'ACM at FSU Programming Contest<acm@cs.fsu.edu>'  
+
+
+# Discord
+# https://discordpy.readthedocs.io/en/stable/
+
+ANNOUNCEMENT_WEBHOOK_URL = os.environ.get('ANNOUNCEMENT_WEBHOOK_URL', None)
