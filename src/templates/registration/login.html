@@ -40,10 +40,14 @@
 							<td>{{ form.password }}</td>
 						</tr>
 					</table>
+					<small><a class="text-danger" href="{% url 'password_reset' %}">Lost password?</a></small>
+					&bull;
+					<small><a class="text-info" href="{% url 'recover_username' %}">Forgot username?</a></small>
+					<br>
 					<input class="btn btn-primary btn-sm mt-2"type="submit" value="login" />
 					<input type="hidden" name="next" value="{{ next }}" />
 				</form>
-				<small><a class="text-danger" href="{% url 'password_reset' %}">Lost password?</a></small>				
+								
 			</div>
 		</div>
 
