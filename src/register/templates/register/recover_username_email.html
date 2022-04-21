@@ -1,0 +1,13 @@
+{% autoescape off %}
+Hello {{ user.first_name }},
+
+A username recovery request was submitted for your account. Your username is below, and no further action is required at this time.
+
+{{ user.username }}
+
+Cheers,
+The Programming Contest Team
+contest@fsu.acm.org
+
+*** This message was sent from an unmonitored address. Please contact us at the address in our signature. ***
+{% endautoescape %}

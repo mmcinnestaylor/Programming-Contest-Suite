@@ -146,3 +146,28 @@ def team(request):
     context['heading'] = 'Team'
     context['form'] = form
     return render(request, 'register/register_form.html', context)
+
+
+# Recover username
+def recover_username(request):
+    context = {}
+
+    if request.method == 'POST':
+        form = forms.InputEmailForm(request.POST)
+
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            tasks.send_username_email.delay(email)
+
+            messages.info(
+                request, 'If the address you entered is attached to an account, you will receive an email with your username.', fail_silently=True)
+            return redirect('recover_username')
+        else:
+            messages.error(
+                request, 'Please correct the error(s) below.', fail_silently=True)
+    else:
+        form = forms.InputEmailForm()
+
+    context['form'] = form
+
+    return render(request, 'register/recover_username_form.html', context)

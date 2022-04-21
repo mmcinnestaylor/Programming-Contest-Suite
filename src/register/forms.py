@@ -46,3 +46,8 @@ class TeamForm(forms.ModelForm):
                 raise ValidationError('Team name not allowed.')
 
         return team_name
+
+
+class InputEmailForm(forms.Form):
+    email = forms.EmailField(widget=forms.EmailInput(
+        attrs={'placeholder': 'Enter your registered email'}), required=True)

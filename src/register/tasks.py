@@ -26,3 +26,20 @@ def send_validation_email(domain, username):
     user.email_user(subject, message)
 
     logger.info('Validation sent to %s' % user.email)
+
+
+@shared_task
+def send_username_email(email):
+    try:
+        user = User.objects.get(email=email)
+    except:
+        logger.info('Username recovery failed for %s' % email)
+    else:
+        subject = 'Programming Contest Username Recovery'
+        message = render_to_string('register/recover_username_email.html', {
+            'user': user,
+        })
+
+        user.email_user(subject, message)
+
+        logger.info('Username recovery sent to %s' % email)
