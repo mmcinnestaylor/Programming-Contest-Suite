@@ -78,6 +78,7 @@ INSTALLED_APPS = [
 if DEBUG:
     INSTALLED_APPS.append('debug_toolbar')
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -91,6 +92,7 @@ MIDDLEWARE = [
 # Add debug_toolber middleware only if site is in debug mode
 if DEBUG:
     MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+
 
 ROOT_URLCONF = 'contestsuite.urls'
 
@@ -145,7 +147,7 @@ CELERY_RESULT_BACKEND = os.environ.get('CELERY_BACKEND', 'redis://127.0.0.1:6379
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TIMEZONE = 'America/New_York'
+CELERY_TIMEZONE = os.environ.get('CELERY_TIMEZONE', 'America/New_York')
 CELERY_ENABLE_UTC = True
 
 
@@ -192,7 +194,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'America/New_York'
+TIME_ZONE = os.environ.get('TIME_ZONE', 'America/New_York')
 
 USE_I18N = True
 
@@ -239,15 +241,24 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
-    EMAIL_BACKEND = os.environ.get('MAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')  
-    EMAIL_HOST = os.environ.get('MAIL_HOST', None)
-    EMAIL_PORT = int(os.environ.get('MAIL_PORT', 465))
-    EMAIL_HOST_USER = os.environ.get('MAIL_USER', None)
-    EMAIL_HOST_PASSWORD = os.environ.get('MAIL_PASSWORD', None)
-    EMAIL_USE_SSL = False
-    EMAIL_USE_TLS = True
+    EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')  
+    EMAIL_HOST = os.environ.get('EMAIL_HOST', None)
+    EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 465))
+    EMAIL_HOST_USER = os.environ.get('EMAIL_USER', None)
+    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', None)
+    
+    if os.environ.get('EMAIL_USE_SSL'):
+        EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL') == 'True'
+    else:
+        EMAIL_USE_SSL = False
+    
+    if os.environ.get('EMAIL_USE_TLS'):
+        EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS') == 'True'
+    else:
+        EMAIL_USE_TLS = False
 
-DEFAULT_FROM_EMAIL = 'ACM at FSU Programming Contest<acm@cs.fsu.edu>'  
+DEFAULT_FROM_EMAIL = os.environ.get(
+    'DEFAULT_FROM_EMAIL', 'ACM at FSU Programming Contest<acm@cs.fsu.edu>')
 
 
 # Discord
