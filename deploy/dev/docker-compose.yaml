@@ -4,29 +4,36 @@ services:
     django:
         build:
             context: ../..
-            dockerfile: Dockerfile-dev
-        image: contestsuite:dev 
-        # '/start' is the shell script used to run the service
-        #command: /app/start
+            args:
+                REQUIREMENTS: requirements-dev.txt
+        image: contestsuite:dev
+        command: /app/docker/start.sh server debug
+        environment:
+            # Django
+            DEBUG: 'True'
+            SECRET_KEY: 86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
+            CACHE_LOCATION: redis://redis:6379/0
+            
+            # Celery
+            CELERY_BACKEND: redis://redis:6379/1
+            CELERY_BROKER: amqp://rabbitmq:5672
+
+            # Email
+            EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+
+            # Database
+            SQL_HOST: mariadb
+            SQL_PORT: 3306
+            SQL_DATABASE: contestsuite
+            SQL_USER: contestadmin
+            SQL_PASSWORD: seminoles1!
         ports:
             - 8000:8000
-        environment:
-            - DEBUG=True
-            - SECRET_KEY=86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
-
-            - CACHE_LOCATION=redis://redis:6379/0
-            - CELERY_BACKEND=redis://redis:6379/1
-            - CELERY_BROKER=amqp://rabbitmq:5672
-
-            - SQL_HOST=mariadb
-            - SQL_PORT=3306
-            - SQL_DATABASE=contestsuite
-            - SQL_USER=dev
-            - SQL_PASSWORD=seminoles
         volumes:
             - ../../src:/app
+            - deployment_scripts:/app/docker
         networks:
-            - contestsuite-dev
+            - contestsuite
         depends_on:
             - redis
             - rabbitmq
@@ -34,29 +41,33 @@ services:
             - celery_worker
     celery_worker:
         image: contestsuite:dev
-        entrypoint: /app/entrypoint-celery
+        command: /app/docker/start.sh worker
         environment:
-            - DEBUG=True
-            - SECRET_KEY=86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
+            # Django
+            DEBUG: 'True'
+            SECRET_KEY: 86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
 
-            - CACHE_LOCATION=redis://redis:6379/0
-            - CELERY_BACKEND=redis://redis:6379/1
-            - CELERY_BROKER=amqp://rabbitmq:5672
+            # Celery
+            CELERY_BACKEND: redis://redis:6379/1
+            CELERY_BROKER: amqp://rabbitmq:5672
+            
+            # Email
+            MAIL_BACKEND: django.core.mail.backends.console.EmailBackend
 
-            - MAIL_BACKEND=django.core.mail.backends.console.EmailBackend
-
-            - SQL_HOST=mariadb
-            - SQL_PORT=3306
-            - SQL_DATABASE=contestsuite
-            - SQL_USER=dev
-            - SQL_PASSWORD=seminoles
+            # Database
+            SQL_HOST: mariadb
+            SQL_PORT: 3306
+            SQL_DATABASE: contestsuite
+            SQL_USER: contestadmin
+            SQL_PASSWORD: seminoles1!
             
             # Discord
-            - ANNOUNCEMENT_WEBHOOK_URL=https://discord.com/api/channel_webhook_url
+            ANNOUNCEMENT_WEBHOOK_URL: https://discord.com/api/channel_webhook_url
         volumes:
-            - ../../src/media:/app/media
+            - ../../src:/app
+            - deployment_scripts:/app/docker
         networks:
-            - contestsuite-dev
+            - contestsuite
         depends_on:
             - redis
             - rabbitmq
@@ -64,47 +75,47 @@ services:
     flower:
         image: mher/flower:latest
         command: celery --broker=amqp://rabbitmq:5672// flower --broker_api=http://guest:guest@rabbitmq:15672/api/vhost
+        environment:
+            CELERY_TIMEZONE: America/New_York
         ports:
             - 5555:5555
         volumes:
-            - flower_data:/data
+            - flower:/data
         networks:
-            - contestsuite-dev
+            - contestsuite
         depends_on:
             - redis
             - rabbitmq
             - celery_worker
     mariadb:
-        image: mariadb:10.5-focal
-        volumes:
-            - django_db_data:/var/lib/mysql
+        image: mariadb:10.6-focal
         environment:
-            - MARIADB_ROOT_PASSWORD=rootpw
-            - MARIADB_DATABASE=contestsuite
-            - MARIADB_USER=dev
-            - MARIADB_PASSWORD=seminoles
+            MARIADB_ROOT_PASSWORD: rootpw
+            MARIADB_DATABASE: contestsuite
+            MARIADB_USER: contestadmin
+            MARIADB_PASSWORD: seminoles1!
+        volumes:
+            - django_db:/var/lib/mysql
         networks:
-            - contestsuite-dev
+            - contestsuite
     redis:
         image: redis:5-buster
         volumes:
-            - redis_data:/data
+            - redis:/data
         networks:
-            - contestsuite-dev
+            - contestsuite
     rabbitmq:
         image: rabbitmq:3-management-alpine
-        ports:
-            - 5672:5672
-            - 15672:15672
         volumes:
-            - rabbit_data:/var/lib/rabbitmq
+            - rabbitmq:/var/lib/rabbitmq
         networks:
-            - contestsuite-dev       
+            - contestsuite       
 volumes:
-    django_db_data:
-    flower_data:
-    redis_data:
-    rabbit_data:
+    deployment_scripts:
+    django_db:
+    flower:
+    redis:
+    rabbitmq:
 networks:
-    contestsuite-dev:
-        name: contestsuite-dev
+    contestsuite:
+        name: contestsuite
