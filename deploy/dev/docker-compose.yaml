@@ -22,11 +22,11 @@ services:
             EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
 
             # Database
-            SQL_HOST: mariadb
-            SQL_PORT: 3306
-            SQL_DATABASE: contestsuite
-            SQL_USER: contestadmin
-            SQL_PASSWORD: seminoles1!
+            SQL_HOST: 'mariadb'
+            SQL_PORT: '3306'
+            SQL_DATABASE: 'contestsuite'
+            SQL_USER: 'contestadmin'
+            SQL_PASSWORD: 'seminoles1!'
         ports:
             - 8000:8000
         volumes:
@@ -55,11 +55,11 @@ services:
             MAIL_BACKEND: django.core.mail.backends.console.EmailBackend
 
             # Database
-            SQL_HOST: mariadb
-            SQL_PORT: 3306
-            SQL_DATABASE: contestsuite
-            SQL_USER: contestadmin
-            SQL_PASSWORD: seminoles1!
+            SQL_HOST: 'mariadb'
+            SQL_PORT: '3306'
+            SQL_DATABASE: 'contestsuite'
+            SQL_USER: 'contestadmin'
+            SQL_PASSWORD: 'seminoles1!'
             
             # Discord
             ANNOUNCEMENT_WEBHOOK_URL: https://discord.com/api/channel_webhook_url
@@ -74,7 +74,7 @@ services:
             - mariadb
     flower:
         image: mher/flower:latest
-        command: celery --broker=amqp://rabbitmq:5672// flower --broker_api=http://guest:guest@rabbitmq:15672/api/vhost
+        command: celery --broker=amqp://rabbitmq:5672// flower --broker_api=http://rabbitmq:15672/api/vhost
         environment:
             CELERY_TIMEZONE: America/New_York
         ports:
@@ -90,10 +90,10 @@ services:
     mariadb:
         image: mariadb:10.6-focal
         environment:
-            MARIADB_ROOT_PASSWORD: rootpw
-            MARIADB_DATABASE: contestsuite
-            MARIADB_USER: contestadmin
-            MARIADB_PASSWORD: seminoles1!
+            MARIADB_ROOT_PASSWORD: 'rootpw'
+            MARIADB_DATABASE: 'contestsuite'
+            MARIADB_USER: 'contestadmin'
+            MARIADB_PASSWORD: 'seminoles1!'
         volumes:
             - django_db:/var/lib/mysql
         networks:
