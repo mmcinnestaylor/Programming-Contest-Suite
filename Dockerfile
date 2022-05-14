@@ -1,12 +1,14 @@
 FROM python:3.9-slim
-LABEL maintainer="ACM at FSU <contestdev@fsu.acm.org>"
+LABEL maintainer="ACM at FSU <contact@fsu.acm.org>"
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
+ARG REQUIREMENTS=requirements.txt
+
 RUN apt-get update \
   # Dependencies for building Python packages
-  && apt-get install -y build-essential \
+  && apt-get install -y --no-install-recommends build-essential \
   # Translations dependencies
   && apt-get install -y gettext \
   # MariaDB dependency
@@ -15,24 +17,30 @@ RUN apt-get update \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
 
-# Requirements are installed here to ensure they will be cached.
+# Requirements are installation
 RUN pip install --upgrade pip
-COPY ./requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+COPY $REQUIREMENTS /tmp/requirements.txt
 
-COPY ./src app
+RUN pip install --no-cache-dir -r /tmp/requirements.txt \
+  && rm -rf /tmp/requirements.txt \
+  && useradd -U app_user \
+  && install -d -m 0755 -o app_user -g app_user /app/static \
+  && install -d -m 0755 -o app_user -g app_user /app/media \
+  && install -d -m 0755 -o app_user -g app_user /app/media/contest_files \
+  && install -d -m 0755 -o app_user -g app_user /app/media/ec_files \
+  && install -d -m 0755 -o app_user -g app_user /app/media/uploads
 
-RUN mkdir -p /app/static
-RUN mkdir -p /app/media/contest_files
-RUN mkdir -p /app/media/ec_files
-RUN mkdir -p /app/media/uploads
+# Code and User Setup
+WORKDIR /app
 
-WORKDIR /app/
+USER app_user:app_user
 
-COPY ./deploy/prod/contestsuite/scripts/django/start.sh start
-RUN sed -i 's/\r$//g' start
-RUN chmod +x start
+COPY --chown=app_user:app_user src .
+COPY --chown=app_user:app_user deploy/prod/contestsuite/scripts/*.sh docker/
 
-COPY ./deploy/prod/contestsuite/scripts/celery/worker/start.sh start-celeryworker
-RUN sed -i 's/\r$//g' start-celeryworker
-RUN chmod +x start-celeryworker
+RUN chmod +x docker/*.sh
+
+# Docker Run Checks and Configurations
+ENTRYPOINT [ "docker/entrypoint.sh" ]
+
+CMD [ "docker/start.sh", "server" ]
