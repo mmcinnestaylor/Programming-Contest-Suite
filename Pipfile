@@ -13,6 +13,7 @@ gunicorn = "*"
 six = "*"
 "discord.py" = "*"
 requests = "*"
+django-hashid-field = "*"
 
 [dev-packages]
 pylint = "*"
