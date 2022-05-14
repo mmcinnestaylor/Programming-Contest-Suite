@@ -1,5 +1,5 @@
 FROM python:3.9-slim
-LABEL maintainer="ACM at FSU <contestdev@fsu.acm.org>"
+LABEL maintainer="ACM at FSU <contact@fsu.acm.org>"
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -17,7 +17,7 @@ RUN apt-get update \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
 
-# Requirements are installed here to ensure they will be cached.
+# Requirements are installation
 RUN pip install --upgrade pip
 COPY $REQUIREMENTS /tmp/requirements.txt
 
@@ -25,6 +25,7 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt \
   && rm -rf /tmp/requirements.txt \
   && useradd -U app_user \
   && install -d -m 0755 -o app_user -g app_user /app/static \
+  && install -d -m 0755 -o app_user -g app_user /app/media \
   && install -d -m 0755 -o app_user -g app_user /app/media/contest_files \
   && install -d -m 0755 -o app_user -g app_user /app/media/ec_files \
   && install -d -m 0755 -o app_user -g app_user /app/media/uploads
