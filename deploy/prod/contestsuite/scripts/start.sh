@@ -35,4 +35,7 @@ elif [ "$PROCESS_TYPE" = "worker" ]; then
         --autoscale=10,3 \
         -n worker@%n \
         --loglevel INFO
+else
+    echo "Invalid [PROCESS_TYPE](server/worker)"
+    exit 1
 fi
