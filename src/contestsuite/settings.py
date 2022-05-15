@@ -265,3 +265,9 @@ DEFAULT_FROM_EMAIL = os.environ.get(
 # https://discordpy.readthedocs.io/en/stable/
 
 ANNOUNCEMENT_WEBHOOK_URL = os.environ.get('ANNOUNCEMENT_WEBHOOK_URL', None)
+
+
+# Hashid Fields
+# https://pypi.org/project/django-hashid-field/
+
+HASHID_FIELD_SALT = os.environ.get('HASHID_FIELD_SALT', None)
