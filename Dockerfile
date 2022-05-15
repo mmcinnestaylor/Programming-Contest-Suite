@@ -41,6 +41,7 @@ COPY --chown=app_user:app_user deploy/prod/contestsuite/scripts/*.sh docker/
 RUN chmod +x docker/*.sh
 
 # Docker Run Checks and Configurations
-ENTRYPOINT [ "docker/entrypoint.sh" ]
+EXPOSE 8000
 
+ENTRYPOINT [ "docker/entrypoint.sh" ]
 CMD [ "docker/start.sh", "server" ]
