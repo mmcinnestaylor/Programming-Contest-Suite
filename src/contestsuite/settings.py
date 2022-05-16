@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'checkin.apps.CheckinConfig',
     'contestadmin.apps.ContestAdminConfig',
     'core.apps.CoreConfig',
+    'lfg.apps.LfgConfig',
     'manager.apps.ManagerConfig',
     'register.apps.RegisterConfig',
     # 3rd party packages
