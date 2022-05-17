@@ -150,7 +150,12 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TIMEZONE = os.environ.get('CELERY_TIMEZONE', 'America/New_York')
 CELERY_ENABLE_UTC = True
-
+CELERY_BEAT_SCHEDULE = {
+    'scrape-discord-members-every-30m': { 
+         'task': 'lfg.tasks.scrape_discord_members', 
+         'schedule': 1800.0,
+        },          
+}
 
 # Cache
 # https://docs.djangoproject.com/en/2.2/ref/settings/#caches
@@ -266,3 +271,6 @@ DEFAULT_FROM_EMAIL = os.environ.get(
 # https://discordpy.readthedocs.io/en/stable/
 
 ANNOUNCEMENT_WEBHOOK_URL = os.environ.get('ANNOUNCEMENT_WEBHOOK_URL', None)
+GUILD_ID = int(os.environ.get('GUILD_ID', None))
+SCRAPE_BOT_TOKEN = os.environ.get(
+    'SCRAPE_BOT_TOKEN', None)
