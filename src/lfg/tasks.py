@@ -43,9 +43,6 @@ class ScrapeBot(Client):
             else:
                 logger.info('No guild with provided id.')
 
-        await self.close()
-        self.clear()
-
 
 # Celery task which invokes ScrapeBot
 @shared_task
