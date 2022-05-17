@@ -39,7 +39,8 @@ elif [ "$PROCESS_TYPE" = "beat" ]; then
     celery \
         -A contestsuite \
         beat \
-        --loglevel INFO
+        --loglevel INFO \
+        --scheduler django_celery_beat.schedulers:DatabaseScheduler
 else
     echo "Invalid [PROCESS_TYPE](server/worker/beat)"
     exit 1
