@@ -13,6 +13,7 @@ gunicorn = "*"
 six = "*"
 "discord.py" = "*"
 requests = "*"
+django-celery-beat = "*"
 
 [dev-packages]
 pylint = "*"
