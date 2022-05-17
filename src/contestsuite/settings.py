@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'manager.apps.ManagerConfig',
     'register.apps.RegisterConfig',
     # 3rd party packages
+    'django_celery_beat',
     'import_export',
 ]
 
