@@ -39,6 +39,33 @@ services:
             - rabbitmq
             - mariadb
             - celery_worker
+    celery_beat:
+        image: contestsuite:dev
+        command: /app/docker/start.sh beat
+        environment:
+            # Django
+            DEBUG: 'True'
+
+            # Celery
+            CELERY_BACKEND: redis://redis:6379/1
+            CELERY_BROKER: amqp://rabbitmq:5672
+
+            # Database
+            SQL_HOST: 'mariadb'
+            SQL_PORT: '3306'
+            SQL_DATABASE: 'contestsuite'
+            SQL_USER: 'contestadmin'
+            SQL_PASSWORD: 'seminoles1!'
+        volumes:
+            - ../../src:/app
+            - deployment_scripts:/app/docker
+        networks:
+            - contestsuite
+        depends_on:
+            - celery_worker
+            - redis
+            - rabbitmq
+            - mariadb
     celery_worker:
         image: contestsuite:dev
         command: /app/docker/start.sh worker
@@ -63,6 +90,8 @@ services:
             
             # Discord
             ANNOUNCEMENT_WEBHOOK_URL: https://discord.com/api/channel_webhook_url
+            GUILD_ID: 000000000000000000
+            SCRAPE_BOT_TOKEN: 'bot_token'
         volumes:
             - ../../src:/app
             - deployment_scripts:/app/docker
