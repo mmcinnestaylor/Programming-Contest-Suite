@@ -3,7 +3,7 @@
 cd /app
 
 if [ $# -eq 0 ]; then
-    echo "Usage: start.sh [PROCESS_TYPE](server/worker)"
+    echo "Usage: start.sh [PROCESS_TYPE](server/worker/beat)"
     exit 1
 fi
 
@@ -35,7 +35,12 @@ elif [ "$PROCESS_TYPE" = "worker" ]; then
         --autoscale=10,3 \
         -n worker@%n \
         --loglevel INFO
+elif [ "$PROCESS_TYPE" = "beat" ]; then
+    celery \
+        -A contestsuite \
+        beat \
+        --loglevel INFO
 else
-    echo "Invalid [PROCESS_TYPE](server/worker)"
+    echo "Invalid [PROCESS_TYPE](server/worker/beat)"
     exit 1
 fi
