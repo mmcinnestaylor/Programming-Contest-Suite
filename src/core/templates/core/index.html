@@ -22,29 +22,89 @@
 
   <div class="row justify-content-center">
     <div class="col">
-      <div class="jumbotron shadow mt-4 p-4" id="jumbo-announcements">
-        <h1 class="mt-0">Recent Announcement</h1>
-        <hr class="my-4">
-        {% for announcement in announcements %}
-        <div class="card mb-4 shadow-sm">
-          <div class="card-body">
-            <h4 class="card-title mb-0">{{ announcement.title }}</h4>
-            <small class="card-text text-muted">{{ announcement.author.first_name }} | {{ announcement.created_on}}
-            </small>
-            {% if announcement.created_on < announcement.updated_on %} <br>
-              <small class="card-text text-muted">Updated on: {{ announcement.updated_on}} </small>
-              {% endif %}
-              {% if announcement.content|length > 140 %}
-              <p class="card-text lead mt-2">{{announcement.content|slice:":140" }}...</p>
-              <a href="{% url 'announcement_detail' announcement.slug  %}" class="btn btn-primary btn-sm">Read More</a>
+      <div class="jumbotron bg-acm shadow mt-4 p-3" >
+        <div class="row">
+          <div class="col-md-8 mt-3">
+            
+            <div class="row">
+              {% if contest is not None %}
+                <!-- Date and Format Column -->
+                <div class="col-sm-6">
+                  <!-- Contest Date -->
+                  <h4 class="text-center">Contest Date</h4>
+                  <p class="lead text-center text-white mb-3">{{ contest.contest_date }}</p>
+                  <!-- Registration Deadline -->
+                  <h4 class="text-center">Registration Deadline</h4>
+                  {% if contest.team_deadline is not None %}
+                    <p class="lead text-center text-white mb-3">{{ contest.team_deadline | date }} @ {{ contest.team_deadline | time }}</p>
+                  {% else %}
+                    <p class="lead text-center text-white mb-3">TBA</p>
+                  {% endif %}
+                  <!-- Contest Format -->
+                  <h4 class="text-center">Format</h4>
+                  {% if contest.participation is not None %}
+                    {% if contest.participation == 1 %}
+                      <p class="lead text-center text-white mb-3">In-Person Only</p>
+                    {% elif contest.participation == 2 %}
+                      <p class="lead text-center text-white mb-3">Virtual Only</p>
+                    {% else %}
+                      <p class="lead text-center text-white mb-3">In-Person or Virtual</p>
+                    {% endif %}
+                  {% else %}
+                      <p class="lead text-center text-white mb-3">TBA</p>
+                  {% endif %}
+                </div>
+                <!-- Date and Format Column end -->
               {% else %}
-              <p class="card-text lead mt-2">{{announcement.content }}</p>
+                <!-- Date and Format Column -->
+                <div class="col-sm-6">
+                  <!-- Contest Date -->
+                  <h4 class="text-center">Contest Date</h4>
+                  <p class="lead text-center text-white mb-3">TBA</p>
+                  <!-- Registration Deadline -->
+                  <h4 class="text-center">Registration Deadline</h4>
+                  <p class="lead text-center text-white mb-3">TBA</p>
+                  <!-- Contest Format -->
+                  <h4 class="text-center">Format</h4>
+                  <p class="lead text-center text-white mb-3">TBA</p>
+                </div>
+                <!-- Date and Format Column end -->
               {% endif %}
+              <!-- Buttons Column -->
+              <div class="col-sm-6 justify-content-center">
+                <div class="text-center">
+                  <!-- Register Button -->
+                  <a href="{% url 'register_base' %}" class="btn btn-lg btn-outline-light my-2">Register</a>
+                  <br>
+                  <!-- Registration Guide button -->
+                  <a href="https://drive.google.com/drive/folders/1uCylEYyFdXdxD_BxplYZIioW6_ragXTq?usp=sharing" class="btn btn-lg btn-outline-light my-2" target="_blank">Registration Guide</a>
+                  <br>
+                  <!-- Contest Schedule button -->
+                  <button type="button" class="btn btn-lg btn-outline-light my-2" data-toggle="modal" data-target="#displayScheduleModal">Contest Schedule
+                  </button>
+                </div>
+              </div>
+              <!-- Buttons Column end -->
+            </div>              
           </div>
-        </div>
-        {% empty %}
-        <p class="lead">No announcements yet.</p>
-        {% endfor %}
+          <!-- Sponsors Column -->
+          <div class="col-md-4 border-left border-secondary d-none d-lg-block">
+            <h4 class="text-center mt-3">Sponsors</h4>
+            <div class="text-center">
+              <img src="{% static 'core/img/L3Harris_logo.png' %}" class="img-fluid w-75 my-2" alt="...">
+              <img src="{% static 'core/img/fsucslogo.png' %}" class="img-fluid w-75 my-2" alt="...">
+              <img src="{% static 'core/img/i2x.jpg' %}" class="img-fluid w-25 mt-2 mb-3" alt="...">
+            </div>
+          </div>
+          <div class="col-md-4 border-left border-secondary d-block d-lg-none">
+            <h4 class="text-center mt-3">Sponsors</h4>
+            <div class="text-center">
+              <img src="{% static 'core/img/L3Harris_logo.png' %}" class="img-fluid w-75 my-2" alt="...">
+              <img src="{% static 'core/img/fsucslogo.png' %}" class="img-fluid w-75 my-2" alt="...">
+              <img src="{% static 'core/img/i2x.jpg' %}" class="img-fluid w-25 mt-2 mb-3" alt="...">
+            </div>
+          </div>
+        </div>          
       </div>
     </div>
   </div>
@@ -52,107 +112,153 @@
   <p class="lead text-center mb-1">An <a href="https://icpc.global" target="_blank" rel="external">ICPC</a> style contest hosted semesterly by the Florida State University Association for Computing Machinery Student Chapter.</p>
   
   <hr>
-  <div class="row justify-content-center">
-    <div class="col-10">
-      <p class="text-center">
-        The ACM Programming Contest is a coding competition
-      emphasizing problem solving executed in code.
-      Students, faculty, and staff from all majors and colleges are welcome.
-      The competition lasts 5 hours, and teams are limited to 3 members.
-      The top teams from each division receive prizes,
-      which have previously included things like Google Home Minis,
-      Amazon Echoes, Raspberry Pi's, Chromecasts, and ACM chapter t-shirts.
-      </p>
-    </div>
-  </div>
 
-  {% if contest is not None and contest.team_deadline is not None %}
-    <div class="row justify-content-center">
-      <div class=" col-sm col-md-6">
-        <div class="card bg-secondary">
-          <h5 class="text-center text-warning">Team Registration Deadline</h5>
-          <p class="text-center text-light">{{ contest.team_deadline | date }} @ {{ contest.team_deadline | time }}</p>
+  <div class="row">
+    <!-- Contest Announcements Column -->
+    <div class="col-md-5">
+      <div class="card mt-3 border-secondary">
+        <div class="card-header font-weight-bold bg-secondary text-white">
+          Recent Announcements
         </div>
-      </div>
-    </div> 
-  {% endif %}
-  
-  <div class="row justify-content-center mt-3">
-    <div class="col-md-5 text-center mb-3">
-      <h3>Contest Details</h3>
-      {% if contest is not None %}
-        {% if contest.participation is not None %}
-          {% if contest.participation == 1 %}
-            <p class="mb-1"><span class="font-weight-bold">Participation: </span>In-Person Only</p>
-          {% elif contest.participation == 2 %}
-            <p class="mb-1"><span class="font-weight-bold">Participation: </span>Virtual Only</p>
-          {% else %}
-            <p class="mb-1"><span class="font-weight-bold">Participation: </span>In-Person or Virtual</p>
+        <div class="card-body">
+          {% for announcement in announcements|slice:":6" %}
+            <h5 class="card-title mb-0">{{ announcement.title }}</h5>
+            {% if announcement.created_on < announcement.updated_on %}
+              <small class="card-text text-muted">Updated: {{ announcement.updated_on}}</small>
+            {% else %}
+              <small class="card-text text-muted">{{ announcement.created_on}}</small>
+            {% endif %}
+
+            {% if announcement.content|length > 140 %}
+            <p class="card-text mt-1 mb-1">{{announcement.content|slice:":140" }}...</p>
+            <a href="{% url 'announcement_detail' announcement.slug  %}" class=" mb-3"><small>Read More</small></a>
+            {% else %}
+            <p class="card-text mt-2">{{announcement.content }}</p>
+            {% endif %}
+
+            {% if not forloop.last%}
+              <hr class="w-75">
+            {% endif %}
+          {% empty %}
+            <p class="card-text mt-1 mb-1">No announcements have been posted.</p>
+          {% endfor %}
+          
+          {% if announcements|length > 6%}
+            <a href="{% url 'announcements' %}" class="mt-2" style="display: block;"><small>All Announcments &raquo;</small></a>
           {% endif %}
-        {% endif %}
-        <p class="mb-1"><span class="font-weight-bold">Date: </span>{{ contest.contest_date }}</p>
-        {% if contest.contest_doors is not None %}
-          <p class="mb-1"><span class="font-weight-bold">Doors Open: </span>{{ contest.contest_doors }}</p>
-        {% endif %}
-        {% if contest.contest_start is not None %}
-          <p class="mb-1"><span class="font-weight-bold">Contest Start: </span>{{ contest.contest_start }}</p>
-        {% endif %}
-        {% if contest.contest_freeze is not None %}
-          <p class="mb-1"><span class="font-weight-bold">Scoreboard Freeze: </span>{{ contest.contest_freeze }}</p>
-        {% endif %}
-        {% if contest.contest_end is not None %}
-          <p class="mb-1"><span class="font-weight-bold">Contest End: </span>{{ contest.contest_end }}</p>
-        {% endif %}
-        {% if contest.contest_awards is not None %}
-          <p class="mb-1"><span class="font-weight-bold">Awards Ceremony: </span>{{ contest.contest_awards }}</p>
-        {% endif %}
-      {% else %}
-        <p>Contest schedule not yet set.</p>
-      {% endif %}
-    </div>
-    <div class="col-md-5 text-center">
-      <h3>Extra Credit Courses</h3>
-      {% if courses|length == 0 %}
-        <p>No courses have been confirmed at this time.</p>
-      {% elif courses|length < 6 %}
-        {% for course in courses %}
-          <p class="mb-1"><span class="font-weight-bold">{{ course.code }} </span>{{ course.name }} - {{ course.instructor.last_name }}</p>
-        {% endfor %}
-      {% else %}
-        {% for course in courses|slice:"5" %}
-          <p class="mb-1"><span class="font-weight-bold">{{ course.code }} </span>{{ course.name }} - {{ course.instructor.last_name }}</p>
-        {% endfor %}
-        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#displayCoursesModal">View All
-        </button>
-      {% endif %}
-    </div>
-  </div>
-  <div class="row mt-4 justify-content-center">
-    <h2 class="text-center">Our Sponsors</h2>
-  </div>
-  <div class="card-deck mb-5">
-    <div class="card mt-3 bg-transparent border-0">
-      <div class="card-body">
-        <div class="col d-flex align-items-center justify-content-center">
-          <img src="{% static 'core/img/L3Harris_logo.png' %}" class="img-fluid" alt="...">
         </div>
       </div>
     </div>
-    <div class="card mt-3 bg-transparent border-0">
-      <div class="card-body">
-        <div class="col d-flex align-items-center justify-content-center">
-          <img src="{% static 'core/img/fsucslogo.png' %}" class="img-fluid" alt="...">
-        </div>
-      </div>
-    </div>
-      <div class="card mt-3 bg-transparent border-0">
-        <div class="card-body ">
-          <div class="col d-flex align-items-center justify-content-center">
-            <img src="{% static 'core/img/i2x.jpg' %}" class="img-fluid" alt="...">
+    <!-- Contest Announcements column end -->
+
+    <!-- Contest Information column -->
+    <div class="col-md-7">
+      <!-- DOMjudge LFG Discord row -->
+      <div class="row">
+        <!-- DOMjudge and LFG column -->
+        <div class="col-lg-6">
+          <!-- Domjudge Status card -->
+          <div class="card mt-3 border-secondary">
+            <div class="card-header font-weight-bold bg-secondary text-white">
+              Contest Server Status
+            </div>
+            <div class="card-body">
+              {% if domjudge_status == 200 %}
+                <button class="btn btn-sm btn-outline-success btn-block" disabled>Online</button>
+              {% else %}
+                <button class="btn btn-sm btn-outline-danger btn-block" disabled>Offline</button>
+              {% endif %}
+            </div>
+            <div class="card-footer">
+              {% if domjudge_status == 200 %}
+                <a href="https://domjudge.cs.fsu.edu" class="btn btn-sm btn-primary" target="_blank" rel="external">Connect</a>
+              {% else %}
+                <a href="" class="btn btn-sm btn-primary disabled" target="_blank" rel="external">Connect</a>
+              {% endif %}
+            </div>
           </div>
+          <!-- Domjudge Status card end -->
+
+          <!-- LFG card -->
+          <div class="card mt-3 border-secondary">
+            <div class="card-header font-weight-bold bg-secondary text-white">
+              #LookingForGroup
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="font-weight-bold">Upper Division:</span>&emsp;<span>0</span>
+              </div>
+              <div>
+                <span class="font-weight-bold">Lower Division:</span>&emsp;<span>0</span>
+              </div>
+            </div>
+          </div>
+          <!-- LFG card end -->
+        </div>
+        <!-- DOMjudge and LFG column end -->
+
+        <!-- Discord Widget column -->
+        <div class="col-lg-6 overflow-auto">
+          <iframe src="https://discord.com/widget?id={{ guild_id }}&theme=light" class="mt-3"
+            height="350" allowtransparency="true" frameborder="0"
+            sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+        </div>
+        <!-- Discord Widget column end -->
+      </div>
+      <!-- DOMjudge LFG Discord row end -->
+
+      <!-- Extra Credit card -->
+      <div class="card border-secondary mt-3">
+        <div class="card-header font-weight-bold bg-secondary text-white">
+          Extra Credit
+        </div>
+        <div class="card-body">
+          {% for course in courses|slice:"5" %}
+            <p class="card-text mb-1">
+              <span class="font-weight-bold">{{ course.code }} </span>{{ course.name }} - {{course.instructor.last_name }}
+            </p>
+          {% empty %}
+            <p class="card-text">No courses have been confirmed at this time.</p>
+          {% endfor %}
+          {% if courses|length > 5 %}
+            <button type="button" class="btn btn-primary btn-sm mt-2" data-toggle="modal" data-target="#displayCoursesModal">View All
+            </button>
+          {% endif %}
         </div>
       </div>
+      <!-- Extra Credit Card end -->
+
+      <!-- About Contest Card -->
+      <div class="card border-secondary mt-3">
+        <div class="card-header font-weight-bold bg-secondary text-white">
+          The Contest
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">About</h4>
+          <p class="card-text">
+            The ACM Programming Contest is a coding competition
+            emphasizing problem solving executed in code.
+            Students, faculty, and staff from all majors and colleges are welcome.
+            The competition lasts 5 hours, and teams are limited to 3 members.
+            The top teams from each division receive prizes,
+            which have previously included things like Google Home Minis,
+            Amazon Echoes, Raspberry Pi's, Chromecasts, and ACM chapter t-shirts.
+          </p>
+          <h4 class="card-title">Volunteering</h4>
+          <p class="card-text">
+            Our team is comprised entirely of volunteers, and we welcome anyone interested in helping out at this or future contests. Each volunteer typically takes on one of the following roles:
+            <ul>
+              <li>Docent</li>
+              <li>Proctor</li>
+              <li>Question Writer</li>
+            </ul>
+            Please contact our team at <a href="mailto:contest@fsu.acm.org">contest@fsu.acm.org</a> for additional information! 
+          </p>
+        </div>
+      </div>
+      <!-- About Contest Card end -->
     </div>
+    <!-- Contest Information Column end -->
   </div>
 
   <!-- Courses Modal -->
@@ -161,15 +267,17 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="displayCoursesModalLongTitle">Extra Credit Courses</h5>
+          <h6 class="modal-title" id="displayCoursesModalLongTitle">Extra Credit</h6>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-            {% for course in courses %}
-              <p class="mb-1"><span class="font-weight-bold">{{ course.code }} </span>{{ course.name }} - {{ course.instructor.last_name }}</p>
-            {% endfor %}
+          {% for course in courses %}
+            <p class="mb-1"><span class="font-weight-bold">{{ course.code }} </span>{{ course.name }} - {{ course.instructor.last_name }}</p>
+          {% empty %}
+            <p class="mb-1">No courses have been confirmed at this time.</p>
+          {% endfor %}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -177,6 +285,81 @@
       </div>
     </div>
   </div>
+  <!-- Courses Modal end -->
+  
+  <!-- Contest Schedule Modal -->
+  <div class="modal fade" id="displayScheduleModal" tabindex="-1" role="dialog"
+    aria-labelledby="displayScheduleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="displayScheduleModalLongTitle">Contest Schedule</h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            {% if contest is not None %}
+              <!-- Contest Doors -->
+              <h5 class="text-center">Doors Open</h5>
+              {% if contest.contest_doors is not None %}
+                <p class="text-center mb-3">{{ contest.contest_doors | time:"g:i a" }}</p>
+              {% else %}
+                <p class="text-center mb-3">TBA</p>
+              {% endif %}
+              <!-- Contest Start -->
+              <h5 class="text-center">Contest Start</h5>
+              {% if contest.contest_start is not None %}
+                <p class="text-center mb-3">{{ contest.contest_start | time:"g:i a" }}</p>
+              {% else %}
+                <p class="text-center mb-3">TBA</p>
+              {% endif %}
+              <!-- Scorebord Freeze -->
+              <h5 class="text-center">Scoreboard Freeze</h5>
+              {% if contest.contest_freeze is not None %}
+                <p class="text-center mb-3">{{ contest.contest_freeze | time:"g:i a" }}</p>
+              {% else %}
+                <p class="text-center mb-3">TBA</p>
+              {% endif %}
+              <!-- Contest End -->
+              <h5 class="text-center">Contest End</h5>
+              {% if contest.contest_end is not None %}
+                <p class="text-center mb-3">{{ contest.contest_end | time:"g:i a" }}</p>
+              {% else %}
+                <p class="text-center mb-3">TBA</p>
+              {% endif %}
+              <!-- Contest Awards -->
+              <h5 class="text-center">Awards Ceremony</h5>
+              {% if contest.contest_awards is not None %}
+                <p class="text-center mb-3">{{ contest.contest_awards | time:"g:i a" }}</p>
+              {% else %}
+                <p class="text-center mb-3">TBA</p>
+              {% endif %}
+            {% else %}
+              <!-- Contest Doors -->
+              <h5 class="text-center">Doors Open</h5>
+              <p class="text-center mb-3">TBA</p>
+              <!-- Contest Start -->
+              <h5 class="text-center">Contest Start</h5>
+              <p class="text-center mb-3">TBA</p>
+              <!-- Scorebord Freeze -->
+              <h5 class="text-center">Scoreboard Freeze</h5>
+              <p class="text-center mb-3">TBA</p>
+              <!-- Contest End -->
+              <h5 class="text-center">Contest End</h5>
+              <p class="text-center mb-3">TBA</p>
+              <!-- Contest Awards -->
+              <h5 class="text-center">Awards Ceremony</h5>
+              <p class="text-center mb-3">TBA</p>
+            {% endif %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Contest Schedule Modal end -->
 {% endcache %}
 
 {% endblock %}
