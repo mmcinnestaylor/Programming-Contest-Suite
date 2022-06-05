@@ -265,3 +265,7 @@ DEFAULT_FROM_EMAIL = os.environ.get(
 # https://discordpy.readthedocs.io/en/stable/
 
 ANNOUNCEMENT_WEBHOOK_URL = os.environ.get('ANNOUNCEMENT_WEBHOOK_URL', None)
+
+
+# DOMjudge Status Button
+DOMJUDGE_URL = os.environ.get('DOMJUDGE_URL', 'https://domjudge.cs.fsu.edu')
