@@ -275,3 +275,7 @@ ANNOUNCEMENT_WEBHOOK_URL = os.environ.get('ANNOUNCEMENT_WEBHOOK_URL', None)
 GUILD_ID = int(os.environ.get('GUILD_ID', 0))
 SCRAPE_BOT_TOKEN = os.environ.get(
     'SCRAPE_BOT_TOKEN', None)
+
+
+# DOMjudge Status Button
+DOMJUDGE_URL = os.environ.get('DOMJUDGE_URL', 'https://domjudge.cs.fsu.edu')
