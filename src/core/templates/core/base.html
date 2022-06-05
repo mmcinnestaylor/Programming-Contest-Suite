@@ -47,7 +47,7 @@
     <header>
       <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
         <div class="d-none d-md-block" id="logo">
-          <a href="{% url 'index' %}" rel="no-follow"><img src="{% static 'core/img/logochapter.png' %}" width="50" height="50" alt="Chapter Logo"></a>
+          <a href="{% url 'index' %}"><img src="{% static 'core/img/acm_fsu_diamond.png' %}" width="50" height="50" alt="Chapter Logo"></a>
         </div>
         <a class="navbar-brand" href="{% url 'index' %}">ACM Programming Contest</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -55,6 +55,9 @@
         </button>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
           <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'index' %}">Home</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'announcements' %}">Announcements</a>
             </li>
@@ -147,7 +150,7 @@
               <div class="mx-auto pt-2">
                 <a href="https://www.facebook.com/ACMatFSU/" target="_blank" rel="external"><i class="fab fa-facebook fa-lg text-white mr-3"></i></a>
                 <a href="https://discord.gg/4z3hNMA" target="_blank" rel="external"><i class="fab fa-discord fa-lg text-white mx-3"></i></a>
-                <a href="https://github.com/FSU-ACM" target="_blank" rel="external"><i class="fab fa-github fa-lg text-white mx-3"></i></a>
+                <a href="https://www.linkedin.com/groups/12238485/" target="_blank" rel="external"><i class="fab fa-linkedin fa-lg text-white mx-3"></i></a>
                 <a href="{% url 'announcements_feed' %}"><i class="fa fa-rss fa-lg text-white mx-3"></i></a>
               </div>              
             </div>
@@ -156,26 +159,23 @@
           <div class="col-md-4 text-white text-center text-md-left ">
             <div class="pt-2 mt-4">
               <div>
-                <p class="text-white"> <i class="fa fa-map-marker mx-2 "></i>
+                <a href="https://goo.gl/maps/AQz5K65kyfjjjQJb7" class="text-white" target="_blank" rel="nofollow"> <i class="fa fa-map-marker mx-2"></i>
                   James J. Love Building,
                   1017 Academic Way,
-                  Tallahassee, FL 32304</p>
+                  Tallahassee, FL 32304</a>
               </div>
-              <div class="mb-2">
+              <div class="my-2">
                 <a class="text-danger" href="https://cs.fsu.edu" target="_blank" rel="external">FSU Dept of Computer Science</a>
               </div>
               <div class="mt-2 pt-1">
-                <a class="text-white" href="https://icpc.global/" target="_blank" rel="external">International Programming Contest</a>
-                
-              </div>
-
-              
+                <a class="text-white" href="https://icpc.global/" target="_blank" rel="external">ICPC Global</a>
+              </div>              
             </div>
           </div>
     
           <div class="col-md-4 text-white my-4 text-center text-md-left ">
             <span class=" font-weight-bold">About the Contest</span>
-            <p class="text-info my-2">The ACM Programming Contest is a coding competition that emphasizes problem solving executed in code.</p>
+            <p class="text-info my-2">The ACM at FSU Programming Contest is a coding competition that emphasizes problem solving executed in code.</p>
             <a class="text-light" href="https://www.mmcinnestaylor.com" target="_blank" rel="external">Built with &hearts; by Marlan Mc-T</a>
           </div>
         </div>

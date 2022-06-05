@@ -33,6 +33,6 @@ body {
   overflow: hidden;
 }
 
-#jumbo-announcements {
-  background: #0182ac;
+.bg-acm {
+  background: #1b9cc6;
 }
