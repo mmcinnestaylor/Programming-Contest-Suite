@@ -6,3 +6,4 @@ from . import models
 
 
 admin.site.register(models.DiscordMember)
+admin.site.register(models.LFGProfile)
