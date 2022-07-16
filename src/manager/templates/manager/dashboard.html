@@ -136,7 +136,12 @@
 		<!-- Team card -->
 		<div class="card mt-4">
 			<div class="card-header font-weight-bold">
-				Team
+				<span>Team</span>
+				{% if user.profile.team is None or user.profile.team.num_members < 3 %}
+					<a class="btn btn-sm btn-success float-right" href="{% url 'lfg_dashboard' %}">#LookingForGroup</a>
+				{% else %}
+					<a class="btn btn-sm btn-success float-right disabled" href="">#LookingForGroup</a>
+				{% endif %}
 			</div>
 			<div class="card-body overflow-auto">
 				{% if user.profile.has_team %}
