@@ -5,7 +5,7 @@ import requests as req
 
 from announcements.models import Announcement
 from contestadmin.models import Contest
-from contestsuite.settings import CACHE_TIMEOUT, DOMJUDGE_URL
+from contestsuite.settings import CACHE_TIMEOUT, DOMJUDGE_URL, GUILD_ID
 from register.models import Team
 from manager.models import Course, Profile
 
@@ -30,6 +30,7 @@ def index(request):
     
     context['announcements'] = (Announcement.objects.filter(status=1))
     context['courses'] = Course.objects.all()    
+    context['guild_id'] = GUILD_ID
 
     return render(request, 'core/index.html', context)
 
