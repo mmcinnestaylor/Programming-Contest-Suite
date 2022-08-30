@@ -269,4 +269,11 @@ GUILD_ID = int(os.environ.get('GUILD_ID', 0))
 
 
 # DOMjudge Status Button
+
 DOMJUDGE_URL = os.environ.get('DOMJUDGE_URL', 'https://domjudge.cs.fsu.edu')
+
+
+# Hashid Fields
+# https://pypi.org/project/django-hashid-field/
+
+HASHID_FIELD_SALT = os.environ.get('HASHID_FIELD_SALT', None)

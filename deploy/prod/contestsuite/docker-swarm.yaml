@@ -55,6 +55,9 @@ services:
 
             # Discord
             GUILD_ID: 0
+
+            # Hashid Module Salt
+            HASHID_FIELD_SALT: 0s97rx*t4%68jell&lw3^)97o*kr*+*2o^(76q)ix+ilc!4ax#
         volumes:
             - django_app:/app/media
             - django_static:/app/static

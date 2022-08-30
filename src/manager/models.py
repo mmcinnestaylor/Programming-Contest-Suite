@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from hashid_field import HashidField
+
 from register.models import Team
 
 # Create your models here.
@@ -70,7 +72,7 @@ class Profile(models.Model):
     team = models.ForeignKey(Team, related_name='profile_team', on_delete=models.SET_NULL, blank=True, null=True)
     team_admin = models.BooleanField(default=False)
     fsu_id = models.CharField(max_length=8, unique=True, blank=True, null=True)
-    fsu_num = models.CharField(max_length=8, unique=True, blank=True, null=True)
+    fsu_num = HashidField(blank=True, null=True)
     courses = models.ManyToManyField(Course, blank=True)
     checked_in = models.BooleanField(default=False)
     email_confirmed = models.BooleanField(default=False)
