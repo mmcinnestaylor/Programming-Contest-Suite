@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import transaction
 from django.shortcuts import render, redirect
 
+from hashid_field import Hashid
+
 from . import forms
 from . import tasks
 from .utils import checkin_auth
@@ -46,7 +48,7 @@ def checkin(request):
 			# Process email form entry, if it has been made.
 			if swipe_form.cleaned_data['fsu_num']:
 				if swipe_form.valid_read():
-					fsu_number = swipe_form.parse()
+					fsu_number = Hashid(swipe_form.parse())
 
 					try:
 						user = User.objects.get(profile__fsu_num=fsu_number)

@@ -21,7 +21,7 @@ class SwipeCheckinForm(forms.Form):
 
     # returns last 8 numbers of fsu number
     def parse(self):
-        return self.cleaned_data['fsu_num'][10:18]
+        return int(self.cleaned_data['fsu_num'][10:18])
 
 
 class WalkinForm(forms.Form):

@@ -69,6 +69,11 @@ class ProfileForm(forms.ModelForm):
             },
         }
 
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        self.fields['fsu_num'] = forms.IntegerField(max_value=99999999, widget=forms.NumberInput(
+            attrs={'placeholder': str(self.instance.fsu_num.id).zfill(8), }))
+        
 
 class CourseForm(forms.ModelForm):
     class Meta:
