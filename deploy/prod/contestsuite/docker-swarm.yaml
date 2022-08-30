@@ -52,6 +52,9 @@ services:
             SQL_DATABASE: contestsuite
             SQL_USER: contestadmin
             SQL_PASSWORD: seminoles1!
+
+            # Discord
+            GUILD_ID: 0
         volumes:
             - django_app:/app/media
             - django_static:/app/static
