@@ -13,6 +13,7 @@ gunicorn = "*"
 six = "*"
 "discord.py" = "*"
 requests = "*"
+django-hashid-field = "*"
 django-celery-beat = "*"
 
 [dev-packages]

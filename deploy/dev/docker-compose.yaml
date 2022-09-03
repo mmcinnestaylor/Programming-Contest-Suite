@@ -27,6 +27,9 @@ services:
             SQL_DATABASE: 'contestsuite'
             SQL_USER: 'contestadmin'
             SQL_PASSWORD: 'seminoles1!'
+
+            # Hashid Salt
+            HASHID_FIELD_SALT: 0s97rx*t4%68jell&lw3^)97o*kr*+*2o^(76q)ix+ilc!4ax#
         ports:
             - 8000:8000
         volumes:
