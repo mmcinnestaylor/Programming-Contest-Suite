@@ -18,9 +18,6 @@ services:
             CELERY_BACKEND: redis://redis:6379/1
             CELERY_BROKER: amqp://rabbitmq:5672
 
-            # Email
-            EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
-
             # Database
             SQL_HOST: 'mariadb'
             SQL_PORT: '3306'
@@ -92,9 +89,10 @@ services:
             SQL_PASSWORD: 'seminoles1!'
             
             # Discord
-            ANNOUNCEMENT_WEBHOOK_URL: https://discord.com/api/channel_webhook_url
-            GUILD_ID: 000000000000000000
-            SCRAPE_BOT_TOKEN: 'bot_token'
+            ANNOUNCEMENT_WEBHOOK_URL: # Webhook URL of the contest announcements channel
+            BOT_CHANNEL_WEBHOOK_URL: # Webhook URL of the bot command channel
+            GUILD_ID: # Discord Server ID
+            SCRAPE_BOT_TOKEN: # Token for the member list scraping bot
         volumes:
             - ../../src:/app
             - deployment_scripts:/app/docker
