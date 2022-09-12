@@ -13,5 +13,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
+    if instance.is_superuser:
+        instance.profile.role = 5
     instance.profile.save()
 
