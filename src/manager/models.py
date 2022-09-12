@@ -62,9 +62,10 @@ class Profile(models.Model):
 
     ROLES = (
         (1, 'Contestant'),
-        (2, 'Proctor'),
-        (3, 'Question Writer'),
-        (4, 'Organizer')
+        (2, 'Docent'),
+        (3, 'Proctor'),
+        (4, 'Question Writer'),
+        (5, 'Organizer')
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -76,6 +77,7 @@ class Profile(models.Model):
     courses = models.ManyToManyField(Course, blank=True)
     checked_in = models.BooleanField(default=False)
     email_confirmed = models.BooleanField(default=False)
+    announcement_email_opt_out = models.BooleanField(default=False)
     
     def __str__(self):
         return (str(self.user.first_name) + ' ' + str(self.user.last_name))
