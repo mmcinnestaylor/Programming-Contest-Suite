@@ -26,6 +26,7 @@ class Contest(models.Model):
     ec_processed = models.BooleanField(default=False)
     volunteer_pin = models.CharField(max_length=8, default='thankyou')
     participation = models.PositiveSmallIntegerField(choices=FORMAT, blank=True, null=True)
+    lunch_form_url = models.URLField(blank=True, null=True)
         
     def __str__(self):
-        return ("Programming Contest "+str(self.contest_date))
+        return ("Programming Contest on "+str(self.contest_date))
