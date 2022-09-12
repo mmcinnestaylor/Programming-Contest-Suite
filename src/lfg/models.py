@@ -51,3 +51,6 @@ class LFGProfile(models.Model):
 
     def is_completed(self):
         return self.division is not None and self.standing is not None
+
+    def is_activatable(self):
+        return not self.active and self.completed and self.verified 
