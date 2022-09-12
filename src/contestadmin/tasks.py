@@ -155,6 +155,7 @@ def check_in_out_users(action):
 def generate_ec_reports():
     num_courses = 0
     faculty_members = Faculty.objects.all()
+    roles = {role[0]:role[1] for role in Profile.ROLES}
 
     for faculty in faculty_members:
         courses = Course.objects.filter(instructor=faculty)
@@ -173,14 +174,7 @@ def generate_ec_reports():
                     writer.writerow(
                         ['fsu_id', 'last_name', 'first_name', 'questions_answered', 'team_division', 'role'])
                     for student in students:
-                        if student.profile.role == 1:
-                            role = 'Contestant'
-                        elif student.profile.role == 2:
-                            role = 'Proctor'
-                        elif student.profile.role == 3:
-                            role = 'Question Writer'
-                        else:
-                            role = 'Organizer'
+                        role = roles[student.profile.role]
 
                         if student.profile.team is None:
                             questions_answered = 'none'
@@ -225,24 +219,23 @@ def email_faculty(domain):
             uid=((faculty.email).split('@'))[0]
             if uid in fname: #not faculty_nanmer
                 found_files = True
-
-                message = render_to_string('contestadmin/ec_available_email.html', {
-                    'faculty': faculty,
-                    'domain': domain,
-                    'uid': urlsafe_base64_encode(force_bytes(uid)),
-                })
-                
-                send_mail(
-                    'Programming Contest EC files',
-                    message,
-                    DEFAULT_FROM_EMAIL,
-                    [faculty.email],
-                    fail_silently = False,
-                )
-
                 break
-        
-        if not found_files:
+
+        if found_files:
+            message = render_to_string('contestadmin/ec_available_email.html', {
+                'faculty': faculty,
+                'domain': domain,
+                'uid': urlsafe_base64_encode(force_bytes(uid)),
+            })
+            
+            send_mail(
+                'Programming Contest EC files',
+                message,
+                DEFAULT_FROM_EMAIL,
+                [faculty.email],
+                fail_silently = False,
+            )     
+        else:
             message = render_to_string('contestadmin/no_ec_available_email.html', {
                 'faculty': faculty,
                 'domain': domain,
