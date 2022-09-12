@@ -10,6 +10,7 @@ from . import forms
 from .utils import team_admin, has_no_team, has_team, has_fsuid
 from .models import Course, Profile
 from announcements.models import Announcement
+from contestadmin.models import Contest
 from register.models import Team 
 
 # Create your views here.
@@ -17,10 +18,15 @@ from register.models import Team
 @login_required
 def dashboard(request):
     context = {}
+    contest = Contest.objects.first()
+    if contest:
+        context['lunch_form_url'] = contest.lunch_form_url
+
+    context['announcements'] = (Announcement.objects.filter(status=1))[:1]
     context['courses'] = request.user.profile.courses.all()
+    context['roles'] = {role[0]:role[1] for role in Profile.ROLES}
     context['total_num_courses'] = Course.objects.count()
     context['team_members'] = User.objects.filter(profile__team=request.user.profile.team)
-    context['announcements'] = (Announcement.objects.filter(status=1))[:1]
 
     # Generate account some useful account notifications
     if not request.user.profile.has_team():
