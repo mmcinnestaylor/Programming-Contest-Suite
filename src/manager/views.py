@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.cache import cache
 from django.shortcuts import redirect, render
 from django.db import transaction
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -11,7 +12,7 @@ from .utils import team_admin, has_no_team, has_team, has_fsuid
 from .models import Course, Profile
 from announcements.models import Announcement
 from contestadmin.models import Contest
-from register.models import Team 
+from contestsuite.settings import CACHE_TIMEOUT
 
 # Create your views here.
 
@@ -22,10 +23,10 @@ def dashboard(request):
     if contest:
         context['lunch_form_url'] = contest.lunch_form_url
 
-    context['announcements'] = (Announcement.objects.filter(status=1))[:1]
+    context['announcements'] = cache.get_or_set('manage_dash_announcement_latest', (Announcement.objects.filter(status=1))[:1], CACHE_TIMEOUT)
     context['courses'] = request.user.profile.courses.all()
     context['roles'] = {role[0]:role[1] for role in Profile.ROLES}
-    context['total_num_courses'] = Course.objects.count()
+    context['total_num_courses'] = cache.get_or_set('manage_dash_courses_total', Course.objects.count(), CACHE_TIMEOUT)
     context['team_members'] = User.objects.filter(profile__team=request.user.profile.team)
 
     # Generate account some useful account notifications
