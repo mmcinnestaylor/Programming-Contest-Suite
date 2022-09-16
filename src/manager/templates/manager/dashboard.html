@@ -13,8 +13,8 @@
 	<!-- Announcements Display -->
 	<div class="row justify-content-center">
 		<div class="col">
-			{% for announcement in announcements %}
-				<div class="alert alert-dismissible fade show mt-3 mb-2 p-0 shadow-sm">
+			<div class="alert alert-dismissible fade show mt-3 mb-2 p-0 shadow-sm">
+				{% for announcement in announcements %}
 					<div class="card m-0 border-secondary">
 						<div class="card-header font-weight-bold bg-secondary text-white">
 							Recent Announcement
@@ -35,17 +35,18 @@
 							{% endif %}
 						</div>
 					</div>
-				</div>
-			{% empty %}
-				<div class="card mt-4 shadow-sm">
-					<div class="card-header font-weight-bold">
-						Recent Announcement
+				{% empty %}
+					<div class="card m-0 border-secondary">
+						<div class="card-header font-weight-bold bg-secondary text-white">
+							Recent Announcement
+							<button type="button" class="close" data-dismiss="alert">&times;</button>
+						</div>
+						<div class="card-body">
+							<p class="lead">No announcements posted.</p>
+						</div>
 					</div>
-					<div class="card-body">
-						<p class="lead">No announcements posted.</p>
-					</div>
-				</div>
-			{% endfor %}
+				{% endfor %}
+			</div>
 		</div>
 	</div>
 	<!-- End Announcements Display -->
