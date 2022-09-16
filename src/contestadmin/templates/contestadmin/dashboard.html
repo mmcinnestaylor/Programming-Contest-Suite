@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block section %}Contest Dashboard{% endblock %}
 
@@ -19,7 +20,11 @@
 			</div>
 			<div class="card-body overflow-auto">
 				<div class="row justify-content-center">
-					<a class="btn btn-primary btn-sm my-1" href="{% url 'gen_dj_files' %}" role="button">Generate DOMjudge TSVs</a>
+					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#createDiscordLfgRolesModal">Create Discord LFG Roles</button>
+				</div>
+				<div class="row justify-content-center">
+					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal"
+						data-target="#generateDomjudgeTsvsModal">Generate DOMjudge TSVs</button>
 					{% if dj_files_available %}					
 						<a class="btn text-dark" href="{% url 'download_dj_files' %}" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
 					{% else %}
@@ -68,9 +73,9 @@
 				<div class="row justify-content-center">
 					
 					{% if dj_results_processed %}					
-						<a class="btn btn-primary btn-sm my-1" href="{% url 'gen_ec_reports' %}" role="button">Generate Reports</a>
+						<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#generateEcReportsModal">Generate Reports</button>
 					{% else %}
-						<a class="btn btn-primary btn-sm my-1 disabled" href="#" role="button">Generate Reports</a>
+						<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#generateEcReportsModal" disabled>Generate Reports</button>
 					{% endif %}
 
 					{% if ec_files_available %}					
@@ -81,9 +86,10 @@
 				</div>
 				<div class="row justify-content-center">
 					{% if ec_files_available %}
-						<a class="btn btn-success btn-sm my-1" href="{% url 'email_faculty' %}" role="button">Email Faculty</a>
+						<button type="button" class="btn btn-success btn-sm my-1" data-toggle="modal" data-target="#emailFacultyModal">Email Faculty</button>
+						
 					{% else %}
-						<a class="btn btn-success btn-sm my-1 disabled" href="#" role="button">Email Faculty</a>
+						<button type="button" class="btn btn-success btn-sm my-1" data-toggle="modal" data-target="#emailFacultyModal" disabled>Email Faculty</button>
 					{% endif %}
 				</div>
 
@@ -108,6 +114,54 @@
 		<!-- Tools card end -->
 	</div>
 	<!-- EC Control deck end -->
+
+	<!-- Discord Control Card deck -->
+	<div class="card-deck">
+		<!-- Roles card -->
+		<div class="card mt-4 border-secondary">
+			<div class="card-header font-weight-bold bg-secondary text-white">
+				Discord LFG Roles Control
+			</div>
+			<div class="card-body overflow-auto">
+				<div class="row justify-content-center">
+					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal"
+						data-target="#createDiscordLfgRolesModal">Create Discord LFG Roles</button>
+				</div>
+				<div class="row justify-content-center">
+					<div class="row justify-content-center">
+						<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#removeDiscordLfgRolesModal">Remove Discord LFG Roles</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Roles card end -->
+		<!-- Channel card -->
+		<div class="card mt-4 border-secondary">
+			<div class="card-header font-weight-bold bg-secondary text-white">
+				Clear Discord Channel
+			</div>
+			<form method="post" enctype="multipart/form-data">
+				<div class="card-body overflow-auto">
+					{% csrf_token %}
+					{% for field in channel_form %}
+					<p class="mb-0">
+						{{ field }}<br>
+						<small class="form-text text-muted">
+							{% for error in field.errors %}
+							<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
+							{% endfor %}
+						</small>
+					</p>
+					{% endfor %}
+				</div>
+				<div class="card-footer">
+					<button class="btn btn-primary btn-sm" type="submit">Submit</button>
+				</div>
+			</form>
+		</div>
+		<!-- Channel card end -->
+	</div>
+	<!-- Discord Control deck end -->
 
 	<!-- Contest Stats Card deck -->
 	<div class="card-deck">
@@ -211,13 +265,7 @@
 							<tbody>
 								{% for volunteer in volunteers %}
 								<tr>
-									{% if volunteer.role == 2 %}
-										<td>Proctor</td>
-									{% elif volunteer.role == 3 %}
-										<td>Question Writer</td>
-									{% else %}
-										<td>Organizer</td>
-									{% endif %}
+									<td>{{ roles | return_item:volunteer.role }}</td>
 									
 									<td>{{ volunteer.user.get_full_name }}</td>
 
@@ -280,6 +328,69 @@
 	<!-- Course Summary card end -->
 
 
+	<!-- Generate DOMjudge TSVs Modal -->
+	<div class="modal fade" id="generateDomjudgeTsvsModal" tabindex="-1" role="dialog"
+		aria-labelledby="confirmClearModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmClearModalLongTitle">Generate DOMjudge TSVs</h5>
+				</div>
+				<div class="modal-body">
+					Are you certain you want to generate the TSVs?
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-primary" href="{% url 'gen_dj_files' %}" role="button">Confirm</a>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Generate DOMjudge TSVs Modal -->
+
+
+	<!-- Generate EC Reports Modal -->
+	<div class="modal fade" id="generateEcReportsModal" tabindex="-1" role="dialog"
+		aria-labelledby="confirmClearModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmClearModalLongTitle">Generate Reports</h5>
+				</div>
+				<div class="modal-body">
+					Are you certain you want to generate the extra credit reports?
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-primary" href="{% url 'gen_ec_reports' %}" role="button">Confirm</a>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Generate EC Reports Modal -->
+
+
+	<!-- Email Faculty Modal -->
+	<div class="modal fade" id="emailFacultyModal" tabindex="-1" role="dialog"
+		aria-labelledby="confirmClearModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmClearModalLongTitle">Email Faculty</h5>
+				</div>
+				<div class="modal-body">
+					Are you certain you want to email the faculty?
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-primary" href="{% url 'email_faculty' %}" role="button">Confirm</a>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Email Faculty Modal -->
+
+
 	<!-- Create Walk-in Teams Modal -->
 	<div class="modal fade" id="walkinModal" tabindex="-1" role="dialog"
 		aria-labelledby="confirmClearModalCenterTitle" aria-hidden="true">
@@ -316,6 +427,7 @@
 	</div>
 	<!-- End Create Walk-in Teams Modal -->
 
+
 	<!-- Checkin/Checkout Users Modal -->
 	<div class="modal fade" id="checkinModal" tabindex="-1" role="dialog" aria-labelledby="confirmClearModalCenterTitle"
 		aria-hidden="true">
@@ -351,5 +463,46 @@
 	</div>
 	<!-- End Create Walk-in Teams Modal -->
 
+
+	<!-- Create Discord Roles Confirm Modal -->
+	<div class="modal fade" id="createDiscordLfgRolesModal" tabindex="-1" role="dialog"
+		aria-labelledby="confirmClearModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmClearModalLongTitle">Create Discord LFG Roles</h5>
+				</div>
+				<div class="modal-body">
+					Are you certain you want to create the roles?
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-primary" href="{% url 'create_discord_roles' %}" role="button">Confirm</a>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Create Discord Roles Confirm Modal -->
+
+
+	<!-- Remove Discord Roles Confirm Modal -->
+	<div class="modal fade" id="removeDiscordLfgRolesModal" tabindex="-1" role="dialog"
+		aria-labelledby="confirmClearModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmClearModalLongTitle">Remove Discord LFG Roles</h5>
+				</div>
+				<div class="modal-body">
+					Are you certain you want to remove the roles?
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-primary" href="{% url 'remove_discord_roles' %}" role="button">Confirm</a>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Remove Discord Roles Confirm Modal -->
 	
 {% endblock %}
