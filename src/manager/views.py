@@ -19,9 +19,13 @@ from contestsuite.settings import CACHE_TIMEOUT
 @login_required
 def dashboard(request):
     context = {}
-    contest = Contest.objects.first()
+
+    contest = cache.get_or_set(
+        'manage_dash_contest_lunch_url', Contest.objects.first(), CACHE_TIMEOUT)
     if contest:
         context['lunch_form_url'] = contest.lunch_form_url
+    else:
+        context['lunch_form_url'] = None
 
     context['announcements'] = cache.get_or_set('manage_dash_announcement_latest', (Announcement.objects.filter(status=1))[:1], CACHE_TIMEOUT)
     context['courses'] = request.user.profile.courses.all()
@@ -33,7 +37,7 @@ def dashboard(request):
     if not request.user.profile.has_team():
         messages.warning(
             request, 'You are not a member of a registered team. You must be a team member in order to compete. Check out the FAQ for more information.')
-    if not request.user.profile.has_courses() and Course.objects.count() > 0:
+    if not request.user.profile.has_courses() and context['total_num_courses'] > 0:
         messages.info(
             request, 'You have not added any extra credit courses. You must add them to your profile in order to receive credit. Check out the FAQ for more information.')
     if request.user.profile.fsu_id is None or request.user.profile.fsu_id == '':
