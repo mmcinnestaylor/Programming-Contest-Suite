@@ -2,7 +2,7 @@ import os
 
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import transaction
 from django.http import HttpResponse
 from django.utils.encoding import force_text
@@ -158,6 +158,7 @@ class GenerateExtraCreditReports(View):
         return redirect('admin_dashboard')
 
 
+@login_required
 @user_passes_test(contestadmin_auth, login_url='/', redirect_field_name=None)
 @transaction.atomic
 def dashboard(request):
@@ -167,6 +168,8 @@ def dashboard(request):
         walkin_form = forms.GenerateWalkinForm(request.POST)
         file_form = forms.ResultsForm(request.POST, request.FILES)
         checkin_form = forms.CheckinUsersForm(request.POST)
+        channel_form = forms.ClearChannelForm(request.POST)
+
         if walkin_form.is_valid():
             tasks.create_walkin_teams.delay(int(walkin_form.cleaned_data['division']), int(walkin_form.cleaned_data['total']))  
             messages.info(request, 'Create teams task scheduled.', fail_silently=True)
@@ -174,6 +177,11 @@ def dashboard(request):
             tasks.check_in_out_users.delay(
                 int(checkin_form.cleaned_data['action']))
             messages.info(request, 'Check in/out task scheduled.',
+                          fail_silently=True)
+        elif channel_form.is_valid():
+            tasks.clear_discord_channel.delay(
+                channel_form.cleaned_data['channel_id'])
+            messages.info(request, 'Clear channel task scheduled.',
                           fail_silently=True)
         elif file_form.is_valid():
             if Contest.objects.all().count() == 0:
@@ -201,6 +209,7 @@ def dashboard(request):
         walkin_form = forms.GenerateWalkinForm()
         file_form = forms.ResultsForm()
         checkin_form = forms.CheckinUsersForm()
+        channel_form = forms.ClearChannelForm()
         
     
     if len(os.listdir(MEDIA_ROOT + '/uploads/')) > 0:
@@ -257,6 +266,7 @@ def dashboard(request):
     context['num_lower_walkin_participants'] = Profile.objects.filter(team__division=2).filter(team__name__contains='Walk-in-').count()
 
     # Volunteer card data
+    context['roles'] = {role[0]:role[1] for role in Profile.ROLES}
     context['volunteers'] = [user for user in Profile.objects.order_by('role').all() if user.is_volunteer()]
     
     # Course card data
@@ -266,5 +276,22 @@ def dashboard(request):
     context['checkin_form'] = checkin_form
     context['file_form'] = file_form
     context['gen_walkin_form'] = walkin_form
+    context['channel_form'] = channel_form
 
     return render(request, 'contestadmin/dashboard.html', context)
+
+
+@login_required
+@user_passes_test(contestadmin_auth, login_url='/', redirect_field_name=None)
+def create_discord_roles(request):
+    tasks.create_discord_lfg_roles.delay()
+    messages.info(request, 'Create roles task scheduled.', fail_silently=True)
+    return redirect('admin_dashboard')
+
+
+@login_required
+@user_passes_test(contestadmin_auth, login_url='/', redirect_field_name=None)
+def remove_discord_roles(request):
+    tasks.remove_all_discord_lfg_roles.delay()
+    messages.info(request, 'Remove roles task scheduled.', fail_silently=True)
+    return redirect('admin_dashboard')
