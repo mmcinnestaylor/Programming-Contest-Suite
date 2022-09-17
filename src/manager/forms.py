@@ -51,10 +51,11 @@ class UserForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('fsu_id', 'fsu_num')
+        fields = ('fsu_id', 'fsu_num', 'announcement_email_opt_out')
         labels = {
             'fsu_id': 'FSU ID',
             'fsu_num': 'FSU number',
+            'announcement_email_opt_out': 'Announcement Email Opt-Out',
         }
         help_texts = {
             'fsu_id': 'Excluding @my.fsu.edu ex: ab12c@my.fsu.edu -> ab12c',
@@ -73,9 +74,11 @@ class ProfileForm(forms.ModelForm):
         super(ProfileForm, self).__init__(*args, **kwargs)
         if self.instance.fsu_num:
             self.fields['fsu_num'] = forms.IntegerField(max_value=99999999, widget=forms.NumberInput(attrs={'placeholder': str(self.instance.fsu_num.id).zfill(8), }))
+            self.fields['fsu_num'].required = False
         else: # Use empty placeholder if the field is blank
             self.fields['fsu_num'] = forms.IntegerField(max_value=99999999, widget=forms.NumberInput(
                 attrs={'placeholder': '', }))
+            self.fields['fsu_num'].required = False
         
 
 class CourseForm(forms.ModelForm):

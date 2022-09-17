@@ -9,8 +9,10 @@ from .tasks import email_annoucement, discord_announcement
 def send_announcement(sender, instance, created, **kwargs):
 	# Publish
 	if instance.status == 1:
-		email_annoucement.delay(instance.id)
-		discord_announcement.delay(instance.id)
+		if instance.send_email:
+			email_annoucement.delay(instance.id)
+		if instance.send_discord:
+			discord_announcement.delay(instance.id)
 	# Draft
 	else:
 		pass

@@ -1,6 +1,8 @@
 import csv
 import os
 
+from discord import Client, Intents, Webhook, RequestsWebhookAdapter, InvalidArgument
+
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.db import transaction
@@ -11,7 +13,7 @@ from django.utils.http import urlsafe_base64_encode
 from celery import shared_task
 from celery.utils.log import get_task_logger
 
-from contestsuite.settings import MEDIA_ROOT, DEFAULT_FROM_EMAIL
+from contestsuite.settings import MEDIA_ROOT, DEFAULT_FROM_EMAIL, GUILD_ID, BOT_CHANNEL_WEBHOOK_URL
 from contestadmin.models import Contest
 from manager.models import Course, Faculty, Profile
 from register.models import Team
@@ -155,6 +157,7 @@ def check_in_out_users(action):
 def generate_ec_reports():
     num_courses = 0
     faculty_members = Faculty.objects.all()
+    roles = {role[0]:role[1] for role in Profile.ROLES}
 
     for faculty in faculty_members:
         courses = Course.objects.filter(instructor=faculty)
@@ -173,14 +176,7 @@ def generate_ec_reports():
                     writer.writerow(
                         ['fsu_id', 'last_name', 'first_name', 'questions_answered', 'team_division', 'role'])
                     for student in students:
-                        if student.profile.role == 1:
-                            role = 'Contestant'
-                        elif student.profile.role == 2:
-                            role = 'Proctor'
-                        elif student.profile.role == 3:
-                            role = 'Question Writer'
-                        else:
-                            role = 'Organizer'
+                        role = roles[student.profile.role]
 
                         if student.profile.team is None:
                             questions_answered = 'none'
@@ -225,24 +221,23 @@ def email_faculty(domain):
             uid=((faculty.email).split('@'))[0]
             if uid in fname: #not faculty_nanmer
                 found_files = True
-
-                message = render_to_string('contestadmin/ec_available_email.html', {
-                    'faculty': faculty,
-                    'domain': domain,
-                    'uid': urlsafe_base64_encode(force_bytes(uid)),
-                })
-                
-                send_mail(
-                    'Programming Contest EC files',
-                    message,
-                    DEFAULT_FROM_EMAIL,
-                    [faculty.email],
-                    fail_silently = False,
-                )
-
                 break
-        
-        if not found_files:
+
+        if found_files:
+            message = render_to_string('contestadmin/ec_available_email.html', {
+                'faculty': faculty,
+                'domain': domain,
+                'uid': urlsafe_base64_encode(force_bytes(uid)),
+            })
+            
+            send_mail(
+                'Programming Contest EC files',
+                message,
+                DEFAULT_FROM_EMAIL,
+                [faculty.email],
+                fail_silently = False,
+            )     
+        else:
             message = render_to_string('contestadmin/no_ec_available_email.html', {
                 'faculty': faculty,
                 'domain': domain,
@@ -289,3 +284,42 @@ def process_contest_results():
                 pass
 
     logger.info('Processed contest results for %d teams' % num_teams)
+
+
+@shared_task
+def clear_discord_channel(id):
+    try:
+        webhook = Webhook.from_url(
+            BOT_CHANNEL_WEBHOOK_URL, adapter=RequestsWebhookAdapter())
+    except InvalidArgument:
+        logger.info('Failed to connect to bot channel webhook.')
+    else:
+        message = '$clear '+str(id)
+        # Executing webhook.
+        webhook.send(content=message)
+
+
+@shared_task
+def create_discord_lfg_roles():
+    try:
+        webhook = Webhook.from_url(
+            BOT_CHANNEL_WEBHOOK_URL, adapter=RequestsWebhookAdapter())
+    except InvalidArgument:
+        logger.info('Failed to connect to bot channel webhook.')
+    else:
+        message = '$create_roles'
+        # Executing webhook.
+        webhook.send(content=message)
+
+
+@shared_task
+def remove_all_discord_lfg_roles():
+    try:
+        webhook = Webhook.from_url(
+            BOT_CHANNEL_WEBHOOK_URL, adapter=RequestsWebhookAdapter())
+    except InvalidArgument:
+        logger.info('Failed to connect to bot channel webhook.')
+    else:
+        message = '$remove_all_roles'
+        # Executing webhook.
+        webhook.send(content=message)

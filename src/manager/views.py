@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.cache import cache
 from django.shortcuts import redirect, render
 from django.db import transaction
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -10,23 +11,33 @@ from . import forms
 from .utils import team_admin, has_no_team, has_team, has_fsuid
 from .models import Course, Profile
 from announcements.models import Announcement
-from register.models import Team 
+from contestadmin.models import Contest
+from contestsuite.settings import CACHE_TIMEOUT
 
 # Create your views here.
 
 @login_required
 def dashboard(request):
     context = {}
+
+    contest = cache.get_or_set(
+        'manage_dash_contest_lunch_url', Contest.objects.first(), CACHE_TIMEOUT)
+    if contest:
+        context['lunch_form_url'] = contest.lunch_form_url
+    else:
+        context['lunch_form_url'] = None
+
+    context['announcements'] = cache.get_or_set('manage_dash_announcement_latest', (Announcement.objects.filter(status=1))[:1], CACHE_TIMEOUT)
     context['courses'] = request.user.profile.courses.all()
-    context['total_num_courses'] = Course.objects.count()
+    context['roles'] = {role[0]:role[1] for role in Profile.ROLES}
+    context['total_num_courses'] = cache.get_or_set('manage_dash_courses_total', Course.objects.count(), CACHE_TIMEOUT)
     context['team_members'] = User.objects.filter(profile__team=request.user.profile.team)
-    context['announcements'] = (Announcement.objects.filter(status=1))[:1]
 
     # Generate account some useful account notifications
     if not request.user.profile.has_team():
         messages.warning(
             request, 'You are not a member of a registered team. You must be a team member in order to compete. Check out the FAQ for more information.')
-    if not request.user.profile.has_courses() and Course.objects.count() > 0:
+    if not request.user.profile.has_courses() and context['total_num_courses'] > 0:
         messages.info(
             request, 'You have not added any extra credit courses. You must add them to your profile in order to receive credit. Check out the FAQ for more information.')
     if request.user.profile.fsu_id is None or request.user.profile.fsu_id == '':

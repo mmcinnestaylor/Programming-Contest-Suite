@@ -1,0 +1,251 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block section %}LFG Dashboard{% endblock %}
+
+{% block content %}
+	<h1 class="text-center">#LookingForGroup</h1>
+
+	<!-- Messages -->
+	{% include 'core/messages.html' %}
+	<!-- End Messages -->
+
+	<div class="row mt-4">
+		<!-- Overview section -->
+		<div class="col-7">
+			<p class="lead">This service is designed to help registerants connect with others who are actively seeking teammates. Once you complete the steps below you will be able to view other LFG registerants, as well as use our chapter Discord server's dedicated LFG channels.</p>
+			
+			<div class="accordion mt-3" id="accordionLFG">
+				<!-- First Question-->
+				<div class="card">
+					<div class="card-header" id="headingOneLFG">
+					<h2 class="mb-0">
+						<button class="btn btn-link btn-block text-left text-dark py-0 my-0 collapsed" type="button" data-toggle="collapse"
+						data-target="#collapseOneLFG" aria-expanded="false" aria-controls="collapseOneLFG">
+						<h6 class="my-0">How do I set up my LFG profile?</h6>
+						</button>
+					</h2>
+					</div>
+					<div id="collapseOneLFG" class="collapse" aria-labelledby="headingOneLFG" data-parent="#accordionLFG">
+					<div class="card-body">
+						<ol>
+							<li>Add your full Discord username (username + discriminator), and preferred division to your LFG profile.
+								<ul>
+									<li>The discriminator is the 4 digit number following the # in a Discord username.</li>
+								</ul> 
+							</li>
+							<li>Join our chapter's Discord server, if you are not already a member.
+								<ul>
+									<li>You must be a member of the server in order to activate your LFG profile.</li>
+								</ul>
+							</li>
+						</ol>
+					</div>
+					</div>
+				</div>
+				<!-- Second Question-->
+				<div class="card">
+					<div class="card-header" id="headingTwoLFG">
+						<h2 class="mb-0">
+							<button class="btn btn-link btn-block text-left text-dark py-0 my-0 collapsed" type="button" data-toggle="collapse"
+							data-target="#collapseTwoLFG" aria-expanded="false" aria-controls="collapseTwoLFG">
+							<h6 class="mb-0">How long does it take for my LFG Profile to become verified?</h6>
+							</button>
+						</h2>
+					</div>
+					<div id="collapseTwoLFG" class="collapse" aria-labelledby="headingTwoLFG" data-parent="#accordionLFG">
+						<div class="card-body">
+							It can take up to 30 minutes for your LFG profile to become active, as we periodically check for new server members.
+						</div>
+					</div>
+				</div>
+				<!-- Third Question-->
+				<div class="card">
+					<div class="card-header" id="headingThreeLFG">
+						<h2 class="mb-0">
+							<button class="btn btn-link btn-block text-left text-dark py-0 my-0 collapsed" type="button" data-toggle="collapse"
+							data-target="#collapseThreeLFG" aria-expanded="false" aria-controls="collapseThreeLFG">
+							<h6 class="mb-0">My LFG Profile was deactivated/unverified. What happened?</h6>
+							</button>
+						</h2>
+						</div>
+						<div id="collapseThreeLFG" class="collapse" aria-labelledby="headingThreeLFG" data-parent="#accordionLFG">
+						<div class="card-body">
+							Your LFG Profile will become inactive once you are a member of a three person team. You can reactivate your profile if you leave the team or if the member total drops below three.
+						</div>
+					</div>
+				</div>
+				<!-- Fourth Question-->
+				<div class="card">
+					<div class="card-header" id="headingFourLFG">
+						<h2 class="mb-0">
+							<button class="btn btn-link btn-block text-left text-dark py-0 my-0 collapsed" type="button" data-toggle="collapse"
+							data-target="#collapseFourLFG" aria-expanded="false" aria-controls="collapseFourLFG">
+							<h6 class="mb-0">How do Preferred Divisions work?</h6>
+							</button>
+						</h2>
+						</div>
+						<div id="collapseFourLFG" class="collapse" aria-labelledby="headingFourLFG" data-parent="#accordionLFG">
+						<div class="card-body">
+							<p>
+								The preferred division you select determines which LFG Discord channel you will be able to access once your LFG Profile
+								is verified and activated. You may select either division regardless of the standing you select.
+							</p>
+							<p>
+								If you intend to seek
+								extra credit in your registered courses, it is <i>strongly</i> encouraged for you to select the division in which you
+								will need to compete in order to receive those points. Please reference the <a href="{% url 'faq' %}">FAQ</a> for more
+								information regarding extra credit and division selection.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		<!-- End Overview section-->
+		<div class="col-5">
+			<!-- Profile card -->
+			<div class="card border-secondary">
+				<div class="card-header font-weight-bold text-white bg-secondary">
+					LFG Profile
+				</div>
+				{% if lfg_active %}
+					<div class="card-body overflow-auto">
+						{% if user.lfgprofile %}
+							<ul class="list-group list-group-flush">
+								<li class="list-group-item"><span class="font-weight-bolder">Discord Username:</span> {{ user.lfgprofile.discord_username }}</li>
+								<li class="list-group-item"><span class="font-weight-bolder">Discord Discriminator:</span> {{ user.lfgprofile.discord_discriminator }}</li>
+								<li class="list-group-item"><span class="font-weight-bolder">Preferred Division:</span> {{ divisions | return_item:user.lfgprofile.division }}</li>
+								{% if user.lfgprofile.is_completed %}
+									{% if user.lfgprofile.verified %}
+										{% if user.lfgprofile.active %}
+											<li class="list-group-item"><span class="font-weight-bolder">Status:</span> <span class="text-success">Active</span></li>
+										{% elif user.profile.team %}
+											{% if user.profile.team.num_members >= 3 %}
+												<li class="list-group-item"><span class="font-weight-bolder">Status:</span> <span class="text-danger">Inactive</span> (Team Full)</li>
+											{% else %}
+											<li class="list-group-item"><span class="font-weight-bolder">Status:</span> <span class="text-danger">Inactive</span>, <span class="text-info">Verified</span></li>
+											{% endif %}
+										{% else %}
+											<li class="list-group-item"><span class="font-weight-bolder">Status:</span> <span class="text-danger">Inactive</span>, <span class="text-info">Verified</span></li>
+										{% endif %}
+									{% else %}
+										<li class="list-group-item"><span class="font-weight-bolder">Status:</span> <span class="text-info">Verification Pending</span></li>
+									{% endif %}
+								{% else %}
+									<li class="list-group-item"><span class="font-weight-bolder">Status:</span> <span class="text-danger">Profile Incomplete</span></li>
+								{% endif %}
+							</ul>
+						{% else %}
+							Use the create button below to begin setting up your profile.
+						{% endif %}
+					</div>
+					
+					<div class="card-footer">
+						{% if user.lfgprofile %}
+							<a class="btn btn-info btn-sm" href="{% url 'manage_lfg_profile' %}" role="button">Edit</a>
+							{% if user.lfgprofile.verified %}
+								{% if user.lfgprofile.active %}
+									<a class="btn btn-danger btn-sm" href="{% url 'deactivate_lfg_profile' %}" role="button">Deactivate</a>
+								{% else %}	
+									{% if user.profile.team %}
+										{% if user.profile.team.num_members < 3 and user.lfgprofile.completed %}
+											<a class="btn btn-success btn-sm" href="{% url 'activate_lfg_profile' %}" role="button">Activate</a>
+										{% endif %}
+									{% elif user.lfgprofile.completed  %}
+										<a class="btn btn-success btn-sm" href="{% url 'activate_lfg_profile' %}" role="button">Activate</a>
+									{% endif %}
+								{% endif %}
+							{% endif %}
+						{% else %}
+							<a class="btn btn-success btn-sm" href="{% url 'create_lfg_profile' %}" role="button">Create</a>
+						{% endif %}
+					</div>
+				{% else %}
+					<div class="card-body overflow-auto">
+						The LFG service is currently offline.
+					</div>
+				{% endif %}
+			</div>
+			<!-- Profile card end -->
+		</div>
+	</div>
+	
+	<!-- LFG Tables -->
+	<div class="row mt-4">
+		<!-- Upper Division Table -->
+		<h3>Preferred Division - Upper</h3>
+		<div class="table-responsive">
+			<table class="table table-sm table-striped shadow">
+				<thead class="thead-dark text-center">
+					<tr>
+						<th scope="col">Name</th>
+						<th scope="col">Discord ID</th>
+						<th scope="col">Standing</th>
+						<th scope="col">Has Team</th>
+						<th scope="col">Team Size</th>
+					</tr>
+				</thead>
+				{% if user.lfgprofile.active %}
+					<tbody class="bg-light">
+						{% for lfg_profile in lfg_upper %}
+							<tr>
+								<td class="text-center">{{ lfg_profile.user.get_full_name }}</th>
+								<td class="text-center">{{ lfg_profile.get_discord_username }}</td>
+								<td class="text-center">{{ standings | return_item:lfg_profile.standing }}</td>
+								{% if lfg_profile.user.profile.has_team %}
+									<td class="text-center">Yes</td>
+									<td class="text-center">{{ lfg_profile.user.profile.team.num_members }}</td>
+								{% else %}
+									<td class="text-center">No</td>
+									<td class="text-center">-</td>
+								{% endif %}
+							</tr>
+						{% endfor %}
+					</tbody>
+				{% endif %}
+			</table>
+		</div>
+		<!-- Upper Division Table end -->
+	</div>
+	
+	<div class="row">	
+		<!-- Lower Division Table -->
+		<h3>Preferred Division - Lower</h3>
+		<div class="table-responsive">
+			<table class="table table-sm table-striped shadow">
+				<thead class="thead-dark text-center">
+					<tr>
+						<th scope="col">Name</th>
+						<th scope="col">Discord ID</th>
+						<th scope="col">Standing</th>
+						<th scope="col">Has Team</th>
+						<th scope="col">Team Size</th>
+					</tr>
+				</thead>
+				{% if user.lfgprofile.active %}
+					<tbody class="bg-light">
+						{% for lfg_profile in lfg_lower %}
+						<tr>
+							<td class="text-center">{{ lfg_profile.user.get_full_name }}</th>
+							<td class="text-center">{{ lfg_profile.get_discord_username }}</td>
+							<td class="text-center">{{ standings | return_item:lfg_profile.standing }}</td>
+							{% if lfg_profile.user.profile.has_team %}
+								<td class="text-center">Yes</td>
+								<td class="text-center">{{ lfg_profile.user.profile.team.num_members }}</td>
+							{% else %}
+								<td class="text-center">No</td>
+								<td class="text-center">-</td>
+							{% endif %}
+						</tr>
+						{% endfor %}
+					</tbody>
+				{% endif %}
+			</table>
+		</div>
+		<!-- Lower Division Table end -->
+	</div>
+	<!-- LFG Tables end -->
+{% endblock %}
