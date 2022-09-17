@@ -11,7 +11,6 @@ services:
         environment:
             # Django
             DEBUG: 'True'
-            SECRET_KEY: 86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
             CACHE_LOCATION: redis://redis:6379/0
             
             # Celery
@@ -24,9 +23,6 @@ services:
             SQL_DATABASE: 'contestsuite'
             SQL_USER: 'contestadmin'
             SQL_PASSWORD: 'seminoles1!'
-
-            # Hashid Salt
-            HASHID_FIELD_SALT: 0s97rx*t4%68jell&lw3^)97o*kr*+*2o^(76q)ix+ilc!4ax#
         ports:
             - 8000:8000
         volumes:
@@ -72,7 +68,6 @@ services:
         environment:
             # Django
             DEBUG: 'True'
-            SECRET_KEY: 86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
 
             # Celery
             CELERY_BACKEND: redis://redis:6379/1
