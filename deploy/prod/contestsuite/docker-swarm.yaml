@@ -14,6 +14,8 @@ services:
             - nginx-backend
         deploy:
             replicas: 2
+            restart_policy:
+                max_attempts: 10
             rollback_config:
                 parallelism: 0
             update_config:
@@ -62,6 +64,83 @@ services:
             - redis-backend
             - rabbitmq-backend
         deploy:
+            restart_policy:
+                max_attempts: 10
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+    scrape_bot:
+        image: acmfsu/contestsuite:latest
+        command: /app/docker/start.sh bot
+        environment:
+            # Django
+            DEBUG: 'False'
+            SECRET_KEY: # Project secret key
+            ALLOWED_HOSTS: contest.cs.fsu.edu
+
+            # Database
+            SQL_HOST: mariadb
+            SQL_PORT: 3306
+            SQL_DATABASE: contestsuite
+            SQL_USER: contestadmin
+            SQL_PASSWORD: seminoles1!
+
+            # Discord
+            GUILD_ID: # ID of Discord server
+            SCRAPE_BOT_TOKEN: # Token for integrated bot
+        networks:
+            - mariadb-backend
+        deploy:
+            restart_policy:
+                max_attempts: 10
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+    celery_worker:
+        image: acmfsu/contestsuite:latest
+        command: /app/docker/start.sh worker
+        environment:
+            # Django
+            DEBUG: 'False'
+            SECRET_KEY: # Project secret key
+            ALLOWED_HOSTS: contest.cs.fsu.edu
+
+            # Celery
+            CELERY_BACKEND: redis://redis:6379/1
+            CELERY_BROKER: amqp://rabbitmq:5672
+
+            # Email
+            EMAIL_HOST: # smtpsubdomain.example.com
+            EMAIL_USER: # exampleuser
+            EMAIL_PASSWORD: # examplepass
+            EMAIL_USE_TLS: 'True'
+
+            # Database
+            SQL_HOST: mariadb
+            SQL_PORT: 3306
+            SQL_DATABASE: contestsuite
+            SQL_USER: contestadmin
+            SQL_PASSWORD: seminoles1!
+
+            # Discord
+            ANNOUNCEMENT_WEBHOOK_URL: # URL of announcement channel webhook
+            BOT_CHANNEL_WEBHOOK_URL: # URL of PCS bot control channel webhook
+        volumes:
+            - django_app:/app/media
+            - django_static:/app/static
+        networks:
+            - mariadb-backend
+            - redis-backend
+            - rabbitmq-backend
+        deploy:
+            restart_policy:
+                max_attempts: 10
             rollback_config:
                 parallelism: 0
             update_config:
@@ -92,49 +171,8 @@ services:
             - redis-backend
             - rabbitmq-backend
         deploy:
-            rollback_config:
-                parallelism: 0
-            update_config:
-                parallelism: 1
-                delay: 5s
-                failure_action: rollback
-    celery_worker:
-        image: acmfsu/contestsuite:latest
-        command: /app/docker/start.sh worker
-        environment:
-            # Django
-            DEBUG: 'False'
-
-            # Celery
-            CELERY_BACKEND: redis://redis:6379/1
-            CELERY_BROKER: amqp://rabbitmq:5672
-
-            # Email
-            EMAIL_HOST: # smtpsubdomain.example.com
-            EMAIL_USER: # exampleuser
-            EMAIL_PASSWORD: # examplepass
-            EMAIL_USE_TLS: 'True'
-
-            # Database
-            SQL_HOST: mariadb
-            SQL_PORT: 3306
-            SQL_DATABASE: contestsuite
-            SQL_USER: contestadmin
-            SQL_PASSWORD: seminoles1!
-
-            # Discord
-            ANNOUNCEMENT_WEBHOOK_URL: # URL of announcement channel webhook
-            BOT_CHANNEL_WEBHOOK_URL: # URL of PCS bot control channel webhook
-            GUILD_ID: # ID of Discord server
-            SCRAPE_BOT_TOKEN: # Token for integrated bot
-        volumes:
-            - django_app:/app/media
-            - django_static:/app/static
-        networks:
-            - mariadb-backend
-            - redis-backend
-            - rabbitmq-backend
-        deploy:
+            restart_policy:
+                max_attempts: 10
             rollback_config:
                 parallelism: 0
             update_config:
@@ -152,6 +190,8 @@ services:
             - nginx-backend
             - rabbitmq-backend
         deploy:
+            restart_policy:
+                max_attempts: 10
             rollback_config:
                 parallelism: 0
             update_config:
@@ -170,6 +210,8 @@ services:
         networks:
             - mariadb-backend
         deploy:
+            restart_policy:
+                max_attempts: 10
             rollback_config:
                 parallelism: 0
             update_config:
@@ -183,6 +225,8 @@ services:
         networks:
             - redis-backend
         deploy:
+            restart_policy:
+                max_attempts: 10
             rollback_config:
                 parallelism: 0
             update_config:
@@ -196,6 +240,8 @@ services:
         networks:
             - rabbitmq-backend
         deploy:
+            restart_policy:
+                max_attempts: 10
             rollback_config:
                 parallelism: 0
             update_config:

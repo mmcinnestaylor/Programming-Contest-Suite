@@ -1,52 +1,16 @@
-from asgiref.sync import sync_to_async
 from celery import shared_task
 from celery.utils.log import get_task_logger
-from discord import Client, Intents, Webhook, RequestsWebhookAdapter, InvalidArgument
+from discord import Webhook, RequestsWebhookAdapter, InvalidArgument
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.template.loader import render_to_string
 
 from .models import DiscordMember, LFGProfile
-from contestsuite.settings import GUILD_ID, SCRAPE_BOT_TOKEN, BOT_CHANNEL_WEBHOOK_URL
+from contestsuite.settings import BOT_CHANNEL_WEBHOOK_URL
 from register.models import Team
 
 
 logger = get_task_logger(__name__)
-
-
-# Discord bot to scrape guild member list 
-class ScrapeBot(Client):
-    # Helper method to write new members to database
-    @sync_to_async
-    @transaction.atomic
-    def save_discord_members(self, members):
-        i = 0
-        for member in members:
-            if not member.bot and not DiscordMember.objects.filter(username=member.name).filter(discriminator=member.discriminator).exists():
-                try:
-                    DiscordMember.objects.create(
-                        username=member.name, discriminator=member.discriminator)
-                    i += 1
-                except:
-                    logger.info('Discord member addition failed for: %s' %
-                                (member.name+'#'+str(member.discriminator).zfill(4)))
-        logger.info('Added %d Discord members' % i)
-
-    # Bot method runs on successful connection to Discord API
-    async def on_ready(self):
-        logger.info('Scrape bot ready.')
-        try:
-            guild = self.get_guild(GUILD_ID)
-        except:
-            logger.info('Guild fetch failed.')
-        else:  
-            if guild is not None:
-                logger.info('Guild %s fetched.' % guild.name)
-                await self.save_discord_members(guild.members)
-            else:
-                logger.info('No guild with provided id.')
-
-        #await self.close()
 
 
 @shared_task
@@ -75,7 +39,7 @@ def cleanup_lfg_rosters():
             webhook = Webhook.from_url(
                 BOT_CHANNEL_WEBHOOK_URL, adapter=RequestsWebhookAdapter())
         except InvalidArgument:
-            logger.info('Failed to connect to bot channel webhook')
+            logger.error('Failed to connect to bot channel webhook')
         else:
             if len(members_upper) > 0:
                 # Upper
@@ -104,7 +68,7 @@ def manage_discord_lfg_role(username, division, action=None):
     try:
         webhook = Webhook.from_url(BOT_CHANNEL_WEBHOOK_URL, adapter=RequestsWebhookAdapter())
     except InvalidArgument:
-        logger.info('Failed to connect to bot channel webhook')
+        logger.error('Failed to connect to bot channel webhook')
     else:
         if action == 'add' or action == 'remove':
             if division == 1:
@@ -132,17 +96,17 @@ def manage_discord_lfg_role(username, division, action=None):
             logger.info(f'Success - {action} role: {username}')
 
 
-# Celery task which invokes ScrapeBot
 @shared_task
 def scrape_discord_members():
-    intents = Intents.default()
-    intents.members = True
-
-    client = ScrapeBot(intents=intents)
-
-    client.run(SCRAPE_BOT_TOKEN)
-    #await client.close()
-
+    try:
+        webhook = Webhook.from_url(BOT_CHANNEL_WEBHOOK_URL, adapter=RequestsWebhookAdapter())
+    except InvalidArgument:
+        logger.error('Failed to connect to bot channel webhook')
+    else:
+        message = '!scrape_members'
+        webhook.send(content=message)
+        logger.info('Scrape members call sent')
+     
 
 @shared_task
 @transaction.atomic

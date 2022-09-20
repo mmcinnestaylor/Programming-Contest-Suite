@@ -41,6 +41,9 @@ elif [ "$PROCESS_TYPE" = "beat" ]; then
         beat \
         --loglevel INFO \
         --scheduler django_celery_beat.schedulers:DatabaseScheduler
+elif [ "$PROCESS_TYPE" = "bot" ]; then
+    python \
+        bot.py
 else
     echo "Invalid [PROCESS_TYPE](server/worker/beat)"
     exit 1
