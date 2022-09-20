@@ -15,6 +15,7 @@ six = "*"
 requests = "*"
 django-hashid-field = "*"
 django-celery-beat = "*"
+channels = "*"
 
 [dev-packages]
 pylint = "*"
