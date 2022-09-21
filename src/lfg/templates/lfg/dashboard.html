@@ -94,21 +94,61 @@
 	<!-- LFG Tables -->
 	<div class="row mt-4">
 		<!-- Upper Division Table -->
-		<h3>Preferred Division - Upper</h3>
-		<div class="table-responsive">
-			<table class="table table-sm table-striped shadow">
-				<thead class="thead-dark text-center">
-					<tr>
-						<th scope="col">Name</th>
-						<th scope="col">Discord ID</th>
-						<th scope="col">Standing</th>
-						<th scope="col">Has Team</th>
-						<th scope="col">Team Size</th>
-					</tr>
-				</thead>
-				{% if user.lfgprofile.active %}
-					<tbody class="bg-light">
-						{% for lfg_profile in lfg_upper %}
+		<div class="col">
+			<h3>Preferred Division - Upper</h3>
+			<div class="table-responsive">
+				<table class="table table-sm table-striped shadow">
+					<thead class="thead-dark text-center">
+						<tr>
+							<th scope="col">Name</th>
+							<th scope="col">Discord ID</th>
+							<th scope="col">Standing</th>
+							<th scope="col">Has Team</th>
+							<th scope="col">Team Size</th>
+						</tr>
+					</thead>
+					{% if user.lfgprofile.active %}
+						<tbody class="bg-light">
+							{% for lfg_profile in lfg_upper %}
+								<tr>
+									<td class="text-center">{{ lfg_profile.user.get_full_name }}</th>
+									<td class="text-center">{{ lfg_profile.get_discord_username }}</td>
+									<td class="text-center">{{ standings | return_item:lfg_profile.standing }}</td>
+									{% if lfg_profile.user.profile.has_team %}
+										<td class="text-center">Yes</td>
+										<td class="text-center">{{ lfg_profile.user.profile.team.num_members }}</td>
+									{% else %}
+										<td class="text-center">No</td>
+										<td class="text-center">-</td>
+									{% endif %}
+								</tr>
+							{% endfor %}
+						</tbody>
+					{% endif %}
+				</table>
+			</div>
+		</div>
+		<!-- Upper Division Table end -->
+	</div>
+	
+	<div class="row">	
+		<!-- Lower Division Table -->
+		<div class="col">
+			<h3>Preferred Division - Lower</h3>
+			<div class="table-responsive">
+				<table class="table table-sm table-striped shadow">
+					<thead class="thead-dark text-center">
+						<tr>
+							<th scope="col">Name</th>
+							<th scope="col">Discord ID</th>
+							<th scope="col">Standing</th>
+							<th scope="col">Has Team</th>
+							<th scope="col">Team Size</th>
+						</tr>
+					</thead>
+					{% if user.lfgprofile.active %}
+						<tbody class="bg-light">
+							{% for lfg_profile in lfg_lower %}
 							<tr>
 								<td class="text-center">{{ lfg_profile.user.get_full_name }}</th>
 								<td class="text-center">{{ lfg_profile.get_discord_username }}</td>
@@ -121,47 +161,11 @@
 									<td class="text-center">-</td>
 								{% endif %}
 							</tr>
-						{% endfor %}
-					</tbody>
-				{% endif %}
-			</table>
-		</div>
-		<!-- Upper Division Table end -->
-	</div>
-	
-	<div class="row">	
-		<!-- Lower Division Table -->
-		<h3>Preferred Division - Lower</h3>
-		<div class="table-responsive">
-			<table class="table table-sm table-striped shadow">
-				<thead class="thead-dark text-center">
-					<tr>
-						<th scope="col">Name</th>
-						<th scope="col">Discord ID</th>
-						<th scope="col">Standing</th>
-						<th scope="col">Has Team</th>
-						<th scope="col">Team Size</th>
-					</tr>
-				</thead>
-				{% if user.lfgprofile.active %}
-					<tbody class="bg-light">
-						{% for lfg_profile in lfg_lower %}
-						<tr>
-							<td class="text-center">{{ lfg_profile.user.get_full_name }}</th>
-							<td class="text-center">{{ lfg_profile.get_discord_username }}</td>
-							<td class="text-center">{{ standings | return_item:lfg_profile.standing }}</td>
-							{% if lfg_profile.user.profile.has_team %}
-								<td class="text-center">Yes</td>
-								<td class="text-center">{{ lfg_profile.user.profile.team.num_members }}</td>
-							{% else %}
-								<td class="text-center">No</td>
-								<td class="text-center">-</td>
-							{% endif %}
-						</tr>
-						{% endfor %}
-					</tbody>
-				{% endif %}
-			</table>
+							{% endfor %}
+						</tbody>
+					{% endif %}
+				</table>
+			</div>
 		</div>
 		<!-- Lower Division Table end -->
 	</div>
