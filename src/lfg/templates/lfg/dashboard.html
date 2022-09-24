@@ -13,14 +13,18 @@
 
 	<div class="row mt-4">
 		<!-- Overview section -->
-		<div class="col-md-7">
-			<blockquote class="blockquote mt-3 text-right">
-				<p class="mb-0">“Teamwork means never having to take all the blame yourself.”</p>
+		<div class="col-md-7">	
+			<blockquote class="blockquote mt-3 mb-4 text-right">
+				<i class="mb-0">“Teamwork means never having to take all the blame yourself.”</i>
 				<footer class="blockquote-footer">Stephen Hawking</footer>
-			  </blockquote>
-			
-			
-			
+			  </blockquote>		
+			<p class="lead">
+			Need help finding teammates? Creating an LFG profile can help you build or expand your team by connecting you with other registrants
+			who are actively seeking teammates.
+			</p>
+			<p class="lead">
+			Check out the <a href="{% url 'faq' %}">FAQ</a> for information regarding LFG signup and participation.
+			</p>
 		</div>
 		<!-- End Overview section-->
 		<div class="col-md-5">
@@ -107,7 +111,7 @@
 							<th scope="col">Team Size</th>
 						</tr>
 					</thead>
-					{% if user.lfgprofile.active %}
+					{% if user.lfgprofile.active  or user.is_superuser %}
 						<tbody class="bg-light">
 							{% for lfg_profile in lfg_upper %}
 								<tr>
@@ -146,7 +150,7 @@
 							<th scope="col">Team Size</th>
 						</tr>
 					</thead>
-					{% if user.lfgprofile.active %}
+					{% if user.lfgprofile.active or user.is_superuser%}
 						<tbody class="bg-light">
 							{% for lfg_profile in lfg_lower %}
 							<tr>
