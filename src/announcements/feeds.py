@@ -6,7 +6,7 @@ from . import models
 
 
 class LatestAnnouncementsFeed(Feed):
-    title = "ACM Programming Contest Announcements"
+    title = "ACM at FSU Programming Contest Announcements"
     link = "/announcements/"
     description = "Latest announcments from The Programming Contest Team."
 

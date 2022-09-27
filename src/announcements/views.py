@@ -20,6 +20,9 @@ class AnnouncementListView(ListView):
         context['cache_timeout'] = CACHE_TIMEOUT
         return context
 
+    def get_queryset(self):
+        return Announcement.objects.filter(status=1)
+
 
 class AnnouncementDetailView(DetailView):
 
