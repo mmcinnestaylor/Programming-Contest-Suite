@@ -50,15 +50,21 @@ class UserForm(forms.ModelForm):
 
 class ProfileForm(forms.ModelForm):
     class Meta:
+        EMAIL_CHOICES = (
+            (False, 'Opt-in'),
+            (True, 'Opt-out'),
+        )   
         model = Profile
-        fields = ('fsu_id', 'fsu_num')
+        fields = ('fsu_id', 'fsu_num', 'announcement_email_opt_out')
         labels = {
             'fsu_id': 'FSU ID',
             'fsu_num': 'FSU number',
+            'announcement_email_opt_out': 'Announcement Emails',
         }
         help_texts = {
-            'fsu_id': 'Excluding @my.fsu.edu ex: ab12c@my.fsu.edu -> ab12c',
+            'fsu_id': 'Excluding @fsu.edu ex: ab12c@fsu.edu -> ab12c',
             'fsu_num': 'Last 8 numbers on FSUCard. Exclude spaces.',
+            'announcement_email_opt_out': 'Contest announcements delivered to your inbox.',
         }
         error_messages = {
             'fsu_id': {
@@ -68,14 +74,17 @@ class ProfileForm(forms.ModelForm):
                 'max_length': "The number entered is too long.",
             },
         }
+        widgets = {'announcement_email_opt_out': forms.Select(choices=EMAIL_CHOICES)}
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
         if self.instance.fsu_num:
-            self.fields['fsu_num'] = forms.IntegerField(max_value=99999999, widget=forms.NumberInput(attrs={'placeholder': str(self.instance.fsu_num.id).zfill(8), }))
+            self.fields['fsu_num'] = forms.IntegerField(max_value=99999999, help_text='Last 8 numbers on FSUCard. Exclude spaces.', label='FSU Number', widget=forms.NumberInput(attrs={'placeholder': str(self.instance.fsu_num.id).zfill(8), }))
+            self.fields['fsu_num'].required = False
         else: # Use empty placeholder if the field is blank
-            self.fields['fsu_num'] = forms.IntegerField(max_value=99999999, widget=forms.NumberInput(
+            self.fields['fsu_num'] = forms.IntegerField(max_value=99999999, help_text='Last 8 numbers on FSUCard. Exclude spaces.', label='FSU Number', widget=forms.NumberInput(
                 attrs={'placeholder': '', }))
+            self.fields['fsu_num'].required = False
         
 
 class CourseForm(forms.ModelForm):

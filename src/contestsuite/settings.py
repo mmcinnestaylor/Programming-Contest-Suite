@@ -68,9 +68,11 @@ INSTALLED_APPS = [
     'checkin.apps.CheckinConfig',
     'contestadmin.apps.ContestAdminConfig',
     'core.apps.CoreConfig',
+    'lfg.apps.LfgConfig',
     'manager.apps.ManagerConfig',
     'register.apps.RegisterConfig',
     # 3rd party packages
+    'django_celery_beat',
     'import_export',
 ]
 
@@ -149,7 +151,20 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TIMEZONE = os.environ.get('CELERY_TIMEZONE', 'America/New_York')
 CELERY_ENABLE_UTC = True
-
+CELERY_BEAT_SCHEDULE = {
+    'cleanup-lfg-rosters': { 
+         'task': 'lfg.tasks.cleanup_lfg_rosters', 
+         'schedule': 600.0,
+        },
+    'scrape-discord-members': { 
+         'task': 'lfg.tasks.scrape_discord_members', 
+         'schedule': 1800.0,
+        },
+    'verify-lfg-profiles': { 
+        'task': 'lfg.tasks.verify_lfg_profiles', 
+        'schedule': 600.0,
+    },          
+}
 
 # Cache
 # https://docs.djangoproject.com/en/2.2/ref/settings/#caches
@@ -241,9 +256,9 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
-    EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')  
+    EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')  
     EMAIL_HOST = os.environ.get('EMAIL_HOST', None)
-    EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 465))
+    EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
     EMAIL_HOST_USER = os.environ.get('EMAIL_USER', None)
     EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', None)
     
@@ -265,7 +280,9 @@ DEFAULT_FROM_EMAIL = os.environ.get(
 # https://discordpy.readthedocs.io/en/stable/
 
 ANNOUNCEMENT_WEBHOOK_URL = os.environ.get('ANNOUNCEMENT_WEBHOOK_URL', None)
+BOT_CHANNEL_WEBHOOK_URL = os.environ.get('BOT_CHANNEL_WEBHOOK_URL', None)
 GUILD_ID = int(os.environ.get('GUILD_ID', 0))
+SCRAPE_BOT_TOKEN = os.environ.get('SCRAPE_BOT_TOKEN', None)
 
 
 # DOMjudge Status Button

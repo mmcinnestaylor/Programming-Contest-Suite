@@ -14,6 +14,8 @@ services:
             - nginx-backend
         deploy:
             replicas: 2
+            restart_policy:
+                max_attempts: 10
             rollback_config:
                 parallelism: 0
             update_config:
@@ -26,25 +28,20 @@ services:
         environment:
             # Django
             DEBUG: 'False'
-            SECRET_KEY: 86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
+            SECRET_KEY: # Project secret key
             ALLOWED_HOSTS: contest.cs.fsu.edu
             CACHE_TIMEOUT: 300
             CACHE_LOCATION: redis://redis:6379/0
-            TIME_ZONE: America/New_York
 
             # Celery
             CELERY_BACKEND: redis://redis:6379/1
             CELERY_BROKER: amqp://rabbitmq:5672
 
             # Email
-            EMAIL_BACKEND: django.core.mail.backends.smtp.EmailBackend
-            EMAIL_HOST: smtpsubdomain.example.com
-            EMAIL_PORT: 465
-            EMAIL_USER: user@example.com
-            EMAIL_PASSWORD: examplepass
-            EMAIL_USE_SSL: 'False'
+            EMAIL_HOST: # smtpsubdomain.example.com
+            EMAIL_USER: # exampleuser
+            EMAIL_PASSWORD: # examplepass
             EMAIL_USE_TLS: 'True'
-            DEFAULT_FROM_EMAIL: ACM at FSU Programming Contest<acm@cs.fsu.edu>
 
             # Database
             SQL_HOST: mariadb
@@ -54,10 +51,10 @@ services:
             SQL_PASSWORD: seminoles1!
 
             # Discord
-            GUILD_ID: 0
+            GUILD_ID: # ID of Discord server
 
-            # Hashid Module Salt
-            HASHID_FIELD_SALT: 0s97rx*t4%68jell&lw3^)97o*kr*+*2o^(76q)ix+ilc!4ax#
+            # Hashid Module 
+            HASHID_FIELD_SALT: # Global Salt
         volumes:
             - django_app:/app/media
             - django_static:/app/static
@@ -67,6 +64,37 @@ services:
             - redis-backend
             - rabbitmq-backend
         deploy:
+            restart_policy:
+                max_attempts: 10
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+    scrape_bot:
+        image: acmfsu/contestsuite:latest
+        command: /app/docker/start.sh bot
+        environment:
+            # Django
+            DEBUG: 'False'
+
+            # Database
+            SQL_HOST: mariadb
+            SQL_PORT: 3306
+            SQL_DATABASE: contestsuite
+            SQL_USER: contestadmin
+            SQL_PASSWORD: seminoles1!
+
+            # Discord
+            BOT_CHANNEL: # Name of command channel
+            GUILD_ID: # ID of Discord server
+            SCRAPE_BOT_TOKEN: # Token for integrated bot
+        networks:
+            - mariadb-backend
+        deploy:
+            restart_policy:
+                max_attempts: 10
             rollback_config:
                 parallelism: 0
             update_config:
@@ -79,23 +107,18 @@ services:
         environment:
             # Django
             DEBUG: 'False'
+            SECRET_KEY: # Project secret key
             ALLOWED_HOSTS: contest.cs.fsu.edu
-            SECRET_KEY: 86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
 
             # Celery
             CELERY_BACKEND: redis://redis:6379/1
             CELERY_BROKER: amqp://rabbitmq:5672
-            CELERY_TIMEZONE: America/New_York
 
             # Email
-            EMAIL_BACKEND: django.core.mail.backends.smtp.EmailBackend
-            EMAIL_HOST: smtpsubdomain.example.com
-            EMAIL_PORT: 465
-            EMAIL_USER: user@example.com
-            EMAIL_PASSWORD: examplepass
-            EMAIL_USE_SSL: 'False'
+            EMAIL_HOST: # smtpsubdomain.example.com
+            EMAIL_USER: # exampleuser
+            EMAIL_PASSWORD: # examplepass
             EMAIL_USE_TLS: 'True'
-            DEFAULT_FROM_EMAIL: ACM at FSU Programming Contest<acm@cs.fsu.edu>
 
             # Database
             SQL_HOST: mariadb
@@ -105,7 +128,8 @@ services:
             SQL_PASSWORD: seminoles1!
 
             # Discord
-            ANNOUNCEMENT_WEBHOOK_URL: https://discord.com/api/channel_webhook_url
+            ANNOUNCEMENT_WEBHOOK_URL: # URL of announcement channel webhook
+            BOT_CHANNEL_WEBHOOK_URL: # URL of PCS bot control channel webhook
         volumes:
             - django_app:/app/media
             - django_static:/app/static
@@ -114,6 +138,40 @@ services:
             - redis-backend
             - rabbitmq-backend
         deploy:
+            restart_policy:
+                max_attempts: 10
+            rollback_config:
+                parallelism: 0
+            update_config:
+                parallelism: 1
+                delay: 5s
+                failure_action: rollback
+    celery_beat:
+        image: acmfsu/contestsuite:latest
+        command: /app/docker/start.sh beat
+        environment:
+            # Django
+            DEBUG: 'False'
+
+            # Celery
+            CELERY_BACKEND: redis://redis:6379/1
+            CELERY_BROKER: amqp://rabbitmq:5672
+
+            # Database
+            SQL_HOST: mariadb
+            SQL_PORT: 3306
+            SQL_DATABASE: contestsuite
+            SQL_USER: contestadmin
+            SQL_PASSWORD: seminoles1!
+        volumes:
+            - django_static:/app/static
+        networks:
+            - mariadb-backend
+            - redis-backend
+            - rabbitmq-backend
+        deploy:
+            restart_policy:
+                max_attempts: 10
             rollback_config:
                 parallelism: 0
             update_config:
@@ -131,6 +189,8 @@ services:
             - nginx-backend
             - rabbitmq-backend
         deploy:
+            restart_policy:
+                max_attempts: 10
             rollback_config:
                 parallelism: 0
             update_config:
@@ -149,6 +209,8 @@ services:
         networks:
             - mariadb-backend
         deploy:
+            restart_policy:
+                max_attempts: 10
             rollback_config:
                 parallelism: 0
             update_config:
@@ -162,6 +224,8 @@ services:
         networks:
             - redis-backend
         deploy:
+            restart_policy:
+                max_attempts: 10
             rollback_config:
                 parallelism: 0
             update_config:
@@ -175,6 +239,8 @@ services:
         networks:
             - rabbitmq-backend
         deploy:
+            restart_policy:
+                max_attempts: 10
             rollback_config:
                 parallelism: 0
             update_config:

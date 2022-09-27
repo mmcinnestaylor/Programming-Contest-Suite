@@ -11,15 +11,11 @@ services:
         environment:
             # Django
             DEBUG: 'True'
-            SECRET_KEY: 86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
             CACHE_LOCATION: redis://redis:6379/0
             
             # Celery
             CELERY_BACKEND: redis://redis:6379/1
             CELERY_BROKER: amqp://rabbitmq:5672
-
-            # Email
-            EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
 
             # Database
             SQL_HOST: 'mariadb'
@@ -28,8 +24,8 @@ services:
             SQL_USER: 'contestadmin'
             SQL_PASSWORD: 'seminoles1!'
 
-            # Hashid Salt
-            HASHID_FIELD_SALT: 0s97rx*t4%68jell&lw3^)97o*kr*+*2o^(76q)ix+ilc!4ax#
+            # Discord
+            GUILD_ID: # Discord Server ID
         ports:
             - 8000:8000
         volumes:
@@ -42,20 +38,68 @@ services:
             - rabbitmq
             - mariadb
             - celery_worker
+    scrape_bot:
+        image: contestsuite:dev
+        command: /app/docker/start.sh bot
+        environment:
+            # Django
+            DEBUG: 'True'
+
+            # Database
+            SQL_HOST: 'mariadb'
+            SQL_PORT: '3306'
+            SQL_DATABASE: 'contestsuite'
+            SQL_USER: 'contestadmin'
+            SQL_PASSWORD: 'seminoles1!'
+
+            # Discord
+            BOT_CHANNEL: # Name of command channel
+            GUILD_ID: # Discord Server ID
+            SCRAPE_BOT_TOKEN: # Token for the member list scraping bot
+        volumes:
+            - ../../src:/app
+            - deployment_scripts:/app/docker
+        networks:
+            - contestsuite
+        depends_on:
+            - mariadb
+    celery_beat:
+        image: contestsuite:dev
+        command: /app/docker/start.sh beat
+        environment:
+            # Django
+            DEBUG: 'True'
+
+            # Celery
+            CELERY_BACKEND: redis://redis:6379/1
+            CELERY_BROKER: amqp://rabbitmq:5672
+
+            # Database
+            SQL_HOST: 'mariadb'
+            SQL_PORT: '3306'
+            SQL_DATABASE: 'contestsuite'
+            SQL_USER: 'contestadmin'
+            SQL_PASSWORD: 'seminoles1!'
+        volumes:
+            - ../../src:/app
+            - deployment_scripts:/app/docker
+        networks:
+            - contestsuite
+        depends_on:
+            - celery_worker
+            - redis
+            - rabbitmq
+            - mariadb
     celery_worker:
         image: contestsuite:dev
         command: /app/docker/start.sh worker
         environment:
             # Django
             DEBUG: 'True'
-            SECRET_KEY: 86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz
 
             # Celery
             CELERY_BACKEND: redis://redis:6379/1
             CELERY_BROKER: amqp://rabbitmq:5672
-            
-            # Email
-            MAIL_BACKEND: django.core.mail.backends.console.EmailBackend
 
             # Database
             SQL_HOST: 'mariadb'
@@ -65,7 +109,8 @@ services:
             SQL_PASSWORD: 'seminoles1!'
             
             # Discord
-            ANNOUNCEMENT_WEBHOOK_URL: https://discord.com/api/channel_webhook_url
+            ANNOUNCEMENT_WEBHOOK_URL: # Webhook URL of the contest announcements channel
+            BOT_CHANNEL_WEBHOOK_URL: # Webhook URL of the bot command channel
         volumes:
             - ../../src:/app
             - deployment_scripts:/app/docker

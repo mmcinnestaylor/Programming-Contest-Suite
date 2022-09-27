@@ -1,0 +1,177 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block section %}LFG Dashboard{% endblock %}
+
+{% block content %}
+	<h1 class="text-center">#LookingForGroup</h1>
+
+	<!-- Messages -->
+	{% include 'core/messages.html' %}
+	<!-- End Messages -->
+
+	<div class="row mt-4">
+		<!-- Overview section -->
+		<div class="col-md-7">	
+			<blockquote class="blockquote mt-3 mb-4 text-right">
+				<i class="mb-0">“Teamwork means never having to take all the blame yourself.”</i>
+				<footer class="blockquote-footer">Stephen Hawking</footer>
+			  </blockquote>		
+			<p class="lead">
+			Need help finding teammates? Creating an LFG profile can help you build or expand your team by connecting you with other registrants
+			who are actively seeking teammates.
+			</p>
+			<p class="lead">
+			Check out the <a href="{% url 'faq' %}">FAQ</a> for information regarding LFG signup and participation.
+			</p>
+		</div>
+		<!-- End Overview section-->
+		<div class="col-md-5">
+			<!-- Profile card -->
+			<div class="card mt-3 border-secondary">
+				<div class="card-header font-weight-bold text-white bg-secondary">
+					LFG Profile
+				</div>
+				{% if lfg_active %}
+					<div class="card-body overflow-auto">
+						{% if user.lfgprofile %}
+							<ul class="list-group list-group-flush">
+								<li class="list-group-item"><span class="font-weight-bolder">Discord Username:</span> {{ user.lfgprofile.discord_username }}</li>
+								<li class="list-group-item"><span class="font-weight-bolder">Discord Discriminator:</span> {{ user.lfgprofile.discord_discriminator }}</li>
+								<li class="list-group-item"><span class="font-weight-bolder">Preferred Division:</span> {{ divisions | return_item:user.lfgprofile.division }}</li>
+								{% if user.lfgprofile.is_completed %}
+									{% if user.lfgprofile.verified %}
+										{% if user.lfgprofile.active %}
+											<li class="list-group-item"><span class="font-weight-bolder">Status:</span> <span class="text-success">Active</span></li>
+										{% elif user.profile.team %}
+											{% if user.profile.team.num_members >= 3 %}
+												<li class="list-group-item"><span class="font-weight-bolder">Status:</span> <span class="text-danger">Inactive</span> (Team Full)</li>
+											{% else %}
+											<li class="list-group-item"><span class="font-weight-bolder">Status:</span> <span class="text-danger">Inactive</span>, <span class="text-info">Verified</span></li>
+											{% endif %}
+										{% else %}
+											<li class="list-group-item"><span class="font-weight-bolder">Status:</span> <span class="text-danger">Inactive</span>, <span class="text-info">Verified</span></li>
+										{% endif %}
+									{% else %}
+										<li class="list-group-item"><span class="font-weight-bolder">Status:</span> <span class="text-info">Verification Pending</span></li>
+									{% endif %}
+								{% else %}
+									<li class="list-group-item"><span class="font-weight-bolder">Status:</span> <span class="text-danger">Profile Incomplete</span></li>
+								{% endif %}
+							</ul>
+						{% else %}
+							Use the create button below to begin setting up your profile.
+						{% endif %}
+					</div>
+					
+					<div class="card-footer">
+						{% if user.lfgprofile %}
+							<a class="btn btn-info btn-sm" href="{% url 'manage_lfg_profile' %}" role="button">Edit</a>
+							{% if user.lfgprofile.verified %}
+								{% if user.lfgprofile.active %}
+									<a class="btn btn-danger btn-sm" href="{% url 'deactivate_lfg_profile' %}" role="button">Deactivate</a>
+								{% else %}	
+									{% if user.profile.team %}
+										{% if user.profile.team.num_members < 3 and user.lfgprofile.completed %}
+											<a class="btn btn-success btn-sm" href="{% url 'activate_lfg_profile' %}" role="button">Activate</a>
+										{% endif %}
+									{% elif user.lfgprofile.completed  %}
+										<a class="btn btn-success btn-sm" href="{% url 'activate_lfg_profile' %}" role="button">Activate</a>
+									{% endif %}
+								{% endif %}
+							{% endif %}
+						{% else %}
+							<a class="btn btn-success btn-sm" href="{% url 'create_lfg_profile' %}" role="button">Create</a>
+						{% endif %}
+					</div>
+				{% else %}
+					<div class="card-body overflow-auto">
+						The LFG service is currently offline.
+					</div>
+				{% endif %}
+			</div>
+			<!-- Profile card end -->
+		</div>
+	</div>
+	
+	<!-- LFG Tables -->
+	<div class="row mt-4">
+		<!-- Upper Division Table -->
+		<div class="col">
+			<h3>Preferred Division - Upper</h3>
+			<div class="table-responsive">
+				<table class="table table-sm table-striped shadow">
+					<thead class="thead-dark text-center">
+						<tr>
+							<th scope="col">Name</th>
+							<th scope="col">Discord ID</th>
+							<th scope="col">Standing</th>
+							<th scope="col">Has Team</th>
+							<th scope="col">Team Size</th>
+						</tr>
+					</thead>
+					{% if user.lfgprofile.active  or user.is_superuser %}
+						<tbody class="bg-light">
+							{% for lfg_profile in lfg_upper %}
+								<tr>
+									<td class="text-center">{{ lfg_profile.user.get_full_name }}</th>
+									<td class="text-center">{{ lfg_profile.get_discord_username }}</td>
+									<td class="text-center">{{ standings | return_item:lfg_profile.standing }}</td>
+									{% if lfg_profile.user.profile.has_team %}
+										<td class="text-center">Yes</td>
+										<td class="text-center">{{ lfg_profile.user.profile.team.num_members }}</td>
+									{% else %}
+										<td class="text-center">No</td>
+										<td class="text-center">-</td>
+									{% endif %}
+								</tr>
+							{% endfor %}
+						</tbody>
+					{% endif %}
+				</table>
+			</div>
+		</div>
+		<!-- Upper Division Table end -->
+	</div>
+	
+	<div class="row">	
+		<!-- Lower Division Table -->
+		<div class="col">
+			<h3>Preferred Division - Lower</h3>
+			<div class="table-responsive">
+				<table class="table table-sm table-striped shadow">
+					<thead class="thead-dark text-center">
+						<tr>
+							<th scope="col">Name</th>
+							<th scope="col">Discord ID</th>
+							<th scope="col">Standing</th>
+							<th scope="col">Has Team</th>
+							<th scope="col">Team Size</th>
+						</tr>
+					</thead>
+					{% if user.lfgprofile.active or user.is_superuser%}
+						<tbody class="bg-light">
+							{% for lfg_profile in lfg_lower %}
+							<tr>
+								<td class="text-center">{{ lfg_profile.user.get_full_name }}</th>
+								<td class="text-center">{{ lfg_profile.get_discord_username }}</td>
+								<td class="text-center">{{ standings | return_item:lfg_profile.standing }}</td>
+								{% if lfg_profile.user.profile.has_team %}
+									<td class="text-center">Yes</td>
+									<td class="text-center">{{ lfg_profile.user.profile.team.num_members }}</td>
+								{% else %}
+									<td class="text-center">No</td>
+									<td class="text-center">-</td>
+								{% endif %}
+							</tr>
+							{% endfor %}
+						</tbody>
+					{% endif %}
+				</table>
+			</div>
+		</div>
+		<!-- Lower Division Table end -->
+	</div>
+	<!-- LFG Tables end -->
+{% endblock %}

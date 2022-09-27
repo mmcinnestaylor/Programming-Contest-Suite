@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block section %}Account Dashboard{% endblock %}
 
@@ -12,10 +13,10 @@
 	<!-- Announcements Display -->
 	<div class="row justify-content-center">
 		<div class="col">
-			{% for announcement in announcements %}
-				<div class="alert alert-dismissible fade show mt-3 mb-2 p-0 shadow-sm">
-					<div class="card m-0">
-						<div class="card-header font-weight-bold">
+			<div class="alert alert-dismissible fade show mt-3 mb-2 p-0 shadow-sm">
+				{% for announcement in announcements %}
+					<div class="card m-0 border-secondary">
+						<div class="card-header font-weight-bold bg-secondary text-white">
 							Recent Announcement
 							<button type="button" class="close" data-dismiss="alert">&times;</button>
 						</div>
@@ -30,51 +31,56 @@
 								<p class="card-text lead mt-2">{{announcement.content|slice:":140" }}...</p>
 								<a href="{% url 'announcement_detail' announcement.slug  %}" class="btn btn-primary btn-sm">Read More</a>
 							{% else %}
-								<p class="card-text lead mt-2">{{announcement.content }}</p>
+								<p class="card-text lead mt-2">{{ announcement.content }}</p>
 							{% endif %}
 						</div>
 					</div>
-				</div>
-			{% empty %}
-				<div class="card mt-4 shadow-sm">
-					<div class="card-header font-weight-bold">
-						Recent Announcement
+				{% empty %}
+					<div class="card m-0 border-secondary">
+						<div class="card-header font-weight-bold bg-secondary text-white">
+							Recent Announcement
+							<button type="button" class="close" data-dismiss="alert">&times;</button>
+						</div>
+						<div class="card-body">
+							<p class="lead">No announcements have been posted.</p>
+						</div>
 					</div>
-					<div class="card-body">
-						<p class="lead">No announcements posted.</p>
-					</div>
-				</div>
-			{% endfor %}
+				{% endfor %}
+			</div>
 		</div>
 	</div>
 	<!-- End Announcements Display -->
 	<!-- User Card deck -->
 	<div class="card-deck">
 		<!-- Profile card -->
-		<div class="card mt-4">
-			<div class="card-header font-weight-bold">
+		<div class="card mt-4 border-secondary">
+			<div class="card-header font-weight-bold bg-secondary text-white">
 				Profile
+				{% if lunch_form_url %}
+				<a class="btn btn-sm btn-primary float-right" href="{{ lunch_form_url }}" target="_blank" rel="external"><i class="fa fa-file-text" aria-hidden="true"></i>
+					Lunch Form</a>
+				{% endif %}
 			</div>
 			<div class="card-body overflow-auto">
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item"><span class="font-weight-bolder">Name:</span> {{ user.get_full_name }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">Email:</span> {{ user.email }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">FSU ID:</span> {{ user.profile.fsu_id }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">FSU Number:</span> {{ user.profile.fsu_num.id|stringformat:"08d" }}</li>
+					{% if user.profile.fsu_id %}
+						<li class="list-group-item"><span class="font-weight-bolder">FSU ID:</span> {{ user.profile.fsu_id }}</li>
+					{% else %}
+						<li class="list-group-item"><span class="font-weight-bolder">FSU ID:</span> <span class="text-danger">blank</span></li>
+					{% endif %}
+					{% if user.profile.fsu_num.id %}
+						<li class="list-group-item"><span class="font-weight-bolder">FSU Number:</span> {{ user.profile.fsu_num.id|stringformat:"08d" }}</li>
+					{% else %}
+						<li class="list-group-item"><span class="font-weight-bolder">FSU Number:</span> <span class="text-danger">blank</span></li>
+					{% endif %}
 					{% if user.profile.checked_in %}
 						<li class="list-group-item"><span class="font-weight-bolder">Checked-in:</span> Yes</li>
 					{% else %}
 						<li class="list-group-item"><span class="font-weight-bolder">Checked-in:</span> No</li>
 					{% endif %}
-					{% if user.profile.role == 1 %}
-						<li class="list-group-item"><span class="font-weight-bolder">Role:</span> Contestant</li>
-					{% elif user.profile.role == 2 %}
-						<li class="list-group-item"><span class="font-weight-bolder">Role:</span> Proctor</li>
-					{% elif user.profile.role == 3 %}
-						<li class="list-group-item"><span class="font-weight-bolder">Role:</span> Question Writer</li>
-					{% else %}
-						<li class="list-group-item"><span class="font-weight-bolder">Role:</span> Organizer</li>
-					{% endif %}
+					<li class="list-group-item"><span class="font-weight-bolder">Role:</span> {{ roles | return_item:user.profile.role }}</li>
 				</ul>
 			</div>
 			<div class="card-footer">
@@ -83,8 +89,8 @@
 		</div>
 		<!-- Profile card end -->
 		<!-- Courses card -->
-		<div class="card mt-4">
-			<div class="card-header font-weight-bold">
+		<div class="card mt-4 border-secondary">
+			<div class="card-header font-weight-bold bg-secondary text-white">
 				Courses
 			</div>
 			<div class="card-body overflow-auto">
@@ -134,9 +140,9 @@
 	<!-- Team Card deck -->
 	<div class="card-deck">
 		<!-- Team card -->
-		<div class="card mt-4">
-			<div class="card-header font-weight-bold">
-				Team
+		<div class="card mt-4 border-secondary">
+			<div class="card-header font-weight-bold bg-secondary text-white">
+				<span>Team</span>
 			</div>
 			<div class="card-body overflow-auto">
 				{% if user.profile.has_team %}
@@ -188,8 +194,8 @@
 		</div>
 		<!-- Team card end -->
 		<!-- Team Members card -->
-		<div class="card mt-4">
-			<div class="card-header font-weight-bold">
+		<div class="card mt-4 border-secondary">
+			<div class="card-header font-weight-bold bg-secondary text-white">
 				Team Members
 			</div>
 			<div class="card-body overflow-auto">

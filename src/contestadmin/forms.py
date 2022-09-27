@@ -29,3 +29,7 @@ class ResultsForm(forms.ModelForm):
     class Meta:
         model = Contest
         fields = ['results']
+
+
+class ClearChannelForm(forms.Form):
+    channel_id = forms.IntegerField()

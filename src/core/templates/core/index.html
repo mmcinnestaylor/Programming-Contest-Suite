@@ -88,20 +88,20 @@
             </div>              
           </div>
           <!-- Sponsors Column -->
-          <div class="col-md-4 border-left border-secondary d-none d-lg-block">
+          <div class="col-md-4 border-left border-secondary d-none d-md-block">
             <h4 class="text-center mt-3">Sponsors</h4>
             <div class="text-center">
-              <img src="{% static 'core/img/L3Harris_logo.png' %}" class="img-fluid w-75 my-2" alt="...">
-              <img src="{% static 'core/img/fsucslogo.png' %}" class="img-fluid w-75 my-2" alt="...">
-              <img src="{% static 'core/img/i2x.jpg' %}" class="img-fluid w-25 mt-2 mb-3" alt="...">
+              <img src="{% static 'core/img/fsucslogo.png' %}" class="img-fluid w-75 my-2" alt="FSU CS Logo">
+              <img src="{% static 'core/img/L3Harris_logo.png' %}" class="img-fluid w-75 my-2" alt="L3Harris Logo">
+              <img src="{% static 'core/img/i2x.png' %}" class="img-fluid w-75 mt-2 mb-3" alt="i2x Solutions Logo">
             </div>
           </div>
-          <div class="col-md-4 border-left border-secondary d-block d-lg-none">
+          <div class="col-md-4 d-block d-md-none">
             <h4 class="text-center mt-3">Sponsors</h4>
             <div class="text-center">
-              <img src="{% static 'core/img/L3Harris_logo.png' %}" class="img-fluid w-75 my-2" alt="...">
-              <img src="{% static 'core/img/fsucslogo.png' %}" class="img-fluid w-75 my-2" alt="...">
-              <img src="{% static 'core/img/i2x.jpg' %}" class="img-fluid w-25 mt-2 mb-3" alt="...">
+              <img src="{% static 'core/img/fsucslogo.png' %}" class="img-fluid w-75 my-2" alt="FSU CS Logo">
+              <img src="{% static 'core/img/L3Harris_logo.png' %}" class="img-fluid w-75 my-2" alt="L3Harris Logo">
+              <img src="{% static 'core/img/i2x.png' %}" class="img-fluid w-75 mt-2 mb-3" alt="i2x Solutions Logo">
             </div>
           </div>
         </div>          
@@ -156,7 +156,7 @@
       <!-- DOMjudge LFG Discord row -->
       <div class="row">
         <!-- DOMjudge and LFG column -->
-        <div class="col-lg-6">
+        <div class="col-lg-5">
           <!-- Domjudge Status card -->
           <div class="card mt-3 border-secondary">
             <div class="card-header font-weight-bold bg-secondary text-white">
@@ -186,10 +186,10 @@
             </div>
             <div class="card-body">
               <div>
-                <span class="font-weight-bold">Upper Division:</span>&emsp;<span>0</span>
+                <span class="font-weight-bold">Upper Division:</span>&emsp;<span>{{ lfg_profiles_upper }}</span>
               </div>
               <div>
-                <span class="font-weight-bold">Lower Division:</span>&emsp;<span>0</span>
+                <span class="font-weight-bold">Lower Division:</span>&emsp;<span>{{ lfg_profiles_lower }}</span>
               </div>
             </div>
           </div>
@@ -198,9 +198,9 @@
         <!-- DOMjudge and LFG column end -->
 
         <!-- Discord Widget column -->
-        <div class="col-lg-6 overflow-auto">
+        <div class="col-lg-7 ">
           <iframe src="https://discord.com/widget?id={{ guild_id }}&theme=light" class="mt-3"
-            height="350" allowtransparency="true" frameborder="0"
+            width="100%" height="333" allowtransparency="true" frameborder="0"
             sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
         </div>
         <!-- Discord Widget column end -->
@@ -236,12 +236,12 @@
         <div class="card-body">
           <h4 class="card-title">About</h4>
           <p class="card-text">
-            The ACM Programming Contest is a coding competition
+            The ACM at FSU Programming Contest is a coding competition
             emphasizing problem solving executed in code.
             Students, faculty, and staff from all majors and colleges are welcome.
             The competition lasts 5 hours, and teams are limited to 3 members.
             The top teams from each division receive prizes,
-            which have previously included things like Google Home Minis,
+            which have previously included items such as Google Home Minis,
             Amazon Echoes, Raspberry Pi's, Chromecasts, and ACM chapter t-shirts.
           </p>
           <h4 class="card-title">Volunteering</h4>
@@ -254,6 +254,9 @@
             </ul>
             Please contact our team at <a href="mailto:contest@fsu.acm.org">contest@fsu.acm.org</a> for additional information! 
           </p>
+          <small class="card-text">
+            <em>A special thank you to ACM at FSU alumnus Will Davenport for donating the server hardware.</em>
+          </small>
         </div>
       </div>
       <!-- About Contest Card end -->

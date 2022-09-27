@@ -11,23 +11,18 @@
 {% block content %}
 {% cache cache_timeout teams %}
 	<h1 class="text-center">Registered Teams</h1>
-
 	<div class="row">
-		<h2>Upper Division</h2>
-	</div>
-	<div class="row">
-		<button type="button" class="btn  btn-sm btn-primary mr-2" disabled>
-			Teams <span class="badge badge-light">{{ num_upper_teams }}</span>
-			<span class="sr-only">number of upper division teams</span>
-		</button>
-		<button type="button" class="btn  btn-sm btn-info" disabled>
-			Participants <span class="badge badge-light">{{ num_upper_participants }}</span>
-			<span class="sr-only">number of upper division participants</span>
-		</button>
-	</div>
-	<div class="row justify-content-center mt-3">
-		<div class="col-10">
-			<div class="table-responsive">
+		<div class="col">
+			<h2>Upper Division</h2>
+			<button type="button" class="btn  btn-sm btn-primary mr-2" disabled>
+				Teams <span class="badge badge-light">{{ num_upper_teams }}</span>
+				<span class="sr-only">number of upper division teams</span>
+			</button>
+			<button type="button" class="btn  btn-sm btn-info" disabled>
+				Participants <span class="badge badge-light">{{ num_upper_participants }}</span>
+				<span class="sr-only">number of upper division participants</span>
+			</button>			
+			<div class="table-responsive mt-2">
 				<table class="table table-sm table-striped shadow rounded">
 					<thead class="thead-dark text-center">
 						<tr>
@@ -61,24 +56,18 @@
 			</div>
 		</div>
 	</div>
-
 	<div class="row">
-		<h2>Lower Division</h2>
-	</div>
-	<div class="row">
-		<button type="button" class="btn  btn-sm btn-primary mr-2" disabled>
-			Teams <span class="badge badge-light">{{ num_lower_teams }}</span>
-			<span class="sr-only">number of lower division teams</span>
-		</button>
-		<button type="button" class="btn  btn-sm btn-info" disabled>
-			Participants <span class="badge badge-light">{{ num_lower_participants }}</span>
-			<span class="sr-only">number of lower division participants</span>
-		</button>
-	</div>
-	<br>
-	<div class="row justify-content-center">
-		<div class="col-10">
-			<div class="table-responsive">
+		<div class="col">
+			<h2>Lower Division</h2>		
+			<button type="button" class="btn  btn-sm btn-primary mr-2" disabled>
+				Teams <span class="badge badge-light">{{ num_lower_teams }}</span>
+				<span class="sr-only">number of lower division teams</span>
+			</button>
+			<button type="button" class="btn  btn-sm btn-info" disabled>
+				Participants <span class="badge badge-light">{{ num_lower_participants }}</span>
+				<span class="sr-only">number of lower division participants</span>
+			</button>
+			<div class="table-responsive mt-2">
 				<table class="table table-sm table-striped shadow ">
 					<thead class="thead-dark text-center">
 						<tr>

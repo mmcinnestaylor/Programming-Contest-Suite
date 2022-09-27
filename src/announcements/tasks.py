@@ -26,12 +26,13 @@ def email_annoucement(id):
         messages = []
         
         for user in users:
-            i += 1
+            if not user.profile.announcement_email_opt_out:
+                i += 1
 
-            message = render_to_string(
-            'announcements/new_announcement_email.html', {'announcement': announcement})
+                message = render_to_string(
+                'announcements/new_announcement_email.html', {'announcement': announcement})
 
-            messages.append((announcement.title, message, DEFAULT_FROM_EMAIL, [user.email]))
+                messages.append((announcement.title, message, DEFAULT_FROM_EMAIL, [user.email]))
 
         messages = tuple(messages)
         send_mass_mail(messages, fail_silently=False)
