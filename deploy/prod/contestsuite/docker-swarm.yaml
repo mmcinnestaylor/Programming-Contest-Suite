@@ -78,8 +78,6 @@ services:
         environment:
             # Django
             DEBUG: 'False'
-            SECRET_KEY: # Project secret key
-            ALLOWED_HOSTS: contest.cs.fsu.edu
 
             # Database
             SQL_HOST: mariadb
@@ -89,6 +87,7 @@ services:
             SQL_PASSWORD: seminoles1!
 
             # Discord
+            BOT_CHANNEL: # Name of command channel
             GUILD_ID: # ID of Discord server
             SCRAPE_BOT_TOKEN: # Token for integrated bot
         networks:
