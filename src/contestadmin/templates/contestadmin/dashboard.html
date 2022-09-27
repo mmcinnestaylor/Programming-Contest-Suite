@@ -204,7 +204,7 @@
 		<!-- Upper Stats card -->
 		<div class="card mt-4 border-secondary">
 			<div class="card-header font-weight-bold bg-secondary text-white">
-				Upper Division
+				Teams - Upper Division
 			</div>
 			<div class="card-body overflow-auto">
 				<ul class="list-group list-group-flush">
@@ -222,7 +222,7 @@
 		<!-- Lower Stats card -->
 		<div class="card mt-4 border-secondary">
 			<div class="card-header font-weight-bold bg-secondary text-white">
-				Lower Division
+				Teams - Lower Division
 			</div>
 			<div class="card-body overflow-auto">
 				<ul class="list-group list-group-flush">
@@ -238,7 +238,43 @@
 		</div>
 		<!-- Lower Stats card end -->		
 	</div>
-	<!-- Division Stats Card deck end -->
+	<!-- LFG Stats Card deck end -->
+
+	<!-- Division Stats Card deck -->
+	<div class="card-deck">
+		<!-- Upper Stats card -->
+		<div class="card mt-4 border-secondary">
+			<div class="card-header font-weight-bold bg-secondary text-white">
+				LFG Profiles - Overview
+			</div>
+			<div class="card-body overflow-auto">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item"><span class="font-weight-bolder">Total:</span> {{ num_lfg_profiles }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Incomplete:</span> {{ num_lfg_profiles_incomplete }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Complete, Unverified:</span> {{ num_lfg_profiles_unverified }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Verified, Inactive:</span> {{ num_lfg_profiles_inactive }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Active:</span> {{ num_lfg_profiles_active }}</li>
+				</ul>
+			</div>
+		</div>
+		<!-- Upper Stats card end -->
+		<!-- Lower Stats card -->
+		<div class="card mt-4 border-secondary">
+			<div class="card-header font-weight-bold bg-secondary text-white">
+				LFG Profiles - Divisions
+			</div>
+			<div class="card-body overflow-auto">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item"><span class="font-weight-bolder">Upper Total:</span> {{ num_upper_lfg_profiles }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Upper Active:</span> {{ num_upper_lfg_profiles_active }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Lower Total:</span> {{ num_lower_lfg_profiles }}</li>
+					<li class="list-group-item"><span class="font-weight-bolder">Lower Active:</span> {{ num_lower_lfg_profiles_active }}</li>
+				</ul>
+			</div>
+		</div>
+		<!-- Lower Stats card end -->		
+	</div>
+	<!-- LFG Stats Card deck end -->
 
 	<!-- Volunteer Summary card -->
 	<div class="card mt-4 mb-3 border-secondary">
