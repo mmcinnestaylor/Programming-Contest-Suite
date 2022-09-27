@@ -42,7 +42,7 @@
 							<button type="button" class="close" data-dismiss="alert">&times;</button>
 						</div>
 						<div class="card-body">
-							<p class="lead">No announcements posted.</p>
+							<p class="lead">No announcements have been posted.</p>
 						</div>
 					</div>
 				{% endfor %}
@@ -65,8 +65,16 @@
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item"><span class="font-weight-bolder">Name:</span> {{ user.get_full_name }}</li>
 					<li class="list-group-item"><span class="font-weight-bolder">Email:</span> {{ user.email }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">FSU ID:</span> {{ user.profile.fsu_id }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">FSU Number:</span> {{ user.profile.fsu_num.id|stringformat:"08d" }}</li>
+					{% if user.profile.fsu_id %}
+						<li class="list-group-item"><span class="font-weight-bolder">FSU ID:</span> {{ user.profile.fsu_id }}</li>
+					{% else %}
+						<li class="list-group-item"><span class="font-weight-bolder">FSU ID:</span> <span class="text-danger">blank</span></li>
+					{% endif %}
+					{% if user.profile.fsu_num.id %}
+						<li class="list-group-item"><span class="font-weight-bolder">FSU Number:</span> {{ user.profile.fsu_num.id|stringformat:"08d" }}</li>
+					{% else %}
+						<li class="list-group-item"><span class="font-weight-bolder">FSU Number:</span> <span class="text-danger">blank</span></li>
+					{% endif %}
 					{% if user.profile.checked_in %}
 						<li class="list-group-item"><span class="font-weight-bolder">Checked-in:</span> Yes</li>
 					{% else %}

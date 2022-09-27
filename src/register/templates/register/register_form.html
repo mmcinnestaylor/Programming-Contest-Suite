@@ -11,25 +11,33 @@
 {% include 'core/messages.html' %}
 <!-- End Messages -->
 <div class="row justify-content-center">
-	<form class="mb-3" method="post">
-		{% csrf_token %}
-		{% for field in form %}
-		<p>
-			<h5>{{ field.label_tag }}</h5>
-			{{ field }}<br>				
-			<small class="form-text text-muted">
-				{% for error in field.errors %}
-				<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
-				{% endfor %}
+	<div class="col-md-4">
+		<form class="mb-3" method="post">
+			<div class="card">
+				<div class="card-body">
+					{% csrf_token %}
+					{% for field in form %}
+					<p>
+						<h5>{{ field.label_tag }}</h5>
+						{{ field }}<br>				
+						<small class="form-text text-muted">
+							{% for error in field.errors %}
+							<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
+							{% endfor %}
 
-				{% if field.help_text %}
-				{{ field.help_text }}
-				{% endif %}
-			</small>				
-		</p>
-		{% endfor %}
-		<button class="btn btn-sm btn-primary" type="submit">Submit</button>
-		<a class="btn btn-secondary btn-sm" href="{% url 'manage_dashboard' %}" role="button">Cancel</a>
-	</form>
+							{% if field.help_text %}
+							{{ field.help_text }}
+							{% endif %}
+						</small>				
+					</p>
+					{% endfor %}
+				</div>
+				<div class="card-footer">
+					<button class="btn btn-sm btn-primary" type="submit">Submit</button>
+					<a class="btn btn-secondary btn-sm" href="{% url 'manage_dashboard' %}" role="button">Cancel</a>
+				</div>
+			</div>
+		</form>
+	</div>
 </div>
 {% endblock %}

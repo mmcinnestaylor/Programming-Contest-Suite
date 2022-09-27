@@ -18,6 +18,7 @@ from . import tasks
 from .utils import contestadmin_auth
 from contestadmin.models import Contest
 from contestsuite.settings import MEDIA_ROOT
+from lfg.models import LFGProfile
 from manager.models import Course, Faculty, Profile
 from register.models import Team
 
@@ -243,7 +244,7 @@ def dashboard(request):
     context['total_walkin'] = Team.objects.filter(name__contains='Walk-in-').count()
     context['walkin_used'] = Team.objects.filter(name__contains='Walk-in-').exclude(num_members=0).count()
 
-    # Upper division card data
+    # Teams Upper division card data
     context['num_upper_teams'] = Team.objects.filter(division=1).exclude(name__contains='Walk-in-').count()
     context['num_upper_active_teams'] = [ team.is_active() for team in Team.objects.filter(division=1).exclude(name__contains='Walk-in-')].count(True)
     context['num_upper_reg_participants'] = Profile.objects.filter(team__division=1).exclude(team__name__contains='Walk-in-').count()
@@ -254,7 +255,7 @@ def dashboard(request):
         name__contains='Walk-in-').exclude(num_members=0).count()
     context['num_upper_walkin_participants'] = Profile.objects.filter(team__division=1).filter(team__name__contains='Walk-in-').count()
 
-    # Lower division card data
+    # Teams Lower division card data
     context['num_lower_teams'] = Team.objects.filter(division=2).exclude(name__contains='Walk-in-').count()
     context['num_lower_active_teams'] = [ team.is_active() for team in Team.objects.filter(division=2).exclude(name__contains='Walk-in-')].count(True)
     context['num_lower_reg_participants'] = Profile.objects.filter(team__division=2).exclude(team__name__contains='Walk-in-').count()
@@ -265,6 +266,19 @@ def dashboard(request):
         name__contains='Walk-in-').exclude(num_members=0).count()
     context['num_lower_walkin_participants'] = Profile.objects.filter(team__division=2).filter(team__name__contains='Walk-in-').count()
 
+    # LFG Overview card data
+    context['num_lfg_profiles'] = LFGProfile.objects.count()
+    context['num_lfg_profiles_incomplete'] = LFGProfile.objects.filter(completed=False).count()
+    context['num_lfg_profiles_unverified'] = LFGProfile.objects.filter(completed=True).filter(verified=False).count()
+    context['num_lfg_profiles_inactive'] = LFGProfile.objects.filter(completed=True).filter(verified=True).filter(active=False).count()
+    context['num_lfg_profiles_active'] = LFGProfile.objects.filter(active=True).count()
+    
+    # LFG Divisions card data
+    context['num_upper_lfg_profiles'] = LFGProfile.objects.filter(division=1).count()
+    context['num_upper_lfg_profiles_active'] = LFGProfile.objects.filter(division=1).filter(active=True).count()
+    context['num_lower_lfg_profiles'] = LFGProfile.objects.filter(division=2).count()
+    context['num_lower_lfg_profiles_active'] = LFGProfile.objects.filter(division=2).filter(active=True).count()
+    
     # Volunteer card data
     context['roles'] = {role[0]:role[1] for role in Profile.ROLES}
     context['volunteers'] = [user for user in Profile.objects.order_by('role').all() if user.is_volunteer()]

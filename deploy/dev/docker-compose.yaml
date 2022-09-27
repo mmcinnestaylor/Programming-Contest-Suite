@@ -53,6 +53,7 @@ services:
             SQL_PASSWORD: 'seminoles1!'
 
             # Discord
+            BOT_CHANNEL: # Name of command channel
             GUILD_ID: # Discord Server ID
             SCRAPE_BOT_TOKEN: # Token for the member list scraping bot
         volumes:
