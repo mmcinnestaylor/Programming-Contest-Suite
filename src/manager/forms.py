@@ -62,7 +62,7 @@ class ProfileForm(forms.ModelForm):
             'announcement_email_opt_out': 'Announcement Emails',
         }
         help_texts = {
-            'fsu_id': 'Excluding @my.fsu.edu ex: ab12c@my.fsu.edu -> ab12c',
+            'fsu_id': 'Excluding @fsu.edu ex: ab12c@fsu.edu -> ab12c',
             'fsu_num': 'Last 8 numbers on FSUCard. Exclude spaces.',
             'announcement_email_opt_out': 'Contest announcements delivered to your inbox.',
         }
