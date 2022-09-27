@@ -142,7 +142,7 @@
 					{% csrf_token %}
 					{% for field in channel_form %}
 					<p class="mb-0">
-						{{ field }}<br>
+						{{ field | placeholder:"Channel ID" }}<br>
 						<small class="form-text text-muted">
 							{% for error in field.errors %}
 							<p class="text-monospace font-weight-lighter text-danger mb-0">-{{ error }}</p>
