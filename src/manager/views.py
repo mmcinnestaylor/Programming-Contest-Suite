@@ -21,7 +21,7 @@ def dashboard(request):
     context = {}
 
     contest = cache.get_or_set(
-        'manage_dash_contest_lunch_url', Contest.objects.first(), CACHE_TIMEOUT)
+        'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
     if contest:
         context['lunch_form_url'] = contest.lunch_form_url
     else:
