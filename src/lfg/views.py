@@ -18,7 +18,7 @@ from contestsuite.settings import CACHE_TIMEOUT
 def dashboard(request):
     context = {}
 
-    contest = cache.get_or_set('lfg_dash_contest_status', Contest.objects.first(), CACHE_TIMEOUT)
+    contest = cache.get_or_set('contest_model', Contest.objects.first(), CACHE_TIMEOUT)
     if contest:
         context['lfg_active'] = contest.lfg_active
     else:
