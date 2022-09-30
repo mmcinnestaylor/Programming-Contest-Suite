@@ -3,9 +3,11 @@ from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.cache import cache
 from django.db import transaction
 # from django.forms import formset_factory
 from django.shortcuts import redirect, render
+from django.utils import timezone
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.views import View
@@ -14,6 +16,8 @@ from . import forms
 from . import models
 from . import tasks
 from .tokens import account_activation_token
+from contestadmin.models import Contest
+from contestsuite.settings import CACHE_TIMEOUT
 from manager.utils import has_no_team, not_registered
 
 # Create your views here.
@@ -118,6 +122,13 @@ def account(request):
 @transaction.atomic
 def team(request):
     context = {}
+
+    contest = cache.get_or_set(
+        'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
+    if contest and contest.team_deadline and timezone.now() > contest.team_deadline:
+        messages.error(
+            request, 'Team registration closed. The registration deadline has already passed.', fail_silently=True)
+        return redirect('manage_dashboard')
 
     if request.method == 'POST':
         form = forms.TeamForm(request.POST)
