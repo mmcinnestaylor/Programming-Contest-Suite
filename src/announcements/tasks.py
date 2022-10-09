@@ -26,7 +26,7 @@ def email_annoucement(id):
         messages = []
         
         for user in users:
-            if not user.profile.announcement_email_opt_out:
+            if user.is_active and not user.profile.announcement_email_opt_out:
                 i += 1
 
                 message = render_to_string(
