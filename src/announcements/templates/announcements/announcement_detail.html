@@ -11,17 +11,19 @@
 {% block content %}
 {% cache cache_timeout announcements announcement.slug %}
   <div class="row justify-content-center">
-    <div class="col-md-10 card mb-3 mt-3 shadow">
-      <div class="card-body">
-        <h2 class="card-title mb-0">{{ object.title }}</h2>
-        <small class="card-text text-muted">{{ object.author.first_name }} | {{ object.created_on }}</small>
-        {% if announcement.created_on < announcement.updated_on %}
-          <br>
-          <small class="card-text text-muted">Updated on: {{ announcement.updated_on}}</small>
-        {% endif %}
-        <p class="card-text mt-2">{{ object.content | linebreaks }}</p>
-        <a href="{% url 'announcements' %}" class="btn btn-primary btn-sm">&larr; Back</a>
-      </div> 
+    <div class="col">
+      <div class="card mb-3 mt-3 shadow">
+        <div class="card-body">
+          <h2 class="card-title mb-0">{{ object.title }}</h2>
+          <small class="card-text text-muted">{{ object.author.first_name }} | {{ object.created_on }}</small>
+          {% if announcement.created_on < announcement.updated_on %}
+            <br>
+            <small class="card-text text-muted">Updated on: {{ announcement.updated_on}}</small>
+          {% endif %}
+          <p class="card-text mt-2">{{ object.content | linebreaks }}</p>
+          <a href="{% url 'announcements' %}" class="btn btn-primary btn-sm">&larr; Back</a>
+        </div> 
+      </div>
     </div>
   </div>
 {% endcache %}
