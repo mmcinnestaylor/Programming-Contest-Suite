@@ -25,10 +25,19 @@ services:
     django:
         image: acmfsu/contestsuite:latest
         command: /app/docker/start.sh server
+        secrets:
+            - contestsuite_db_name
+            - contestsuite_db_user
+            - contestsuite_db_password
+            - contestsuite_django_key
+            - contestsuite_hashid_key
+            - contestsuite_email_user
+            - contestsuite_email_password
+            - contestsuite_discord_guild_id
         environment:
             # Django
             DEBUG: 'False'
-            SECRET_KEY: # Project secret key
+            SECRET_KEY: /run/secrets/contestsuite_django_key # Project secret key
             ALLOWED_HOSTS: contest.cs.fsu.edu
             CACHE_TIMEOUT: 300
             CACHE_LOCATION: redis://redis:6379/0
@@ -38,23 +47,23 @@ services:
             CELERY_BROKER: amqp://rabbitmq:5672
 
             # Email
-            EMAIL_HOST: # smtpsubdomain.example.com
-            EMAIL_USER: # exampleuser
-            EMAIL_PASSWORD: # examplepass
+            EMAIL_HOST: mail2.cs.fsu.edu
+            EMAIL_USER: /run/secrets/contestsuite_email_user
+            EMAIL_PASSWORD: /run/secrets/contestsuite_email_password
             EMAIL_USE_TLS: 'True'
 
             # Database
             SQL_HOST: mariadb
             SQL_PORT: 3306
-            SQL_DATABASE: contestsuite
-            SQL_USER: contestadmin
-            SQL_PASSWORD: seminoles1!
+            SQL_DATABASE: /run/secrets/contestsuite_db_name
+            SQL_USER: /run/secrets/contestsuite_db_user
+            SQL_PASSWORD: /run/secrets/contestsuite_db_password
 
             # Discord
-            GUILD_ID: # ID of Discord server
+            GUILD_ID: /run/secrets/contestsuite_discord_guild_id # ID of Discord server
 
             # Hashid Module 
-            HASHID_FIELD_SALT: # Global Salt
+            HASHID_FIELD_SALT: /run/secrets/contestsuite_hashid_key # Global Salt
         volumes:
             - django_app:/app/media
             - django_static:/app/static
@@ -75,6 +84,13 @@ services:
     scrape_bot:
         image: acmfsu/contestsuite:latest
         command: /app/docker/start.sh bot
+        secrets:
+            - contestsuite_db_name
+            - contestsuite_db_user
+            - contestsuite_db_password
+            - contestsuite_bot_channel_name
+            - contestsuite_discord_guild_id
+            - contestsuite_scrapebot_token
         environment:
             # Django
             DEBUG: 'False'
@@ -82,14 +98,14 @@ services:
             # Database
             SQL_HOST: mariadb
             SQL_PORT: 3306
-            SQL_DATABASE: contestsuite
-            SQL_USER: contestadmin
-            SQL_PASSWORD: seminoles1!
+            SQL_DATABASE: /run/secrets/contestsuite_db_name
+            SQL_USER: /run/secrets/contestsuite_db_user
+            SQL_PASSWORD: /run/secrets/contestsuite_db_password
 
             # Discord
-            BOT_CHANNEL: # Name of command channel
-            GUILD_ID: # ID of Discord server
-            SCRAPE_BOT_TOKEN: # Token for integrated bot
+            BOT_CHANNEL: /run/secrets/contestsuite_bot_channel_name # Name of command channel
+            GUILD_ID: /run/secrets/contestsuite_discord_guild_id # ID of Discord server
+            SCRAPE_BOT_TOKEN: /run/secrets/contestsuite_scrapebot_token # Token for integrated bot
         networks:
             - mariadb-backend
         deploy:
@@ -104,10 +120,19 @@ services:
     celery_worker:
         image: acmfsu/contestsuite:latest
         command: /app/docker/start.sh worker
+        secrets:
+            - contestsuite_db_name
+            - contestsuite_db_user
+            - contestsuite_db_password
+            - contestsuite_django_key
+            - contestsuite_email_user
+            - contestsuite_email_password
+            - contestsuite_announcement_channel_url
+            - contestsuite_bot_channel_url
         environment:
             # Django
             DEBUG: 'False'
-            SECRET_KEY: # Project secret key
+            SECRET_KEY: /run/secrets/contestsuite_django_key # Project secret key
             ALLOWED_HOSTS: contest.cs.fsu.edu
 
             # Celery
@@ -115,21 +140,21 @@ services:
             CELERY_BROKER: amqp://rabbitmq:5672
 
             # Email
-            EMAIL_HOST: # smtpsubdomain.example.com
-            EMAIL_USER: # exampleuser
-            EMAIL_PASSWORD: # examplepass
+            EMAIL_HOST: mail2.cs.fsu.edu
+            EMAIL_USER: /run/secrets/contestsuite_email_user
+            EMAIL_PASSWORD: /run/secrets/contestsuite_email_password
             EMAIL_USE_TLS: 'True'
 
             # Database
             SQL_HOST: mariadb
             SQL_PORT: 3306
-            SQL_DATABASE: contestsuite
-            SQL_USER: contestadmin
-            SQL_PASSWORD: seminoles1!
+            SQL_DATABASE: /run/secrets/contestsuite_db_name
+            SQL_USER: /run/secrets/contestsuite_db_user
+            SQL_PASSWORD: /run/secrets/contestsuite_db_password
 
             # Discord
-            ANNOUNCEMENT_WEBHOOK_URL: # URL of announcement channel webhook
-            BOT_CHANNEL_WEBHOOK_URL: # URL of PCS bot control channel webhook
+            ANNOUNCEMENT_WEBHOOK_URL: /run/secrets/contestsuite_announcement_channel_url # URL of announcement channel webhook
+            BOT_CHANNEL_WEBHOOK_URL: /run/secrets/contestsuite_bot_channel_url # URL of bot control channel webhook
         volumes:
             - django_app:/app/media
             - django_static:/app/static
@@ -149,6 +174,10 @@ services:
     celery_beat:
         image: acmfsu/contestsuite:latest
         command: /app/docker/start.sh beat
+        secrets:
+            - contestsuite_db_name
+            - contestsuite_db_user
+            - contestsuite_db_password
         environment:
             # Django
             DEBUG: 'False'
@@ -160,9 +189,9 @@ services:
             # Database
             SQL_HOST: mariadb
             SQL_PORT: 3306
-            SQL_DATABASE: contestsuite
-            SQL_USER: contestadmin
-            SQL_PASSWORD: seminoles1!
+            SQL_DATABASE: /run/secrets/contestsuite_db_name
+            SQL_USER: /run/secrets/contestsuite_db_user
+            SQL_PASSWORD: /run/secrets/contestsuite_db_password
         volumes:
             - django_static:/app/static
         networks:
@@ -199,11 +228,16 @@ services:
                 failure_action: rollback
     mariadb:
         image: mariadb:10.6-focal
+        secrets:
+            - contestsuite_db_name
+            - contestsuite_db_user
+            - contestsuite_db_password
+            - contestsuite_db_root_password
         environment:
-            MARIADB_ROOT_PASSWORD: rootpw
-            MARIADB_DATABASE: contestsuite
-            MARIADB_USER: contestadmin
-            MARIADB_PASSWORD: seminoles1!
+            MARIADB_DATABASE: /run/secrets/contestsuite_db_name
+            MARIADB_USER: /run/secrets/contestsuite_db_user
+            MARIADB_PASSWORD: /run/secrets/contestsuite_db_password
+            MARIADB_ROOT_PASSWORD: /run/secrets/contestsuite_db_root_password
         volumes:
             - django_db:/var/lib/mysql
         networks:
@@ -247,6 +281,40 @@ services:
                 parallelism: 1
                 delay: 5s
                 failure_action: rollback
+secrets:
+    # Database
+    contestsuite_db_name:
+        external: true
+    contestsuite_db_user:
+        external: true
+    contestsuite_db_password:
+        external: true
+    contestsuite_db_root_password:
+        external: true
+    # Secret keys
+    contestsuite_django_key:
+        external: true
+    contestsuite_hashid_key:
+        external: true
+    # Email
+    contestsuite_email_user:
+        external: true
+    contestsuite_email_password:
+        external: true
+    # Discord server
+    contestsuite_discord_guild_id:
+        external: true
+    contestsuite_bot_channel_name:
+        external: true
+    # Discord Webhooks
+    contestsuite_announcement_channel_url:
+        external: true
+    contestsuite_bot_channel_url:
+        external: true
+    # Scrapebot
+    contestsuite_scrapebot_token:
+        external: true
+    
 volumes:
     django_app:
     django_db:
