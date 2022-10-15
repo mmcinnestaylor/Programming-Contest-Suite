@@ -45,6 +45,6 @@ elif [ "$PROCESS_TYPE" = "bot" ]; then
     python \
         bot.py
 else
-    echo "Invalid [PROCESS_TYPE](server/worker/beat)"
+    echo "Invalid [PROCESS_TYPE](server | worker | beat | bot)"
     exit 1
 fi
