@@ -314,7 +314,6 @@ secrets:
     # Scrapebot
     contestsuite_scrapebot_token:
         external: true
-    
 volumes:
     django_app:
     django_db:
