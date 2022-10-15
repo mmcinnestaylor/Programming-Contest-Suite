@@ -13,6 +13,14 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 
+def get_secret(key, default=None):
+    value = os.getenv(key, default)
+    if os.path.isfile(value):
+        with open(value) as f:
+            return f.read()
+    return value
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,13 +31,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 # Raises django's ImproperlyConfigured exception if SECRET_KEY not in os.environ
 
-SECRET_KEY = os.environ.get('SECRET_KEY', '86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz')
+SECRET_KEY = get_secret('SECRET_KEY', '86@j2=z!=&1r_hoqboog1#*mb$jx=9mf0uw#hrs@lw&7m34sqz')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# False if not in os.environ
 
-if os.environ.get('DEBUG'):
-    DEBUG = os.environ.get('DEBUG') == 'True'
+if get_secret('DEBUG'):
+    DEBUG = get_secret('DEBUG') == 'True'
 else:
     DEBUG = False
 
@@ -37,8 +44,8 @@ else:
 if DEBUG:
     ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '[::1]']
 else:
-    if os.environ.get('ALLOWED_HOSTS'):
-        ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
+    if os.getenv('ALLOWED_HOSTS'):
+        ALLOWED_HOSTS = get_secret('ALLOWED_HOSTS').split(',')
     else:
         ALLOWED_HOSTS = []
         
@@ -126,11 +133,11 @@ WSGI_APPLICATION = 'contestsuite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': os.environ.get('SQL_HOST', 'localhost'),
-        'PORT': os.environ.get('SQL_PORT', '3306'),
-        'NAME': os.environ.get('SQL_DATABASE', 'contestsuite'),
-        'USER': os.environ.get('SQL_USER', 'contestadmin1!'),
-        'PASSWORD': os.environ.get('SQL_PASSWORD','seminoles1!'),
+        'HOST': get_secret('SQL_HOST', 'localhost'),
+        'PORT': get_secret('SQL_PORT', '3306'),
+        'NAME': get_secret('SQL_DATABASE', 'contestsuite'),
+        'USER': get_secret('SQL_USER', 'contestadmin'),
+        'PASSWORD': get_secret('SQL_PASSWORD', 'seminoles1!'),
         'OPTIONS': {'charset': 'utf8mb4'},
         'TIME_ZONE': 'America/New_York',
         'AUTOCOMMIT': True,
@@ -144,12 +151,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Celery
 # https://docs.celeryproject.org/en/stable/getting-started/first-steps-with-celery.html#configuration
  
-CELERY_BROKER_URL = os.environ.get('CELERY_BROKER', 'amqp://127.0.0.1:5672')
-CELERY_RESULT_BACKEND = os.environ.get('CELERY_BACKEND', 'redis://127.0.0.1:6379/1')
+CELERY_BROKER_URL = get_secret('CELERY_BROKER', 'amqp://127.0.0.1:5672')
+CELERY_RESULT_BACKEND = get_secret('CELERY_BACKEND', 'redis://127.0.0.1:6379/1')
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TIMEZONE = os.environ.get('CELERY_TIMEZONE', 'America/New_York')
+CELERY_TIMEZONE = get_secret('CELERY_TIMEZONE', 'America/New_York')
 CELERY_ENABLE_UTC = True
 CELERY_BEAT_SCHEDULE = {
     'cleanup-lfg-rosters': { 
@@ -172,7 +179,7 @@ CELERY_BEAT_SCHEDULE = {
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': os.environ.get('CACHE_LOCATION', 'redis://127.0.0.1:6379/0'),
+        'LOCATION': get_secret('CACHE_LOCATION', 'redis://127.0.0.1:6379/0'),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -182,7 +189,7 @@ CACHES = {
 if DEBUG:
     CACHE_TIMEOUT = 0
 else:
-    CACHE_TIMEOUT = int(os.environ.get('CACHE_TIMEOUT', 300))
+    CACHE_TIMEOUT = int(get_secret('CACHE_TIMEOUT', 300))
 
 
 # Password validation
@@ -209,7 +216,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = os.environ.get('TIME_ZONE', 'America/New_York')
+TIME_ZONE = get_secret('TIME_ZONE', 'America/New_York')
 
 USE_I18N = True
 
@@ -256,42 +263,42 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
-    EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')  
-    EMAIL_HOST = os.environ.get('EMAIL_HOST', None)
-    EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
-    EMAIL_HOST_USER = os.environ.get('EMAIL_USER', None)
-    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', None)
+    EMAIL_BACKEND = get_secret('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')  
+    EMAIL_HOST = get_secret('EMAIL_HOST', None)
+    EMAIL_PORT = int(get_secret('EMAIL_PORT', 587))
+    EMAIL_HOST_USER = get_secret('EMAIL_USER', None)
+    EMAIL_HOST_PASSWORD = get_secret('EMAIL_PASSWORD', None)
     
-    if os.environ.get('EMAIL_USE_SSL'):
-        EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL') == 'True'
+    if get_secret('EMAIL_USE_SSL'):
+        EMAIL_USE_SSL = get_secret('EMAIL_USE_SSL') == 'True'
     else:
         EMAIL_USE_SSL = False
     
-    if os.environ.get('EMAIL_USE_TLS'):
-        EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS') == 'True'
+    if get_secret('EMAIL_USE_TLS'):
+        EMAIL_USE_TLS = get_secret('EMAIL_USE_TLS') == 'True'
     else:
         EMAIL_USE_TLS = False
 
-DEFAULT_FROM_EMAIL = os.environ.get(
+DEFAULT_FROM_EMAIL = get_secret(
     'DEFAULT_FROM_EMAIL', 'ACM at FSU Programming Contest<acm@cs.fsu.edu>')
 
 
 # Discord
 # https://discordpy.readthedocs.io/en/stable/
 
-ANNOUNCEMENT_WEBHOOK_URL = os.environ.get('ANNOUNCEMENT_WEBHOOK_URL', None)
-BOT_CHANNEL_WEBHOOK_URL = os.environ.get('BOT_CHANNEL_WEBHOOK_URL', None)
-GUILD_ID = int(os.environ.get('GUILD_ID', 0))
-SCRAPE_BOT_TOKEN = os.environ.get('SCRAPE_BOT_TOKEN', None)
+ANNOUNCEMENT_WEBHOOK_URL = get_secret('ANNOUNCEMENT_WEBHOOK_URL', None)
+BOT_CHANNEL_WEBHOOK_URL = get_secret('BOT_CHANNEL_WEBHOOK_URL', None)
+GUILD_ID = int(get_secret('GUILD_ID', 0))
+SCRAPE_BOT_TOKEN = get_secret('SCRAPE_BOT_TOKEN', None)
 
 
 # DOMjudge Status Button
 
-DOMJUDGE_URL = os.environ.get('DOMJUDGE_URL', 'https://domjudge.cs.fsu.edu')
+DOMJUDGE_URL = get_secret('DOMJUDGE_URL', 'https://domjudge.cs.fsu.edu')
 
 
 # Hashid Fields
 # https://pypi.org/project/django-hashid-field/
 
-HASHID_FIELD_SALT = os.environ.get(
+HASHID_FIELD_SALT = get_secret(
     'HASHID_FIELD_SALT', '0s97rx*t4%68jell&lw3^)97o*kr*+*2o^(76q)ix+ilc!4ax#')
