@@ -143,6 +143,7 @@
 		<div class="card mt-4 border-secondary">
 			<div class="card-header font-weight-bold bg-secondary text-white">
 				<span>Team</span>
+				<a class="btn btn-sm btn-primary float-right" href="{% url 'lfg_dashboard' %}"><i class="fa-solid fa-user-group"></i> LFG Dashboard</a>
 			</div>
 			<div class="card-body overflow-auto">
 				{% if user.profile.has_team %}
@@ -178,19 +179,17 @@
 				</div>
 				{% endif %}
 			</div>
+			{% if user.profile.has_team %}
 			<div class="card-footer">
-				{% if user.profile.has_team %}
-					{% if user.profile.team_admin %}
-						<a class="btn btn-info btn-sm" href="{% url 'manage_team' %}" role="button">Manage</a>
-						<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#confirmLeaveModal">Leave</button>
-						<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmDeleteModal">Delete</button>
-					{% else %}
-						<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#confirmLeaveModal">Leave</button>
-					{% endif %}
+				{% if user.profile.team_admin %}
+					<a class="btn btn-info btn-sm" href="{% url 'manage_team' %}" role="button">Manage</a>
+					<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#confirmLeaveModal">Leave</button>
+					<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmDeleteModal">Delete</button>
 				{% else %}
-					<a href="#" role="button" class="btn btn-warning btn-sm disabled">Leave</a>
+					<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#confirmLeaveModal">Leave</button>
 				{% endif %}
 			</div>
+			{% endif %}
 		</div>
 		<!-- Team card end -->
 		<!-- Team Members card -->
