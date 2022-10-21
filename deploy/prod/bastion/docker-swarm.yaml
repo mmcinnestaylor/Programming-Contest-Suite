@@ -2,57 +2,77 @@ version: '3.8'
 services:
     domserver:
         image: domjudge/domserver:7.3.3
+        secrets:
+            - bastion_db_password
+            - bastion_db_root_password
         environment:
-            - LETSENCRYPT_HOST=bastion.cs.fsu.edu
-            - VIRTUAL_HOST=bastion.cs.fsu.edu
+            # Domain name
+            LETSENCRYPT_HOST: bastion.cs.fsu.edu
+            VIRTUAL_HOST: bastion.cs.fsu.edu
 
-            - CONTAINER_TIMEZONE=America/New_York
+            # Time config
+            CONTAINER_TIMEZONE: America/New_York
             
-            - MYSQL_HOST=mariadb
-            - MYSQL_DATABASE=domjudge
-            - MYSQL_USER=domjudge
-            - MYSQL_PASSWORD=djpw
-            - MYSQL_ROOT_PASSWORD=rootpw
+            # Database
+            MYSQL_HOST: mariadb
+            MYSQL_DATABASE: domjudge
+            MYSQL_USER: domjudge
+            MYSQL_PASSWORD: /run/secrets/bastion_db_password
+            MYSQL_ROOT_PASSWORD: /run/secrets/bastion_db_root_password
         volumes:
             - ./config/initial_admin_password.secret:/opt/domjudge/domserver/etc/initial_admin_password.secret:ro 
         networks:
             - frontend
-            - bastion-jh-backend
-            - bastion-db-backend
+            - jh-backend
+            - db-backend
         deploy:
-            rollback_config:
-                parallelism: 0
-            update_config:
-                parallelism: 1
+            restart_policy:
                 delay: 5s
+                max_attempts: 10
+                window: 120s
+            rollback_config:
+                monitor: 75s
+            update_config:
+                monitor: 75s
                 failure_action: rollback
     mariadb:
         image: mariadb:10.6-focal
+        secrets:
+            - bastion_db_password
+            - bastion_db_root_password
         environment:
-            - MARIADB_DATABASE=domjudge
-            - MARIADB_USER=domjudge
-            - MARIADB_PASSWORD=djpw
-            - MARIADB_ROOT_PASSWORD=rootpw
+            MARIADB_DATABASE: domjudge
+            MARIADB_USER: domjudge
+            MARIADB_PASSWORD: /run/secrets/bastion_db_password
+            MARIADB_ROOT_PASSWORD: /run/secrets/bastion_db_root_password
         volumes:
-            - domserver_db_data:/var/lib/mysql
+            - domserver_db:/var/lib/mysql
         networks:
-            - bastion-db-backend
+            - db-backend
         deploy:
-            rollback_config:
-                parallelism: 0
-            update_config:
-                parallelism: 1
+            restart_policy:
                 delay: 5s
-                failure_action: rollback        
+                max_attempts: 10
+                window: 75s
+            rollback_config:
+                monitor: 75s
+            update_config:
+                monitor: 75s
+                failure_action: rollback
+secrets:
+    # Database
+    bastion_db_password:
+        external: true
+    bastion_db_root_password:
+        external: true        
 volumes:
-    domserver_db_data:
+    domserver_db:
 networks:
     frontend:
         external: true
         name: proxied-apps
-    bastion-jh-backend:
-        name: bastion-jh-backend
+    jh-backend:
+        name: bastion_jh-backend
         attachable: true
-    bastion-db-backend:
-        name: bastion-db-backend
-    
+    db-backend:
+        name: bastion_db-backend
