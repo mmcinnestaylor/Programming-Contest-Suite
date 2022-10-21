@@ -74,13 +74,13 @@
               <div class="col-sm-6 justify-content-center">
                 <div class="text-center">
                   <!-- Register Button -->
-                  <a href="{% url 'register_base' %}" class="btn btn-lg btn-outline-light my-2">Register</a>
+                  <a href="{% url 'register_base' %}" class="btn btn-lg btn-outline-light my-2"><i class="fa-solid fa-user-plus"></i> Register</a>
                   <br>
                   <!-- Registration Guide button -->
-                  <a href="https://drive.google.com/drive/folders/1uCylEYyFdXdxD_BxplYZIioW6_ragXTq?usp=sharing" class="btn btn-lg btn-outline-light my-2" target="_blank">Registration Guide</a>
+                  <a href="https://drive.google.com/drive/folders/1uCylEYyFdXdxD_BxplYZIioW6_ragXTq?usp=sharing" class="btn btn-lg btn-outline-light my-2" target="_blank"><i class="fa-solid fa-book"></i> Registration Guide</a>
                   <br>
                   <!-- Contest Schedule button -->
-                  <button type="button" class="btn btn-lg btn-outline-light my-2" data-toggle="modal" data-target="#displayScheduleModal">Contest Schedule
+                  <button type="button" class="btn btn-lg btn-outline-light my-2" data-toggle="modal" data-target="#displayScheduleModal"><i class="fa-solid fa-clock"></i> Contest Schedule
                   </button>
                 </div>
               </div>
@@ -118,7 +118,7 @@
     <div class="col-md-5">
       <div class="card mt-3 border-secondary">
         <div class="card-header font-weight-bold bg-secondary text-white">
-          Recent Announcements
+          <i class="fa-solid fa-bullhorn"></i> Recent Announcements
         </div>
         <div class="card-body">
           {% for announcement in announcements|slice:":6" %}
@@ -160,7 +160,7 @@
           <!-- Domjudge Status card -->
           <div class="card mt-3 border-secondary">
             <div class="card-header font-weight-bold bg-secondary text-white">
-              Contest Server Status
+              <i class="fa-solid fa-server"></i> Contest Server Status
             </div>
             <div class="card-body">
               {% if domjudge_status == 200 %}
@@ -171,9 +171,9 @@
             </div>
             <div class="card-footer">
               {% if domjudge_status == 200 %}
-                <a href="https://domjudge.cs.fsu.edu" class="btn btn-sm btn-primary" target="_blank" rel="external">Connect</a>
+                <a href="https://domjudge.cs.fsu.edu" class="btn btn-sm btn-primary" target="_blank" rel="external"><i class="fa-solid fa-arrow-up-right-from-square"></i> Connect</a>
               {% else %}
-                <a href="" class="btn btn-sm btn-primary disabled" target="_blank" rel="external">Connect</a>
+                <a href="" class="btn btn-sm btn-primary disabled" target="_blank" rel="external"><i class="fa-solid fa-up-right-from-square"></i> Connect</a>
               {% endif %}
             </div>
           </div>
@@ -182,7 +182,7 @@
           <!-- LFG card -->
           <div class="card mt-3 border-secondary">
             <div class="card-header font-weight-bold bg-secondary text-white">
-              #LookingForGroup
+              <i class="fa-solid fa-arrows-down-to-people"></i> Looking For Group
             </div>
             <div class="card-body">
               <div>
@@ -210,7 +210,7 @@
       <!-- Extra Credit card -->
       <div class="card border-secondary mt-3">
         <div class="card-header font-weight-bold bg-secondary text-white">
-          Extra Credit
+          <i class="fa-solid fa-list-ul"></i> Extra Credit Courses
         </div>
         <div class="card-body">
           {% for course in courses|slice:"5" %}
@@ -231,7 +231,7 @@
       <!-- About Contest Card -->
       <div class="card border-secondary mt-3">
         <div class="card-header font-weight-bold bg-secondary text-white">
-          The Contest
+          <i class="fa-solid fa-circle-info"></i> The Contest
         </div>
         <div class="card-body">
           <h4 class="card-title">About</h4>
