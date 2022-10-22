@@ -1,6 +1,7 @@
 version: '3.8'
+
 services:
-    judgehost:
+    domjudge-jh:
         image: acmfsu/judgehost:7.3.3
         privileged: true
         restart: always
@@ -16,7 +17,7 @@ services:
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
         networks:
             - domjudge-jh-backend
-    jh_bas:
+    bastion-jh:
         image: acmfsu/judgehost:7.3.3
         privileged: true
         restart: always
