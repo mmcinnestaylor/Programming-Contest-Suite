@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
     domserver:
         image: domjudge/domserver:7.3.3
@@ -17,8 +18,8 @@ services:
             MYSQL_HOST: mariadb
             MYSQL_DATABASE: domjudge
             MYSQL_USER: domjudge
-            MYSQL_PASSWORD: /run/secrets/domjudge_db_password
-            MYSQL_ROOT_PASSWORD: /run/secrets/domjudge_db_root_password
+            MYSQL_PASSWORD_FILE: /run/secrets/domjudge_db_password
+            MYSQL_ROOT_PASSWORD_FILE: /run/secrets/domjudge_db_root_password
         volumes:
             - ./config/initial_admin_password.secret:/opt/domjudge/domserver/etc/initial_admin_password.secret:ro 
         networks:
