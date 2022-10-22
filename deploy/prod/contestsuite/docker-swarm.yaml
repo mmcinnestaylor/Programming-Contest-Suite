@@ -242,10 +242,10 @@ services:
             - contestsuite_db_password
             - contestsuite_db_root_password
         environment:
-            MARIADB_DATABASE: /run/secrets/contestsuite_db_name
-            MARIADB_USER: /run/secrets/contestsuite_db_user
-            MARIADB_PASSWORD: /run/secrets/contestsuite_db_password
-            MARIADB_ROOT_PASSWORD: /run/secrets/contestsuite_db_root_password
+            MARIADB_DATABASE_FILE: /run/secrets/contestsuite_db_name
+            MARIADB_USER_FILE: /run/secrets/contestsuite_db_user
+            MARIADB_PASSWORD_FILE: /run/secrets/contestsuite_db_password
+            MARIADB_ROOT_PASSWORD_FILE: /run/secrets/contestsuite_db_root_password
         volumes:
             - django_db:/var/lib/mysql
         networks:

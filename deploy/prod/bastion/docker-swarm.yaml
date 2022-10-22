@@ -44,8 +44,8 @@ services:
         environment:
             MARIADB_DATABASE: domjudge
             MARIADB_USER: domjudge
-            MARIADB_PASSWORD: /run/secrets/bastion_db_password
-            MARIADB_ROOT_PASSWORD: /run/secrets/bastion_db_root_password
+            MARIADB_PASSWORD_FILE: /run/secrets/bastion_db_password
+            MARIADB_ROOT_PASSWORD_FILE: /run/secrets/bastion_db_root_password
         volumes:
             - domserver_db:/var/lib/mysql
         networks:
