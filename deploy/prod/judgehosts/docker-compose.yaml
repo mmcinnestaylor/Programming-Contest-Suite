@@ -35,9 +35,9 @@ services:
             - bastion-jh-backend
 secrets:
     domjudge_jh_password:
-        external: true
+        file: config/domjudge_jh_password.secret
     bastion_jh_password:
-        external: true
+        file: config/bastion_jh_password.secret
 networks:
     domjudge-jh-backend:
         external: true
