@@ -32,19 +32,24 @@ elif [ "$PROCESS_TYPE" = "worker" ]; then
     celery \
         -A contestsuite \
         worker \
-        --autoscale=10,3 \
-        -n worker@%n \
-        --loglevel INFO
+            --autoscale=10,3 \
+            -n worker@%n \
+            --loglevel INFO
 elif [ "$PROCESS_TYPE" = "beat" ]; then
     celery \
         -A contestsuite \
         beat \
-        --loglevel INFO \
-        --scheduler django_celery_beat.schedulers:DatabaseScheduler
+            --loglevel INFO \
+            --scheduler django_celery_beat.schedulers:DatabaseScheduler
+elif [ "$PROCESS_TYPE" = "flower" ]; then
+    celery \
+        -A contestsuite \
+        flower \
+            --loglevel INFO
 elif [ "$PROCESS_TYPE" = "bot" ]; then
     python \
         bot.py
 else
-    echo "Invalid [PROCESS_TYPE](server | worker | beat | bot)"
+    echo "Invalid [PROCESS_TYPE](server | worker | beat | flower | bot)"
     exit 1
 fi
