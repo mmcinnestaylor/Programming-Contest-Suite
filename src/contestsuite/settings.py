@@ -133,7 +133,7 @@ WSGI_APPLICATION = 'contestsuite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': get_secret('SQL_HOST', 'localhost'),
+        'HOST': get_secret('SQL_HOST', 'mariadb'),
         'PORT': get_secret('SQL_PORT', '3306'),
         'NAME': get_secret('SQL_DATABASE', 'contestsuite'),
         'USER': get_secret('SQL_USER', 'contestadmin'),
@@ -151,13 +151,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Celery
 # https://docs.celeryproject.org/en/stable/getting-started/first-steps-with-celery.html#configuration
  
-CELERY_BROKER_URL = get_secret('CELERY_BROKER', 'amqp://127.0.0.1:5672')
-CELERY_RESULT_BACKEND = get_secret('CELERY_BACKEND', 'redis://127.0.0.1:6379/1')
+CELERY_BROKER_URL = get_secret('CELERY_BROKER', 'amqp://rabbitmq:5672')
+CELERY_RESULT_BACKEND = get_secret('CELERY_BACKEND', 'redis://redis:6379/1')
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TIMEZONE = get_secret('CELERY_TIMEZONE', 'America/New_York')
 CELERY_ENABLE_UTC = True
+
+# Celery Beat
+# https://celery-safwan.readthedocs.io/en/latest/reference/celery.beat.html
+
 CELERY_BEAT_SCHEDULE = {
     'cleanup-lfg-rosters': { 
          'task': 'lfg.tasks.cleanup_lfg_rosters', 
@@ -173,13 +177,23 @@ CELERY_BEAT_SCHEDULE = {
     },          
 }
 
+# Celery Flower
+# https://flower.readthedocs.io/en/latest/
+
+FLOWER_BROKER_API = get_secret('FLOWER_BROKER_API', 'http://rabbitmq:15672/api/vhost')
+if DEBUG:
+    FLOWER_DEBUG = True
+else:
+    FLOWER_URL_PREFIX = get_secret('FLOWER_URL_PREFIX', 'flower')
+    FLOWER_BASIC_AUTH = get_secret('FLOWER_USER', 'contestadmin')+':'+get_secret('FLOWER_PASSWORD', 'seminoles1!')
+
 # Cache
 # https://docs.djangoproject.com/en/2.2/ref/settings/#caches
 
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': get_secret('CACHE_LOCATION', 'redis://127.0.0.1:6379/0'),
+        'LOCATION': get_secret('CACHE_LOCATION', 'redis://redis:6379/0'),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -187,7 +201,7 @@ CACHES = {
 }
 
 if DEBUG:
-    CACHE_TIMEOUT = 0
+    CACHE_TIMEOUT = int(get_secret('CACHE_TIMEOUT', 0))
 else:
     CACHE_TIMEOUT = int(get_secret('CACHE_TIMEOUT', 300))
 
@@ -263,21 +277,22 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 if DEBUG:
     EMAIL_BACKEND = get_secret('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 else:
-    EMAIL_BACKEND = get_secret('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')  
-    EMAIL_HOST = get_secret('EMAIL_HOST', None)
-    EMAIL_PORT = int(get_secret('EMAIL_PORT', 587))
-    EMAIL_HOST_USER = get_secret('EMAIL_USER', None)
-    EMAIL_HOST_PASSWORD = get_secret('EMAIL_PASSWORD', None)
-    
-    if get_secret('EMAIL_USE_SSL'):
-        EMAIL_USE_SSL = get_secret('EMAIL_USE_SSL') == 'True'
-    else:
-        EMAIL_USE_SSL = False
-    
-    if get_secret('EMAIL_USE_TLS'):
-        EMAIL_USE_TLS = get_secret('EMAIL_USE_TLS') == 'True'
-    else:
-        EMAIL_USE_TLS = False
+    EMAIL_BACKEND = get_secret('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+      
+EMAIL_HOST = get_secret('EMAIL_HOST', None)
+EMAIL_PORT = int(get_secret('EMAIL_PORT', 587))
+EMAIL_HOST_USER = get_secret('EMAIL_USER', None)
+EMAIL_HOST_PASSWORD = get_secret('EMAIL_PASSWORD', None)
+
+if get_secret('EMAIL_USE_SSL'):
+    EMAIL_USE_SSL = get_secret('EMAIL_USE_SSL') == 'True'
+else:
+    EMAIL_USE_SSL = False
+
+if get_secret('EMAIL_USE_TLS'):
+    EMAIL_USE_TLS = get_secret('EMAIL_USE_TLS') == 'True'
+else:
+    EMAIL_USE_TLS = False
 
 DEFAULT_FROM_EMAIL = get_secret(
     'DEFAULT_FROM_EMAIL', 'ACM at FSU Programming Contest<acm@cs.fsu.edu>')
