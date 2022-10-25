@@ -15,9 +15,12 @@ services:
         deploy:
             replicas: 2
             restart_policy:
+                delay: 5s
                 max_attempts: 10
+                window: 60s
             rollback_config:
-                parallelism: 0
+                delay: 5s
+                monitor: 60s
             update_config:
                 parallelism: 1
                 delay: 5s
@@ -69,17 +72,18 @@ services:
             - django_static:/app/static
         networks:
             - nginx-backend
-            - mariadb-backend
+            - db-backend
             - redis-backend
             - rabbitmq-backend
         deploy:
             restart_policy:
-                max_attempts: 10
-            rollback_config:
-                parallelism: 0
-            update_config:
-                parallelism: 1
                 delay: 5s
+                max_attempts: 10
+                window: 60s
+            rollback_config:
+                monitor: 75s
+            update_config:
+                monitor: 75s
                 failure_action: rollback
     scrape_bot:
         image: acmfsu/contestsuite:latest
@@ -107,15 +111,16 @@ services:
             GUILD_ID: /run/secrets/contestsuite_discord_guild_id # ID of Discord server
             SCRAPE_BOT_TOKEN: /run/secrets/contestsuite_scrapebot_token # Token for integrated bot
         networks:
-            - mariadb-backend
+            - db-backend
         deploy:
             restart_policy:
-                max_attempts: 10
-            rollback_config:
-                parallelism: 0
-            update_config:
-                parallelism: 1
                 delay: 5s
+                max_attempts: 10
+                window: 60s
+            rollback_config:
+                monitor: 75s
+            update_config:
+                monitor: 75s
                 failure_action: rollback
     celery_worker:
         image: acmfsu/contestsuite:latest
@@ -159,17 +164,18 @@ services:
             - django_app:/app/media
             - django_static:/app/static
         networks:
-            - mariadb-backend
+            - db-backend
             - redis-backend
             - rabbitmq-backend
         deploy:
             restart_policy:
-                max_attempts: 10
-            rollback_config:
-                parallelism: 0
-            update_config:
-                parallelism: 1
                 delay: 5s
+                max_attempts: 10
+                window: 60s
+            rollback_config:
+                monitor: 75s
+            update_config:
+                monitor: 75s
                 failure_action: rollback
     celery_beat:
         image: acmfsu/contestsuite:latest
@@ -195,17 +201,18 @@ services:
         volumes:
             - django_static:/app/static
         networks:
-            - mariadb-backend
+            - db-backend
             - redis-backend
             - rabbitmq-backend
         deploy:
             restart_policy:
-                max_attempts: 10
-            rollback_config:
-                parallelism: 0
-            update_config:
-                parallelism: 1
                 delay: 5s
+                max_attempts: 10
+                window: 60s
+            rollback_config:
+                monitor: 75s
+            update_config:
+                monitor: 75s
                 failure_action: rollback
     flower:
         image: mher/flower:latest
@@ -219,12 +226,13 @@ services:
             - rabbitmq-backend
         deploy:
             restart_policy:
-                max_attempts: 10
-            rollback_config:
-                parallelism: 0
-            update_config:
-                parallelism: 1
                 delay: 5s
+                max_attempts: 10
+                window: 60s
+            rollback_config:
+                monitor: 75s
+            update_config:
+                monitor: 75s
                 failure_action: rollback
     mariadb:
         image: mariadb:10.6-focal
@@ -234,22 +242,23 @@ services:
             - contestsuite_db_password
             - contestsuite_db_root_password
         environment:
-            MARIADB_DATABASE: /run/secrets/contestsuite_db_name
-            MARIADB_USER: /run/secrets/contestsuite_db_user
-            MARIADB_PASSWORD: /run/secrets/contestsuite_db_password
-            MARIADB_ROOT_PASSWORD: /run/secrets/contestsuite_db_root_password
+            MARIADB_DATABASE_FILE: /run/secrets/contestsuite_db_name
+            MARIADB_USER_FILE: /run/secrets/contestsuite_db_user
+            MARIADB_PASSWORD_FILE: /run/secrets/contestsuite_db_password
+            MARIADB_ROOT_PASSWORD_FILE: /run/secrets/contestsuite_db_root_password
         volumes:
             - django_db:/var/lib/mysql
         networks:
-            - mariadb-backend
+            - db-backend
         deploy:
             restart_policy:
-                max_attempts: 10
-            rollback_config:
-                parallelism: 0
-            update_config:
-                parallelism: 1
                 delay: 5s
+                max_attempts: 10
+                window: 75s
+            rollback_config:
+                monitor: 75s
+            update_config:
+                monitor: 75s
                 failure_action: rollback
     redis:
         image: redis:5-buster
@@ -259,12 +268,13 @@ services:
             - redis-backend
         deploy:
             restart_policy:
-                max_attempts: 10
-            rollback_config:
-                parallelism: 0
-            update_config:
-                parallelism: 1
                 delay: 5s
+                max_attempts: 10
+                window: 75s
+            rollback_config:
+                monitor: 75s
+            update_config:
+                monitor: 75s
                 failure_action: rollback
     rabbitmq:
         image: rabbitmq:3-management
@@ -274,12 +284,13 @@ services:
             - rabbitmq-backend
         deploy:
             restart_policy:
-                max_attempts: 10
-            rollback_config:
-                parallelism: 0
-            update_config:
-                parallelism: 1
                 delay: 5s
+                max_attempts: 10
+                window: 75s
+            rollback_config:
+                monitor: 75s
+            update_config:
+                monitor: 75s
                 failure_action: rollback
 secrets:
     # Database
@@ -326,10 +337,10 @@ networks:
         external: true
         name: proxied-apps
     nginx-backend:
-        name: nginx-backend
-    mariadb-backend:
-        name: mariadb-backend
+        name: contestsuite_nginx-backend
+    db-backend:
+        name: contestsuite_db-backend
     redis-backend:
-        name: redis-backend
+        name: contestsuite_redis-backend
     rabbitmq-backend:
-        name: rabbitmq-backend
+        name: contestsuite_rabbitmq-backend

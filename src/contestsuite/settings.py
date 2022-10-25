@@ -261,7 +261,7 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 # https://docs.djangoproject.com/en/3.1/topics/email/
 
 if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    EMAIL_BACKEND = get_secret('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 else:
     EMAIL_BACKEND = get_secret('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')  
     EMAIL_HOST = get_secret('EMAIL_HOST', None)
