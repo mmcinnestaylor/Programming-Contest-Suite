@@ -17,7 +17,7 @@
 				{% for announcement in announcements %}
 					<div class="card m-0 border-secondary">
 						<div class="card-header font-weight-bold bg-secondary text-white">
-							Recent Announcement
+							<i class="fa-solid fa-bullhorn"></i> Recent Announcement
 							<button type="button" class="close" data-dismiss="alert">&times;</button>
 						</div>
 						<div class="card-body">
@@ -38,7 +38,7 @@
 				{% empty %}
 					<div class="card m-0 border-secondary">
 						<div class="card-header font-weight-bold bg-secondary text-white">
-							Recent Announcement
+							<i class="fa-solid fa-bullhorn"></i> Recent Announcement
 							<button type="button" class="close" data-dismiss="alert">&times;</button>
 						</div>
 						<div class="card-body">
@@ -55,7 +55,7 @@
 		<!-- Profile card -->
 		<div class="card mt-4 border-secondary">
 			<div class="card-header font-weight-bold bg-secondary text-white">
-				Profile
+				<i class="fa-solid fa-address-card"></i> Profile
 				{% if lunch_form_url %}
 				<a class="btn btn-sm btn-primary float-right" href="{{ lunch_form_url }}" target="_blank" rel="external"><i class="fa fa-file-text" aria-hidden="true"></i>
 					Lunch Survey</a>
@@ -84,14 +84,14 @@
 				</ul>
 			</div>
 			<div class="card-footer">
-				<a class="btn btn-info btn-sm" href="{% url 'manage_profile' %}" role="button">Edit</a>
+				<a class="btn btn-info btn-sm" href="{% url 'manage_profile' %}" role="button"><i class="fa-solid fa-user-pen"></i> Edit</a>
 			</div>
 		</div>
 		<!-- Profile card end -->
 		<!-- Courses card -->
 		<div class="card mt-4 border-secondary">
 			<div class="card-header font-weight-bold bg-secondary text-white">
-				Courses
+				<i class="fa-solid fa-list-ul"></i> Courses
 			</div>
 			<div class="card-body overflow-auto">
 				{% if total_num_courses == 0 %}
@@ -119,20 +119,17 @@
 					</table>
 				{% else %}
 					<div class="row justify-content-center">
-						<a class="btn btn-outline-info btn-sm" href="{% url 'manage_courses' %}" role="button">Add</a>
+						<a class="btn btn-outline-info btn-sm" href="{% url 'manage_courses' %}" role="button"><i class="fa-solid fa-plus"></i> Add</a>
 					</div>
 				{% endif %}
 			</div>
+			{% if user.profile.has_courses %}
 			<div class="card-footer">
-				{% if user.profile.fsu_id is None or not user.profile.has_courses %}
-					<a href="#" role="button" class="btn btn-info btn-sm disabled">Edit</a>
-					<a href="#" role="button" class="btn btn-danger btn-sm disabled">Clear</a>
-				{% else %}
-					<a class="btn btn-info btn-sm" href="{% url 'manage_courses' %}" role="button">Edit</a>
-					<button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-						data-target="#confirmClearModal">Clear</button>
-				{% endif %}
+				<a class="btn btn-info btn-sm" href="{% url 'manage_courses' %}" role="button"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+				<button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+					data-target="#confirmClearModal"><i class="fa-solid fa-xmark"></i> Clear</button>
 			</div>
+			{% endif %}
 		</div>
 		<!-- Courses card end -->		
 	</div>
@@ -142,7 +139,8 @@
 		<!-- Team card -->
 		<div class="card mt-4 border-secondary">
 			<div class="card-header font-weight-bold bg-secondary text-white">
-				<span>Team</span>
+				<span><i class="fa-solid fa-users"></i> Team</span>
+				<a class="btn btn-sm btn-primary float-right" href="{% url 'lfg_dashboard' %}"><i class="fa-solid fa-arrows-down-to-people"></i> LFG Dashboard</a>
 			</div>
 			<div class="card-body overflow-auto">
 				{% if user.profile.has_team %}
@@ -178,25 +176,23 @@
 				</div>
 				{% endif %}
 			</div>
+			{% if user.profile.has_team %}
 			<div class="card-footer">
-				{% if user.profile.has_team %}
-					{% if user.profile.team_admin %}
-						<a class="btn btn-info btn-sm" href="{% url 'manage_team' %}" role="button">Manage</a>
-						<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#confirmLeaveModal">Leave</button>
-						<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmDeleteModal">Delete</button>
-					{% else %}
-						<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#confirmLeaveModal">Leave</button>
-					{% endif %}
+				{% if user.profile.team_admin %}
+					<a class="btn btn-info btn-sm" href="{% url 'manage_team' %}" role="button"><i class="fa-solid fa-users-gear"></i> Manage</a>
+					<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#confirmLeaveModal"><i class="fa-solid fa-right-from-bracket"></i> Leave</button>
+					<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmDeleteModal"><i class="fa-solid fa-trash-can"></i> Delete</button>
 				{% else %}
-					<a href="#" role="button" class="btn btn-warning btn-sm disabled">Leave</a>
+					<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#confirmLeaveModal"><i class="fa-solid fa-right-from-bracket"></i> Leave</button>
 				{% endif %}
 			</div>
+			{% endif %}
 		</div>
 		<!-- Team card end -->
 		<!-- Team Members card -->
 		<div class="card mt-4 border-secondary">
 			<div class="card-header font-weight-bold bg-secondary text-white">
-				Team Members
+				<i class="fa-solid fa-people-group"></i> Team Members
 			</div>
 			<div class="card-body overflow-auto">
 				{% if user.profile.has_team %}
@@ -214,9 +210,9 @@
 								<td>{{ member.first_name }}</td>
 								<td>{{ member.last_name }}</td>
 								{% if member.profile.checked_in %}
-									<td class="text-center">Yes</td>
+									<td class="text-center text-success"><i class="fa-solid fa-check"></i></td>
 								{% else %}
-									<td class="text-center">No</td>
+									<td class="text-center text-danger"><i class="fa-solid fa-xmark"></i></td>
 								{% endif %}
 							</tr>
 							{% endfor %}

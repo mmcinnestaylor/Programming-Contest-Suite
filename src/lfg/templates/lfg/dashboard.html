@@ -2,10 +2,10 @@
 {% load static %}
 {% load custom_filters %}
 
-{% block section %}LFG Dashboard{% endblock %}
+{% block section %}Looking For Group{% endblock %}
 
 {% block content %}
-	<h1 class="text-center">#LookingForGroup</h1>
+	<h1 class="text-center">Looking For Group</h1>
 
 	<!-- Messages -->
 	{% include 'core/messages.html' %}
@@ -23,7 +23,7 @@
 			who are actively seeking teammates.
 			</p>
 			<p class="lead">
-				Check out the <a href="{% url 'faq' %}">FAQ</a> for information regarding LFG signup and participation. You must be a
+				Check out the <a href="{% url 'faq' %}#lfg">FAQ</a> for information regarding LFG signup and participation. You must be a
 				member of ACM at FSU's <a href="https://discord.gg/4z3hNMA" target="_blank" rel="external">Discord server</a> in order
 				to participate in LFG.
 			</p>
@@ -33,7 +33,7 @@
 			<!-- Profile card -->
 			<div class="card mt-3 border-secondary">
 				<div class="card-header font-weight-bold text-white bg-secondary">
-					LFG Profile
+					<i class="fa-solid fa-address-card"></i> LFG Profile
 				</div>
 				{% if lfg_active %}
 					<div class="card-body overflow-auto">
@@ -69,7 +69,7 @@
 					
 					<div class="card-footer">
 						{% if user.lfgprofile %}
-							<a class="btn btn-info btn-sm" href="{% url 'manage_lfg_profile' %}" role="button">Edit</a>
+							<a class="btn btn-info btn-sm" href="{% url 'manage_lfg_profile' %}" role="button"><i class="fa-solid fa-user-pen"></i> Edit</a>
 							{% if user.lfgprofile.verified %}
 								{% if user.lfgprofile.active %}
 									<a class="btn btn-danger btn-sm" href="{% url 'deactivate_lfg_profile' %}" role="button">Deactivate</a>
@@ -84,7 +84,7 @@
 								{% endif %}
 							{% endif %}
 						{% else %}
-							<a class="btn btn-success btn-sm" href="{% url 'create_lfg_profile' %}" role="button">Create</a>
+							<a class="btn btn-success btn-sm" href="{% url 'create_lfg_profile' %}" role="button"><i class="fa-solid fa-user-plus"></i> Create</a>
 						{% endif %}
 					</div>
 				{% else %}

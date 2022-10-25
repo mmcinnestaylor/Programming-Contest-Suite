@@ -1,37 +1,47 @@
 version: '3.8'
+
 services:
-    judgehost:
-        image: 'acmfsu/judgehost:7.3.3'
+    domjudge-jh:
+        image: acmfsu/judgehost:7.3.3
         privileged: true
         restart: always
+        secrets:
+            - domjudge_jh_password
         environment:
-            - CONTAINER_TIMEZONE=America/New_York
-            - JUDGEDAEMON_USERNAME=judgehost
-            - JUDGEDAEMON_PASSWORD=jdpw
-            - DOMSERVER_BASEURL=http://domserver/
-            - DOMJUDGE_CREATE_WRITABLE_TEMP_DIR=1
+            CONTAINER_TIMEZONE: America/New_York
+            JUDGEDAEMON_USERNAME: judgehost
+            JUDGEDAEMON_PASSWORD_FILE: /run/secrets/domjudge_jh_password
+            DOMSERVER_BASEURL: http://domserver/
+            DOMJUDGE_CREATE_WRITABLE_TEMP_DIR: 1
         volumes:  
-            - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
         networks:
-            - domserver-jh-backend
-    jh_bas:
-        image: 'acmfsu/judgehost:7.3.3'
+            - domjudge-jh-backend
+    bastion-jh:
+        image: acmfsu/judgehost:7.3.3
         privileged: true
         restart: always
+        secrets:
+            - bastion_jh_password
         environment:
-            - CONTAINER_TIMEZONE=America/New_York
-            - JUDGEDAEMON_USERNAME=judgehost
-            - JUDGEDAEMON_PASSWORD=jdpw
-            - DOMSERVER_BASEURL=http://domserver/
-            - DOMJUDGE_CREATE_WRITABLE_TEMP_DIR=1
+            CONTAINER_TIMEZONE: America/New_York
+            JUDGEDAEMON_USERNAME: judgehost
+            JUDGEDAEMON_PASSWORD_FILE: /run/secrets/bastion_jh_password
+            DOMSERVER_BASEURL: http://domserver/
+            DOMJUDGE_CREATE_WRITABLE_TEMP_DIR: 1
         volumes:  
-            - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
         networks:
             - bastion-jh-backend
+secrets:
+    domjudge_jh_password:
+        file: config/domjudge_jh_password.secret
+    bastion_jh_password:
+        file: config/bastion_jh_password.secret
 networks:
-    domserver-jh-backend:
+    domjudge-jh-backend:
         external: true
-        name: domserver-jh-backend
+        name: domjudge_jh-backend
     bastion-jh-backend:
         external: true
-        name: bastion-jh-backend
+        name: bastion_jh-backend

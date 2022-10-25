@@ -95,22 +95,22 @@
               <a class="nav-link" href="{% url 'announcements' %}">Announcements</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'faq' %}">FAQ</a>
+              <a class="nav-link" href="{% url 'teams' %}">Teams</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'teams' %}">Teams</a>
+              <a class="nav-link" href="{% url 'faq' %}">FAQ</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                 Resources
               </a>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="https://domjudge.cs.fsu.edu" target="_blank" rel="external">Contest Server</a>
+                <a class="dropdown-item" href="https://domjudge.cs.fsu.edu" target="_blank" rel="external"><i class="fa-solid fa-server"></i> Contest Server</a>
                 <a class="dropdown-item" href="https://drive.google.com/drive/folders/1pjZk22HGTOjvedz932kHox6-rTz5JqoE?usp=sharing"
-                  target="_blank" rel="external">Example Questions</a>
+                  target="_blank" rel="external"><i class="fa-solid fa-file-circle-question"></i> Example Questions</a>
                 <a class="dropdown-item" href="https://drive.google.com/drive/folders/1uCylEYyFdXdxD_BxplYZIioW6_ragXTq?usp=sharing"
-                  target="_blank" rel="external">Registration Guide</a>
-                <a class="dropdown-item" href="https://bit.ly/JoinProgClub" target="_blank" rel="external">Programming Club</a>
+                  target="_blank" rel="external"><i class="fa-solid fa-book"></i> Registration Guide</a>
+                <a class="dropdown-item" href="https://bit.ly/JoinProgClub" target="_blank" rel="external"><i class="fa-solid fa-people-group"></i> Programming Club</a>
               </div>
             </li>
             <li class="nav-item">
@@ -121,32 +121,32 @@
             {% cache 300 navbar request.user.username %}
             {% if user.is_authenticated %}
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown">{{ user.first_name }}</a>
+                <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown"><i class="fa-regular fa-circle-user"></i> {{ user.first_name }}</a>
                 <div class="dropdown-menu dropdown-menu-right">
                   {% if user.is_staff %}
-                    <a class="dropdown-item" href="{% url 'admin:index' %}" target="_blank">Django Admin</a>
+                    <a class="dropdown-item" href="{% url 'admin:index' %}" target="_blank"><i class="fa-solid fa-users-gear"></i> Django Admin</a>
                   {% endif %}
                   {% if user.profile.is_volunteer %}
                     {% if user.profile.role == 5 %}
-                      <a class="dropdown-item" href="{% url 'admin_dashboard' %}">Contest Dashboard</a>
-                      <a class="dropdown-item" href="https://contest.cs.fsu.edu/flower/" target="_blank">Flower Dashboard</a>
+                      <a class="dropdown-item" href="{% url 'admin_dashboard' %}"><i class="fa-regular fa-chart-bar"></i> Contest Dashboard</a>
+                      <a class="dropdown-item" href="https://contest.cs.fsu.edu/flower/" target="_blank"><i class="fa-solid fa-diagram-project"></i> Flower Dashboard</a>
                       <hr>
                     {% endif %}
-                    <a class="dropdown-item" href="{% url 'checkin' %}">Contest Check-in</a>
-                    <a class="dropdown-item" href="{% url 'volunteer_checkin' %}">Volunteer Check-in</a>
+                    <a class="dropdown-item" href="{% url 'checkin' %}"><i class="fa-solid fa-door-open"></i> Contest Check-in</a>
+                    <a class="dropdown-item" href="{% url 'volunteer_checkin' %}"><i class="fa-solid fa-handshake-simple"></i> Volunteer Check-in</a>
                     <hr>
                   {% endif %}
-                  <a class="dropdown-item" href="{% url 'manage_dashboard' %}">Account</a>
-                  <a class="dropdown-item" href="{% url 'lfg_dashboard' %}">#LookingForGroup</a>
-                  <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                  <a class="dropdown-item" href="{% url 'manage_dashboard' %}"><i class="fa-solid fa-user-gear"></i> Account</a>
+                  <a class="dropdown-item" href="{% url 'lfg_dashboard' %}"><i class="fa-solid fa-arrows-down-to-people"></i> Looking For Group</a>
+                  <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
                 </div>
               </li>
             {% else %}
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'login' %}">Login</a>
+                <a class="nav-link btn btn-sm btn-secondary text-white m-1" href="{% url 'login' %}"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
               </li>
-              <li class="nav-item active">
-                <a class="nav-link text-warning" href="{% url 'register_base' %}">Register</a>
+              <li class="nav-item">
+                <a class="nav-link btn btn-sm btn-warning text-dark m-1" href="{% url 'register_base' %}"><i class="fa-solid fa-user-plus"></i> Register</a>
               </li>
             {% endif %}
             {% endcache %}
@@ -174,7 +174,7 @@
             <div class="py-0">
               <h3 class="my-4 text-white"><a class="mx-2 font-italic text-primary" href="https://fsu.acm.org" target="_blank" rel="external">ACM at FSU</a></h3>
               <p class="footer-links">
-                <i class="fa fa-envelope text-white mx-2"></i><a href="mailto:contest@fsu.acm.org" class="text-warning" rel="external">contest@fsu.acm.org</a>
+                <a href="mailto:contest@fsu.acm.org" class="text-warning" rel="external"><i class="fa fa-envelope text-white mx-2"></i>contest@fsu.acm.org</a>
               </p>
               <div class="mx-auto pt-2">
                 <a href="https://www.facebook.com/ACMatFSU/" target="_blank" rel="external"><i class="fab fa-facebook fa-lg text-white mr-3"></i></a>
@@ -188,16 +188,16 @@
           <div class="col-md-4 text-white text-center text-md-left ">
             <div class="pt-2 mt-4">
               <div>
-                <a href="https://goo.gl/maps/AQz5K65kyfjjjQJb7" class="text-white" target="_blank" rel="nofollow"> <i class="fa fa-map-marker mx-2"></i>
+                <a href="https://goo.gl/maps/AQz5K65kyfjjjQJb7" class="text-white" target="_blank" rel="nofollow"><i class="fa-solid fa-map-location-dot"></i>
                   James J. Love Building,
                   1017 Academic Way,
                   Tallahassee, FL 32304</a>
               </div>
               <div class="my-2">
-                <a class="text-danger" href="https://cs.fsu.edu" target="_blank" rel="external">FSU Dept of Computer Science</a>
+                <a class="text-white" href="https://cs.fsu.edu" target="_blank" rel="external"><i class="fa-solid fa-up-right-from-square"></i> FSU Dept of Computer Science</a>
               </div>
               <div class="mt-2 pt-1">
-                <a class="text-white" href="https://icpc.global/" target="_blank" rel="external">ICPC Global</a>
+                <a class="text-white" href="https://icpc.global/" target="_blank" rel="external"><i class="fa-solid fa-up-right-from-square"></i> ICPC Global</a>
               </div>              
             </div>
           </div>
@@ -205,7 +205,7 @@
           <div class="col-md-4 text-white my-4 text-center text-md-left ">
             <span class=" font-weight-bold">About the Contest</span>
             <p class="text-info my-2">The ACM at FSU Programming Contest is a coding competition that emphasizes problem solving executed in code.</p>
-            <a class="text-light" href="https://www.mmcinnestaylor.com" target="_blank" rel="external">Built with &hearts; by Marlan Mc-T</a>
+            <a class="text-white" href="https://www.mmcinnestaylor.com" target="_blank" rel="external">Built with &hearts; by Marlan Mc-T</a>
           </div>
         </div>
       </div>
