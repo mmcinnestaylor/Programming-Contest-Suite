@@ -177,15 +177,6 @@ CELERY_BEAT_SCHEDULE = {
     },          
 }
 
-# Celery Flower
-# https://flower.readthedocs.io/en/latest/
-
-FLOWER_BROKER_API = get_secret('FLOWER_BROKER_API', 'http://rabbitmq:15672/api/vhost')
-if DEBUG:
-    FLOWER_DEBUG = True
-else:
-    FLOWER_URL_PREFIX = get_secret('FLOWER_URL_PREFIX', 'flower')
-    FLOWER_BASIC_AUTH = get_secret('FLOWER_USER', 'contestadmin')+':'+get_secret('FLOWER_PASSWORD', 'seminoles1!')
 
 # Cache
 # https://docs.djangoproject.com/en/2.2/ref/settings/#caches
