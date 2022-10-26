@@ -17,7 +17,7 @@ services:
             restart_policy:
                 delay: 5s
                 max_attempts: 10
-                window: 60s
+                window: 120s
             rollback_config:
                 delay: 5s
                 monitor: 60s
@@ -186,7 +186,7 @@ services:
             update_config:
                 monitor: 75s
                 failure_action: rollback
-    flower:
+    celery_flower:
         image: acmfsu/contestsuite:latest
         command: /app/docker/start.sh flower
         secrets:
@@ -195,6 +195,7 @@ services:
             - contestsuite_db_password
             - contestsuite_flower_user
             - contestsuite_flower_password
+            - contestsuite_flower_cookie_key
         environment:
             # Database
             SQL_DATABASE: /run/secrets/contestsuite_db_name
@@ -205,6 +206,7 @@ services:
             FLOWER_BROKER_API: http://guest:guest@rabbitmq:15672/api/vhost
             FLOWER_USER: /run/secrets/contestsuite_flower_user
             FLOWER_PASSWORD: /run/secrets/contestsuite_flower_password
+            FLOWER_COOKIE_KEY: /run/secrets/contestsuite_flower_cookie_key
         volumes:
             - django_static:/app/static
         networks:
@@ -317,6 +319,8 @@ secrets:
     contestsuite_flower_user:
         external: true
     contestsuite_flower_password:
+        external: true
+    contestsuite_flower_cookie_key:
         external: true
 volumes:
     django_app:
