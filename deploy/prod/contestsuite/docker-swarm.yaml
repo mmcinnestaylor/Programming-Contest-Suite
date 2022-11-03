@@ -8,7 +8,8 @@ services:
             VIRTUAL_HOST: contest.cs.fsu.edu
         volumes:
             - ./config/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
-            - django_static:/usr/share/nginx/html/static:ro
+            - django_static:/usr/share/nginx/html/static/django:ro
+            - flower_static:/usr/share/nginx/html/static/flower:ro
         networks:
             - frontend
             - nginx-backend
@@ -209,6 +210,7 @@ services:
             FLOWER_COOKIE_KEY: /run/secrets/contestsuite_flower_cookie_key
         volumes:
             - django_static:/app/static
+            - flower_static:/usr/local/lib/python3.9/site-packages/flower/static
         networks:
             - nginx-backend
             - db-backend
