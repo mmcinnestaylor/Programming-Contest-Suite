@@ -6,6 +6,8 @@ services:
         environment:
             LETSENCRYPT_HOST: contest.cs.fsu.edu
             VIRTUAL_HOST: contest.cs.fsu.edu
+            
+            TZ: America/New_York
         volumes:
             - ./config/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
             - django_static:/usr/share/nginx/html/static/django:ro
@@ -25,6 +27,7 @@ services:
             update_config:
                 parallelism: 1
                 delay: 5s
+                monitor: 60s
                 failure_action: rollback            
     django:
         image: acmfsu/contestsuite:latest
@@ -254,6 +257,8 @@ services:
                 failure_action: rollback
     redis:
         image: redis:5-buster
+        environment:
+            TZ: America/New_York
         volumes:
             - redis:/data
         networks:
@@ -270,6 +275,8 @@ services:
                 failure_action: rollback
     rabbitmq:
         image: rabbitmq:3-management
+        environment:
+            TZ: America/New_York
         volumes:
             - rabbitmq:/var/lib/rabbitmq
         networks:
