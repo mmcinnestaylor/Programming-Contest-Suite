@@ -183,11 +183,8 @@ CELERY_BEAT_SCHEDULE = {
 
 CACHES = {
     'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
         'LOCATION': get_secret('CACHE_LOCATION', 'redis://redis:6379/0'),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
     }
 }
 
