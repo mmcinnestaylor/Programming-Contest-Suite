@@ -4,9 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-Django = ">=3,<4.0"
+Django = ">=4,<4.2"
 mysqlclient = "*"
-django-redis = "*"
+redis = ">=3"
 django-import-export = "*"
 celery = "*"
 gunicorn = "*"
