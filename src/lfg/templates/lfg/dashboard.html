@@ -136,6 +136,9 @@
 						</tbody>
 					{% endif %}
 				</table>
+				{% if not user.lfgprofile.active and not user.is_superuser %}
+					<p class="text-center">An active LFG profile is required to view the partcipant table.</p>
+				{% endif %}
 			</div>
 		</div>
 		<!-- Upper Division Table end -->
@@ -179,6 +182,9 @@
 						</tbody>
 					{% endif %}
 				</table>
+				{% if not user.lfgprofile.active and not user.is_superuser %}
+					<p class="text-center">An active LFG profile is required to view the partcipant table.</p>
+				{% endif %}
 			</div>
 		</div>
 		<!-- Lower Division Table end -->
