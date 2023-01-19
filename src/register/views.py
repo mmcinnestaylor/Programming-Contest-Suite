@@ -8,7 +8,7 @@ from django.db import transaction
 # from django.forms import formset_factory
 from django.shortcuts import redirect, render
 from django.utils import timezone
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views import View
 
@@ -27,7 +27,7 @@ class ActivateAccount(View):
 
     def get(self, request, uidb64, token):
         try:
-            uid = force_text(urlsafe_base64_decode(uidb64))
+            uid = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None

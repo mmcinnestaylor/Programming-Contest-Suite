@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import transaction
 from django.http import HttpResponse
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.shortcuts import redirect, render
 from django.views import View
@@ -86,7 +86,7 @@ class FacultyDashboard(View):
 
     def get(self, request, uidb64):
         try:
-            faculty_member = Faculty.objects.get(email__contains=force_text(urlsafe_base64_decode(uidb64)))
+            faculty_member = Faculty.objects.get(email__contains=force_str(urlsafe_base64_decode(uidb64)))
         except: #(TypeError, ValueError, OverflowError):
             faculty_member = None
 
@@ -111,7 +111,7 @@ class FacultyDashboard(View):
     
     def download(self, uidb64):
         try:
-            faculty_member = force_text(urlsafe_base64_decode(uidb64))
+            faculty_member = force_str(urlsafe_base64_decode(uidb64))
         except: #(TypeError, ValueError, OverflowError):
             faculty_member = None
 

@@ -78,11 +78,9 @@
   <body>
     <!-- header -->
     <header>
-      <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-        <div class="d-none d-md-block" id="logo">
-          <a href="{% url 'index' %}"><img src="{% static 'core/img/acm_fsu_diamond.png' %}" width="50" height="50" alt="Chapter Logo"></a>
-        </div>
-        <a class="navbar-brand" href="{% url 'index' %}">ACM Programming Contest</a>
+      <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+        <a class = "navbar-brand p-0" href="{% url 'index' %}"><img src="{% static 'core/img/acm_fsu_diamond.png' %}" width="45" height="45" alt="Chapter Logo"></a>
+        
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -121,7 +119,8 @@
             {% cache 300 navbar request.user.username %}
             {% if user.is_authenticated %}
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle active" href="#" id="navbardrop" data-toggle="dropdown"><i class="fa-regular fa-circle-user"></i> {{ user.first_name }}</a>
+                <a class="nav-link dropdown-toggle active d-none d-md-block" href="#" id="navbardrop" data-toggle="dropdown"><i class="fa-regular fa-circle-user"></i></a>
+                <a class="nav-link dropdown-toggle active d-block d-md-none" href="#" id="navbardrop" data-toggle="dropdown"><i class="fa-regular fa-circle-user"></i> {{ user.first_name }}</a>
                 <div class="dropdown-menu dropdown-menu-right">
                   {% if user.is_staff %}
                     <a class="dropdown-item" href="{% url 'admin:index' %}" target="_blank"><i class="fa-solid fa-users-gear"></i> Django Admin</a>
@@ -138,6 +137,7 @@
                   {% endif %}
                   <a class="dropdown-item" href="{% url 'manage_dashboard' %}"><i class="fa-solid fa-user-gear"></i> Account</a>
                   <a class="dropdown-item" href="{% url 'lfg_dashboard' %}"><i class="fa-solid fa-arrows-down-to-people"></i> Looking For Group</a>
+                  <hr>
                   <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
                 </div>
               </li>
