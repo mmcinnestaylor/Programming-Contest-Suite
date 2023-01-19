@@ -20,7 +20,7 @@ else:
 broker_api = get_secret('FLOWER_BROKER_API', 'http://rabbitmq:15672/api/vhost')
 
 if not debug:
-    basic_auth = basic_auth = [
+    basic_auth = [
         get_secret('FLOWER_USER', 'contestadmin') + ':' + get_secret('FLOWER_PASSWORD', 'seminoles1!')
     ]
 
