@@ -1,9 +1,7 @@
 #!/bin/bash
 
-cd /app
-
 if [ $# -eq 0 ]; then
-    echo "Usage: start.sh [PROCESS_TYPE](server/worker/beat)"
+    echo "Usage: start.sh [PROCESS_TYPE](server | worker | beat | flower | bot)"
     exit 1
 fi
 
@@ -23,28 +21,59 @@ if [ "$PROCESS_TYPE" = "server" ]; then
             --threads 4 \
             --worker-class gthread \
             --worker-tmp-dir /dev/shm \
-            --log-level DEBUG \
+            --log-level INFO \
             --access-logfile "-" \
             --error-logfile "-" \
             contestsuite.wsgi:application
     fi
 elif [ "$PROCESS_TYPE" = "worker" ]; then
+    if [ "$MODE" = "debug" ]; then
     celery \
         -A contestsuite \
         worker \
-        --autoscale=10,3 \
-        -n worker@%n \
-        --loglevel INFO
-elif [ "$PROCESS_TYPE" = "beat" ]; then
-    celery \
+            --autoscale=10,1 \
+            -n worker@%n \
+            --loglevel DEBUG
+    else
+        celery \
         -A contestsuite \
-        beat \
-        --loglevel INFO \
-        --scheduler django_celery_beat.schedulers:DatabaseScheduler
+        worker \
+            --autoscale=10,3 \
+            -n worker@%n \
+            --loglevel INFO
+    fi
+elif [ "$PROCESS_TYPE" = "beat" ]; then
+    if [ "$MODE" = "debug" ]; then
+        celery \
+            -A contestsuite \
+            beat \
+                --loglevel DEBUG \
+                --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    else
+        celery \
+            -A contestsuite \
+            beat \
+                --loglevel INFO \
+                --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    fi
+elif [ "$PROCESS_TYPE" = "flower" ]; then
+    if [ "$MODE" = "debug" ]; then
+        celery \
+            -A contestsuite \
+            flower \
+                --loglevel DEBUG \
+                --conf=contestsuite/flowerconfig.py
+    else
+        celery \
+            -A contestsuite \
+            flower \
+                --loglevel INFO \
+                --conf=contestsuite/flowerconfig.py
+    fi
 elif [ "$PROCESS_TYPE" = "bot" ]; then
     python \
         bot.py
 else
-    echo "Invalid [PROCESS_TYPE](server | worker | beat | bot)"
+    echo "Invalid [PROCESS_TYPE](server | worker | beat | flower | bot)"
     exit 1
 fi

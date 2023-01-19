@@ -6,9 +6,12 @@ services:
         environment:
             LETSENCRYPT_HOST: contest.cs.fsu.edu
             VIRTUAL_HOST: contest.cs.fsu.edu
+            
+            TZ: America/New_York
         volumes:
             - ./config/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
-            - django_static:/usr/share/nginx/html/static:ro
+            - django_static:/usr/share/nginx/html/static/django:ro
+            - flower_static:/usr/share/nginx/html/static/flower:ro
         networks:
             - frontend
             - nginx-backend
@@ -17,13 +20,14 @@ services:
             restart_policy:
                 delay: 5s
                 max_attempts: 10
-                window: 60s
+                window: 120s
             rollback_config:
                 delay: 5s
                 monitor: 60s
             update_config:
                 parallelism: 1
                 delay: 5s
+                monitor: 60s
                 failure_action: rollback            
     django:
         image: acmfsu/contestsuite:latest
@@ -39,15 +43,8 @@ services:
             - contestsuite_discord_guild_id
         environment:
             # Django
-            DEBUG: 'False'
             SECRET_KEY: /run/secrets/contestsuite_django_key # Project secret key
             ALLOWED_HOSTS: contest.cs.fsu.edu
-            CACHE_TIMEOUT: 300
-            CACHE_LOCATION: redis://redis:6379/0
-
-            # Celery
-            CELERY_BACKEND: redis://redis:6379/1
-            CELERY_BROKER: amqp://rabbitmq:5672
 
             # Email
             EMAIL_HOST: mail2.cs.fsu.edu
@@ -56,8 +53,6 @@ services:
             EMAIL_USE_TLS: 'True'
 
             # Database
-            SQL_HOST: mariadb
-            SQL_PORT: 3306
             SQL_DATABASE: /run/secrets/contestsuite_db_name
             SQL_USER: /run/secrets/contestsuite_db_user
             SQL_PASSWORD: /run/secrets/contestsuite_db_password
@@ -96,12 +91,7 @@ services:
             - contestsuite_discord_guild_id
             - contestsuite_scrapebot_token
         environment:
-            # Django
-            DEBUG: 'False'
-
             # Database
-            SQL_HOST: mariadb
-            SQL_PORT: 3306
             SQL_DATABASE: /run/secrets/contestsuite_db_name
             SQL_USER: /run/secrets/contestsuite_db_user
             SQL_PASSWORD: /run/secrets/contestsuite_db_password
@@ -110,6 +100,8 @@ services:
             BOT_CHANNEL: /run/secrets/contestsuite_bot_channel_name # Name of command channel
             GUILD_ID: /run/secrets/contestsuite_discord_guild_id # ID of Discord server
             SCRAPE_BOT_TOKEN: /run/secrets/contestsuite_scrapebot_token # Token for integrated bot
+        volumes:
+            - django_static:/app/static
         networks:
             - db-backend
         deploy:
@@ -136,13 +128,8 @@ services:
             - contestsuite_bot_channel_url
         environment:
             # Django
-            DEBUG: 'False'
             SECRET_KEY: /run/secrets/contestsuite_django_key # Project secret key
             ALLOWED_HOSTS: contest.cs.fsu.edu
-
-            # Celery
-            CELERY_BACKEND: redis://redis:6379/1
-            CELERY_BROKER: amqp://rabbitmq:5672
 
             # Email
             EMAIL_HOST: mail2.cs.fsu.edu
@@ -151,8 +138,6 @@ services:
             EMAIL_USE_TLS: 'True'
 
             # Database
-            SQL_HOST: mariadb
-            SQL_PORT: 3306
             SQL_DATABASE: /run/secrets/contestsuite_db_name
             SQL_USER: /run/secrets/contestsuite_db_user
             SQL_PASSWORD: /run/secrets/contestsuite_db_password
@@ -185,16 +170,7 @@ services:
             - contestsuite_db_user
             - contestsuite_db_password
         environment:
-            # Django
-            DEBUG: 'False'
-
-            # Celery
-            CELERY_BACKEND: redis://redis:6379/1
-            CELERY_BROKER: amqp://rabbitmq:5672
-
             # Database
-            SQL_HOST: mariadb
-            SQL_PORT: 3306
             SQL_DATABASE: /run/secrets/contestsuite_db_name
             SQL_USER: /run/secrets/contestsuite_db_user
             SQL_PASSWORD: /run/secrets/contestsuite_db_password
@@ -214,15 +190,34 @@ services:
             update_config:
                 monitor: 75s
                 failure_action: rollback
-    flower:
-        image: mher/flower:latest
-        command: celery --broker=amqp://rabbitmq:5672// flower --broker_api=http://guest:guest@rabbitmq:15672/api/vhost --url_prefix=flower --basic_auth=contestadmin:seminoles1!
+    celery_flower:
+        image: acmfsu/contestsuite:latest
+        command: /app/docker/start.sh flower
+        secrets:
+            - contestsuite_db_name
+            - contestsuite_db_user
+            - contestsuite_db_password
+            - contestsuite_flower_user
+            - contestsuite_flower_password
+            - contestsuite_flower_cookie_key
         environment:
-            CELERY_TIMEZONE: America/New_York
+            # Database
+            SQL_DATABASE: /run/secrets/contestsuite_db_name
+            SQL_USER: /run/secrets/contestsuite_db_user
+            SQL_PASSWORD: /run/secrets/contestsuite_db_password
+
+            # Flower
+            FLOWER_BROKER_API: http://guest:guest@rabbitmq:15672/api/vhost
+            FLOWER_USER: /run/secrets/contestsuite_flower_user
+            FLOWER_PASSWORD: /run/secrets/contestsuite_flower_password
+            FLOWER_COOKIE_KEY: /run/secrets/contestsuite_flower_cookie_key
         volumes:
-            - flower:/data
+            - django_static:/app/static
+            - flower_static:/usr/local/lib/python3.9/site-packages/flower/static
         networks:
             - nginx-backend
+            - db-backend
+            - redis-backend
             - rabbitmq-backend
         deploy:
             restart_policy:
@@ -262,6 +257,8 @@ services:
                 failure_action: rollback
     redis:
         image: redis:5-buster
+        environment:
+            TZ: America/New_York
         volumes:
             - redis:/data
         networks:
@@ -278,6 +275,8 @@ services:
                 failure_action: rollback
     rabbitmq:
         image: rabbitmq:3-management
+        environment:
+            TZ: America/New_York
         volumes:
             - rabbitmq:/var/lib/rabbitmq
         networks:
@@ -325,11 +324,17 @@ secrets:
     # Scrapebot
     contestsuite_scrapebot_token:
         external: true
+    # Celery Flower
+    contestsuite_flower_user:
+        external: true
+    contestsuite_flower_password:
+        external: true
+    contestsuite_flower_cookie_key:
+        external: true
 volumes:
     django_app:
     django_db:
     django_static:
-    flower:
     rabbitmq:
     redis:
 networks:

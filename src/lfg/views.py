@@ -27,8 +27,13 @@ def dashboard(request):
     context['cache_timeout'] = CACHE_TIMEOUT
     context['standings'] = {standing[0]:standing[1] for standing in LFGProfile.STANDING}#['Graduate', 'Senior', 'Junior', 'Sophomore', 'Freshman', 'Other']
     context['divisions'] = {division[0]:division[1] for division in LFGProfile.DIVISION}
-    context['lfg_upper'] = cache.get_or_set('lfg_dash_users_upper', LFGProfile.objects.filter(active=True).filter(division=1), CACHE_TIMEOUT)
-    context['lfg_lower'] = cache.get_or_set('lfg_dash_users_lower', LFGProfile.objects.filter(active=True).filter(division=2), CACHE_TIMEOUT)
+    context['lfg_upper'] = cache.get_or_set(
+        'lfg_dash_users_upper', LFGProfile.objects.filter(active=True).filter(division=1), CACHE_TIMEOUT)
+    context['lfg_lower'] = cache.get_or_set(
+        'lfg_dash_users_lower', LFGProfile.objects.filter(active=True).filter(division=2), CACHE_TIMEOUT)
+    context['lfg_upper_count'] = context['lfg_upper'].count()
+    context['lfg_lower_count'] = context['lfg_lower'].count()
+    
 
     return render(request, 'lfg/dashboard.html', context)
 

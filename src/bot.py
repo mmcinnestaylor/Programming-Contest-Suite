@@ -2,7 +2,6 @@ import logging
 import django
 import os
 
-
 from channels.db import database_sync_to_async
 from discord import Intents
 from discord.ext import commands
@@ -12,19 +11,6 @@ from django.db import transaction
 
 # Environment variables
 BOT_CHANNEL = os.environ.get('BOT_CHANNEL', 'bot_commands')
-if os.environ.get('DEBUG'):
-    DEBUG = os.environ.get('DEBUG') == 'True'
-else:
-    DEBUG = False
-
-# Logging setup
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger('discord')
-
-if DEBUG:
-    logger.setLevel(logging.DEBUG)
-else:
-    logger.setLevel(logging.INFO)
 
 # Initialize a Django instance
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'contestsuite.settings')
@@ -32,7 +18,14 @@ django.setup()
 
 # Django imports valid after setup()
 from lfg.models import DiscordMember
-from contestsuite.settings import GUILD_ID, SCRAPE_BOT_TOKEN
+from contestsuite.settings import DEBUG, GUILD_ID, SCRAPE_BOT_TOKEN
+
+# Logging setup
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger('discord')
+
+if not DEBUG:
+    logger.setLevel(logging.INFO)
 
 # Initialize bot
 intents = Intents(messages=True, guilds=True, members=True)
@@ -123,6 +116,7 @@ def create_db_members(members):
         logger.info(f"Failed to write {failed_adds} members to the database")
     else:
         logger.info("Member scrape successful")
+
 
 if __name__ == "__main__":
     bot.run(SCRAPE_BOT_TOKEN)

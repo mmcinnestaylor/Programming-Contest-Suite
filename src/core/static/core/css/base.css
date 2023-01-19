@@ -24,6 +24,7 @@ html {
     font-size: 1.6rem;
   }
 }
+
 body {
   background: #D3D3D3;
 }
@@ -33,6 +34,6 @@ body {
   overflow: hidden;
 }
 
-#logo {
-  margin-right: 10px;
+.bg-acm {
+  background: #1b9cc6;
 }
