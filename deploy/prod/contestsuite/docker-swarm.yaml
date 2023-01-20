@@ -335,6 +335,7 @@ volumes:
     django_app:
     django_db:
     django_static:
+    flower_static:
     rabbitmq:
     redis:
 networks:
