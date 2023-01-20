@@ -41,23 +41,16 @@ else:
     DEBUG = False
 
 
+# Allowed Hosts and Origins
+
+ALLOWED_HOSTS = []
 if DEBUG:
     ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '[::1]']
-else:
-    if os.getenv('ALLOWED_HOSTS'):
-        ALLOWED_HOSTS = get_secret('ALLOWED_HOSTS').split(',')
-    else:
-        ALLOWED_HOSTS = []
-        
-    
-# Debug Toolbar Access 
 
-if DEBUG:
-    INTERNAL_IPS = [
-        'localhost',
-        '0.0.0.0',
-        '127.0.0.1',
-    ]
+if os.getenv('ALLOWED_HOSTS'):
+    ALLOWED_HOSTS = ALLOWED_HOSTS + get_secret('ALLOWED_HOSTS').split(',')
+    CSRF_TRUSTED_ORIGINS = [
+        'https://'+hostname if 'https://' not in hostname else hostname for hostname in ALLOWED_HOSTS]
 
 
 # Application definition
@@ -83,10 +76,6 @@ INSTALLED_APPS = [
     'import_export',
 ]
 
-# Add debug_toolber only if site is in debug mode
-if DEBUG:
-    INSTALLED_APPS.append('debug_toolbar')
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -97,10 +86,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-# Add debug_toolber middleware only if site is in debug mode
-if DEBUG:
-    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
 
 
 ROOT_URLCONF = 'contestsuite.urls'

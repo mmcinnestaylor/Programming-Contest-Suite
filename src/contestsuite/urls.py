@@ -29,9 +29,3 @@ urlpatterns = [
     path('manage/', include('manager.urls')),
     path('register/', include('register.urls')),
 ]
-
-if DEBUG:
-    import debug_toolbar
-    urlpatterns = [
-        path('__debug__/', include(debug_toolbar.urls)),
-    ] + urlpatterns

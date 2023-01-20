@@ -22,7 +22,6 @@ flower = "*"
 [dev-packages]
 pylint = "*"
 autopep8 = "*"
-django-debug-toolbar = "*"
 
 [requires]
 python_version = "3.9"
