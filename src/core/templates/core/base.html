@@ -123,7 +123,7 @@
                 <a class="nav-link dropdown-toggle active d-block d-md-none" href="#" id="navbardrop" data-toggle="dropdown"><i class="fa-regular fa-circle-user"></i> {{ user.first_name }}</a>
                 <div class="dropdown-menu dropdown-menu-right">
                   {% if user.is_staff %}
-                    <a class="dropdown-item" href="{% url 'admin:index' %}" target="_blank"><i class="fa-solid fa-users-gear"></i> Django Admin</a>
+                    <a class="dropdown-item" href="{% url 'admin:index' %}"><i class="fa-solid fa-users-gear"></i> Django Admin</a>
                   {% endif %}
                   {% if user.profile.is_volunteer %}
                     {% if user.profile.role == 5 %}
