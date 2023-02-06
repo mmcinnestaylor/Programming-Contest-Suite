@@ -107,9 +107,24 @@ class TeamForm(forms.ModelForm):
         }
 
 
+    def clean_name(self):
+        reserved_names = ['Walk-in-U', 'Walk-in-L']
+        team_name = self.cleaned_data['name']
+
+        for name in reserved_names:
+            if name in team_name:
+                raise ValidationError('Team name not allowed.')
+
+        return team_name
+
+
 class JoinForm(forms.Form):
-    team = forms.ModelChoiceField(queryset=Team.objects.all(
-    ), label='Registered Teams', help_text='Teamname : Division where UPPER = 1 and LOWER = 2')
+    team = forms.ModelChoiceField(
+        queryset=Team.objects.all(),
+        label='Registered Teams',
+        help_text='Team : Division [U/L]')
     pin = forms.CharField(
-        max_length=6, label='PIN', help_text='Ask team admin for PIN')
+        max_length=6,
+        label='PIN',
+        help_text='Ask team admin for PIN')
 
