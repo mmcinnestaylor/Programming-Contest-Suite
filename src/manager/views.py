@@ -130,8 +130,9 @@ def manage_team(request):
             messages.error(request, 'Please correct the error(s) below.', fail_silently=True)
     else:
         form = forms.TeamForm(instance=request.user.profile.team)
-        team_members = User.objects.filter(
-            profile__team=request.user.profile.team).exclude(username=request.user.username)
+    
+    team_members = User.objects.filter(
+        profile__team=request.user.profile.team).exclude(username=request.user.username)
 
     context['form'] = form
     context['team_members'] = team_members

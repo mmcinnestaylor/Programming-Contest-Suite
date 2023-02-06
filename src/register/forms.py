@@ -22,14 +22,9 @@ class ExtendedUserCreationForm(UserCreationForm):
    
 
 class TeamForm(forms.ModelForm):
-    name = forms.CharField(max_length=30)
-
     class Meta:
         model = Team
         fields = ['name', 'division']
-        labels = {
-            'name': 'Team Name',
-        }
         help_texts = {
             'name': '30 characters max. Keep it PG-13 please!',
             'division': 'The division in which your team will compete.',
@@ -39,6 +34,10 @@ class TeamForm(forms.ModelForm):
                 'max_length': "This team name is too long.",
             },
         }
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': "Your team's name"}),
+        }
+
     
     def clean_name(self):
         reserved_names = ['Walk-in-U', 'Walk-in-L']

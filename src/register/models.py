@@ -28,7 +28,7 @@ class Team(models.Model):
     num_members = models.PositiveSmallIntegerField(default=0)
 
     def __str__(self):
-        return (str(self.name) + ' : ' + str(self.division))
+        return (str(self.name) + ' : ' + ('U' if self.division == 1 else 'L'))
 
     def get_members(self):
         members = User.objects.filter(profile__team=self)

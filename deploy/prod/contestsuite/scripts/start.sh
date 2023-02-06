@@ -21,7 +21,6 @@ if [ "$PROCESS_TYPE" = "server" ]; then
             --threads 4 \
             --worker-class gthread \
             --worker-tmp-dir /dev/shm \
-            --log-level INFO \
             --access-logfile "-" \
             --error-logfile "-" \
             contestsuite.wsgi:application
