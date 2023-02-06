@@ -35,13 +35,13 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-  redeploy:
-    name: Redeploy webhook call
-    runs-on: ubuntu-latest
-    needs: [push_to_registry]
-    steps:
-      - name: Invoke deployment hook
-        uses: distributhor/workflow-webhook@v2
-        env:
-          webhook_url: ${{ secrets.AGON_WEBHOOK_URL }}
-          webhook_secret: ${{ secrets.AGON_WEBHOOK_SECRET }}
+#  redeploy:
+#    name: Redeploy webhook call
+#    runs-on: ubuntu-latest
+#    needs: [push_to_registry]
+#    steps:
+#      - name: Invoke deployment hook
+#        uses: distributhor/workflow-webhook@v2
+#        env:
+#          webhook_url: ${{ secrets.AGON_WEBHOOK_URL }}
+#          webhook_secret: ${{ secrets.AGON_WEBHOOK_SECRET }}

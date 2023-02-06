@@ -1,12 +1,6 @@
 import os
+from contestsuite.settings import get_secret
 
-
-def get_secret(key, default=None):
-    value = os.getenv(key, default)
-    if value and os.path.isfile(value):
-        with open(value) as f:
-            return f.read().strip()
-    return value
 
 
 # Celery Flower configuration
