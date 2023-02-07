@@ -36,7 +36,7 @@ WORKDIR /app
 USER app_user:app_user
 
 COPY --chown=app_user:app_user src .
-COPY --chown=app_user:app_user deploy/prod/contestsuite/scripts/*.sh docker/
+COPY --chown=app_user:app_user scripts/docker/ docker/
 
 RUN chmod +x docker/*.sh
 
