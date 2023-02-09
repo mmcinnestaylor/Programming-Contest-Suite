@@ -1,6 +1,9 @@
 from contestsuite import settings
 
 
-def debug(request):
-    # Multiple k-v pairs supported
-    return {'DEBUG': settings.DEBUG}
+def app_settings(request):
+    return {
+        'CACHE_TIMEOUT': settings.CACHE_TIMEOUT,
+        'DEBUG': settings.DEBUG,
+        'GTAG': settings.GTAG,
+        }
