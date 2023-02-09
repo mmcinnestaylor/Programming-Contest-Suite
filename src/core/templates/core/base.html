@@ -59,15 +59,15 @@
       integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
     <!-------------------------------------------------------------->
     
-    {% if not DEBUG %}
+    {% if not DEBUG and GTAG %}
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R68Q4E2KTL"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ GTAG }}"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() { dataLayer.push(arguments); }
       gtag('js', new Date());
 
-      gtag('config', 'G-R68Q4E2KTL');
+      gtag('config', '{{ GTAG }}');
     </script>
     <!-------------------------------------------------------------->
     {% endif %}
