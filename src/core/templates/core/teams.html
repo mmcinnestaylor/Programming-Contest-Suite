@@ -9,7 +9,7 @@
 {% block section %}Teams{% endblock %}
 
 {% block content %}
-{% cache cache_timeout teams %}
+{% cache CACHE_TIMEOUT teams %}
 	<h1 class="text-center">Registered Teams</h1>
 	<div class="row">
 		<div class="col">

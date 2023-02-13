@@ -118,7 +118,7 @@
             </li>
           </ul>
           <ul class="navbar-nav ml-auto">
-            {% cache 300 navbar request.user.username %}
+            {% cache CACHE_TIMEOUT navbar request.user.username %}
             {% if user.is_authenticated %}
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle active d-none d-md-block" href="#" id="navbardrop" data-toggle="dropdown"><i class="fa-regular fa-circle-user"></i></a>

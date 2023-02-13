@@ -24,7 +24,6 @@ def dashboard(request):
     else:
         context['lfg_active'] = False
 
-    context['cache_timeout'] = CACHE_TIMEOUT
     context['standings'] = {standing[0]:standing[1] for standing in LFGProfile.STANDING}#['Graduate', 'Senior', 'Junior', 'Sophomore', 'Freshman', 'Other']
     context['divisions'] = {division[0]:division[1] for division in LFGProfile.DIVISION}
     context['lfg_upper'] = cache.get_or_set(

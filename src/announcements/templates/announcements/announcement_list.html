@@ -12,7 +12,7 @@
 <h1 class="text-center">Contest Announcements</h1>
 
 {% if is_paginated %}
-    {% cache cache_timeout announcements page_obj.number %}
+    {% cache CACHE_TIMEOUT announcements page_obj.number %}
         <div class="row justify-content-center">
             <div class="col-md-8 mt-3 left">
                 {% for announcement in object_list %}
@@ -56,7 +56,7 @@
         
     {% endcache %}
 {% else %}
-    {% cache cache_timeout announcements %}
+    {% cache CACHE_TIMEOUT announcements %}
         <div class="row justify-content-center">
             <div class="col-md-8 mt-3 left">
                 {% for announcement in object_list %}
