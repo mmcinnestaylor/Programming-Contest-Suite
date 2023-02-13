@@ -23,10 +23,8 @@ def index(request):
     else:
         context['domjudge_status'] = r.status_code
 
-    try:
-        context['contest'] = Contest.objects.first()
-    except:
-        context['contest'] = None
+    context['contest'] = cache.get_or_set(
+        'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
     
     context['announcements'] = (Announcement.objects.filter(status=1))
     context['courses'] = Course.objects.all()

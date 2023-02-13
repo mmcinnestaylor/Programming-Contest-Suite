@@ -24,7 +24,8 @@ def dashboard(request):
     else:
         context['lfg_active'] = False
 
-    context['standings'] = {standing[0]:standing[1] for standing in LFGProfile.STANDING}#['Graduate', 'Senior', 'Junior', 'Sophomore', 'Freshman', 'Other']
+    #['Graduate', 'Senior', 'Junior', 'Sophomore', 'Freshman', 'Other']
+    context['standings'] = {standing[0]:standing[1] for standing in LFGProfile.STANDING}
     context['divisions'] = {division[0]:division[1] for division in LFGProfile.DIVISION}
     context['lfg_upper'] = cache.get_or_set(
         'lfg_dash_users_upper', LFGProfile.objects.filter(active=True).filter(division=1), CACHE_TIMEOUT)
@@ -42,7 +43,8 @@ def dashboard(request):
 @transaction.atomic
 def activate_profile(request):
 
-    contest = cache.get_or_set('lfg_activate_contest_status', Contest.objects.first(), CACHE_TIMEOUT)
+    contest = cache.get_or_set(
+        'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
     if not contest or not contest.lfg_active:
         messages.error(request, 'The LFG service is currently offline.', fail_silently=True)
         return redirect('lfg_dashboard')
@@ -62,7 +64,8 @@ def activate_profile(request):
 def create_profile(request):
     context = {}
 
-    contest = cache.get_or_set('lfg_create_contest_status', Contest.objects.first(), CACHE_TIMEOUT)
+    contest = cache.get_or_set(
+        'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
     if not contest or not contest.lfg_active:
         messages.error(request, 'The LFG service is currently offline.', fail_silently=True)
         return redirect('lfg_dashboard')
@@ -94,7 +97,8 @@ def create_profile(request):
 @transaction.atomic
 def deactivate_profile(request):
 
-    contest = cache.get_or_set('lfg_deactivate_contest_status', Contest.objects.first(), CACHE_TIMEOUT)
+    contest = cache.get_or_set(
+        'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
     if not contest or not contest.lfg_active:
         messages.error(request, 'The LFG service is currently offline.', fail_silently=True)
         return redirect('lfg_dashboard')
@@ -114,7 +118,8 @@ def deactivate_profile(request):
 def manage_profile(request):
     context = {}
 
-    contest = cache.get_or_set('lfg_manage_contest_status', Contest.objects.first(), CACHE_TIMEOUT)
+    contest = cache.get_or_set(
+        'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
     if not contest or not contest.lfg_active:
         messages.error(request, 'The LFG service is currently offline.', fail_silently=True)
         return redirect('lfg_dashboard')
