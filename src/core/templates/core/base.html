@@ -128,7 +128,7 @@
                     <a class="dropdown-item" href="{% url 'admin:index' %}"><i class="fa-solid fa-users-gear"></i> Django Admin</a>
                   {% endif %}
                   {% if user.profile.is_volunteer %}
-                    {% if user.profile.role == 5 %}
+                    {% if user.profile.is_organizer %}
                       <a class="dropdown-item" href="{% url 'admin_dashboard' %}"><i class="fa-regular fa-chart-bar"></i> Contest Dashboard</a>
                       <a class="dropdown-item" href="https://contest.cs.fsu.edu/flower/" target="_blank"><i class="fa-solid fa-diagram-project"></i> Flower Dashboard</a>
                       <hr>
