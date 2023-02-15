@@ -31,7 +31,7 @@ def dashboard(request):
     context['courses'] = request.user.profile.courses.all()
     context['roles'] = {role[0]:role[1] for role in Profile.ROLES}
     context['total_num_courses'] = cache.get_or_set('manage_dash_courses_total', Course.objects.count(), CACHE_TIMEOUT)
-    context['team_members'] = User.objects.filter(profile__team=request.user.profile.team)
+    context['team_members'] = User.objects.filter(profile__team=request.user.profile.team).exclude(username=request.user.username)
 
     # Generate account some useful account notifications
     if not request.user.profile.has_team():
