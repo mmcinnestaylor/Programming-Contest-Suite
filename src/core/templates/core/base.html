@@ -3,6 +3,19 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    {% if not DEBUG and GTAG %}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ GTAG }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+
+      gtag('config', '{{ GTAG }}');
+    </script>
+    <!-------------------------------------------------------------->
+    {% endif %}
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="author" content="Marlan McInnes-Taylor">
@@ -58,19 +71,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
     <!-------------------------------------------------------------->
-    
-    {% if not DEBUG and GTAG %}
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ GTAG }}"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-
-      gtag('config', '{{ GTAG }}');
-    </script>
-    <!-------------------------------------------------------------->
-    {% endif %}
 
     {% block title %}
     <title>{% block section %}{% endblock %} | ACM at FSU Programming Contest</title>
@@ -105,12 +105,12 @@
                 Resources
               </a>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="https://domjudge.cs.fsu.edu" target="_blank" rel="external noopener"><i class="fa-solid fa-server"></i> Contest Server</a>
+                <a class="dropdown-item" href="https://domjudge.cs.fsu.edu" target="_blank" rel="external noopener"><i class="fa-solid fa-server fa-fw"></i> Contest Server</a>
                 <a class="dropdown-item" href="https://drive.google.com/drive/folders/1pjZk22HGTOjvedz932kHox6-rTz5JqoE?usp=sharing"
-                  target="_blank" rel="external noopener"><i class="fa-solid fa-file-circle-question"></i> Example Questions</a>
+                  target="_blank" rel="external noopener"><i class="fa-solid fa-file-circle-question fa-fw"></i> Example Questions</a>
                 <a class="dropdown-item" href="https://drive.google.com/drive/folders/1uCylEYyFdXdxD_BxplYZIioW6_ragXTq?usp=sharing"
-                  target="_blank" rel="external noopener"><i class="fa-solid fa-book"></i> Registration Guide</a>
-                <a class="dropdown-item" href="https://bit.ly/JoinProgClub" target="_blank" rel="external noopener"><i class="fa-solid fa-people-group"></i> Programming Club</a>
+                  target="_blank" rel="external noopener"><i class="fa-solid fa-book fa-fw"></i> Registration Guide</a>
+                <a class="dropdown-item" href="https://bit.ly/JoinProgClub" target="_blank" rel="external noopener"><i class="fa-solid fa-people-group fa-fw"></i> Programming Club</a>
               </div>
             </li>
             <li class="nav-item">
@@ -125,30 +125,30 @@
                 <a class="nav-link dropdown-toggle active d-block d-md-none" href="#" id="navbardrop" data-toggle="dropdown"><i class="fa-regular fa-circle-user"></i> {{ user.first_name }}</a>
                 <div class="dropdown-menu dropdown-menu-right">
                   {% if user.is_staff %}
-                    <a class="dropdown-item" href="{% url 'admin:index' %}"><i class="fa-solid fa-users-gear"></i> Django Admin</a>
+                    <a class="dropdown-item" href="{% url 'admin:index' %}"><i class="fa-solid fa-users-gear fa-fw"></i> Django Admin</a>
                   {% endif %}
                   {% if user.profile.is_volunteer %}
                     {% if user.profile.is_organizer %}
-                      <a class="dropdown-item" href="{% url 'admin_dashboard' %}"><i class="fa-regular fa-chart-bar"></i> Contest Dashboard</a>
-                      <a class="dropdown-item" href="https://contest.cs.fsu.edu/flower/" target="_blank"><i class="fa-solid fa-diagram-project"></i> Flower Dashboard</a>
+                      <a class="dropdown-item" href="{% url 'admin_dashboard' %}"><i class="fa-regular fa-chart-bar fa-fw"></i> Contest Dashboard</a>
+                      <a class="dropdown-item" href="https://contest.cs.fsu.edu/flower/" target="_blank"><i class="fa-solid fa-diagram-project fa-fw"></i> Flower Dashboard</a>
                       <hr>
                     {% endif %}
-                    <a class="dropdown-item" href="{% url 'checkin' %}"><i class="fa-solid fa-door-open"></i> Contest Check-in</a>
-                    <a class="dropdown-item" href="{% url 'volunteer_checkin' %}"><i class="fa-solid fa-handshake-simple"></i> Volunteer Check-in</a>
+                    <a class="dropdown-item" href="{% url 'checkin' %}"><i class="fa-solid fa-door-open fa-fw"></i> Contest Check-in</a>
+                    <a class="dropdown-item" href="{% url 'volunteer_checkin' %}"><i class="fa-solid fa-handshake-simple fa-fw"></i> Volunteer Check-in</a>
                     <hr>
                   {% endif %}
-                  <a class="dropdown-item" href="{% url 'manage_dashboard' %}"><i class="fa-solid fa-user-gear"></i> Account</a>
-                  <a class="dropdown-item" href="{% url 'lfg_dashboard' %}"><i class="fa-solid fa-arrows-down-to-people"></i> Looking For Group</a>
+                  <a class="dropdown-item" href="{% url 'manage_dashboard' %}"><i class="fa-solid fa-user-gear fa-fw"></i> Account</a>
+                  <a class="dropdown-item" href="{% url 'lfg_dashboard' %}"><i class="fa-solid fa-arrows-down-to-people fa-fw"></i> Looking For Group</a>
                   <hr>
-                  <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                  <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket fa-fw"></i> Logout</a>
                 </div>
               </li>
             {% else %}
               <li class="nav-item">
-                <a class="nav-link btn btn-sm btn-secondary text-white m-1" href="{% url 'login' %}"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+                <a class="nav-link btn btn-sm btn-secondary text-white m-1" href="{% url 'login' %}"><i class="fa-solid fa-right-to-bracket fa-fw"></i> Login</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link btn btn-sm btn-warning text-dark m-1" href="{% url 'register_base' %}"><i class="fa-solid fa-user-plus"></i> Register</a>
+                <a class="nav-link btn btn-sm btn-warning text-dark m-1" href="{% url 'register_base' %}"><i class="fa-solid fa-user-plus fa-fw"></i> Register</a>
               </li>
             {% endif %}
             {% endcache %}
@@ -171,42 +171,44 @@
     <footer style="background-color: #2c292f">
       <div class="container mt-5">
         <div class="row ">
-          <div class="col-md-4 text-center text-md-left ">
-    
-            <div class="py-0">
-              <h3 class="my-4 text-white"><a class="mx-2 font-italic text-primary" href="https://fsu.acm.org" title="ACM at FSU Homepage" target="_blank" rel="external noopener">ACM at FSU</a></h3>
-              <p class="footer-links">
-                <a href="mailto:contest@fsu.acm.org" title="ACM at FSU Email" class="text-warning"><i class="fa fa-envelope text-white mx-2"></i>contest@fsu.acm.org</a>
-              </p>
-              <div class="mx-auto pt-2">
-                <a href="https://www.facebook.com/ACMatFSU/" title="ACM at FSU Facebook" target="_blank" rel="external noopener"><i class="fab fa-facebook fa-lg text-white mr-3"></i></a>
-                <a href="https://discord.gg/4z3hNMA" title="ACM at FSU Discord" target="_blank" rel="external noopener"><i class="fab fa-discord fa-lg text-white mx-3"></i></a>
-                <a href="https://www.instagram.com/fsuacm/" title="ACM at FSU Instagram" target="_blank" rel="external noopener"><i
-                    class="fab fa-instagram fa-lg text-white mx-3"></i></a>
-                <a href="https://www.linkedin.com/groups/12238485/" title="ACM at FSU LinkedIn" target="_blank" rel="external noopener"><i class="fab fa-linkedin fa-lg text-white mx-3"></i></a>
-              </div>              
+          <!-- left column -->
+          <div class="col-md-4 my-3 text-md-left ">
+            <div class="row justify-content-center">
+              <div class="col  text-center">
+                <h3 class=" mb-3 text-white"><a class="font-italic text-primary" href="https://fsu.acm.org" title="ACM at FSU Homepage" target="_blank" rel="external noopener">ACM at FSU</a></h3>
+                
+                <a href="mailto:contest@fsu.acm.org" title="ACM at FSU Email" class="text-warning d-block my-3"><i class="fa fa-envelope fa-fw text-white"></i> contest@fsu.acm.org</a>
+                  
+                <div class="pt-2">
+                  <a href="https://www.facebook.com/ACMatFSU/" title="ACM at FSU Facebook" target="_blank" rel="external noopener"><i class="fab fa-facebook fa-lg text-white mr-3"></i></a>
+                  <a href="https://discord.gg/4z3hNMA" title="ACM at FSU Discord" target="_blank" rel="external noopener"><i class="fab fa-discord fa-lg text-white mx-3"></i></a>
+                  <a href="https://www.instagram.com/fsuacm/" title="ACM at FSU Instagram" target="_blank" rel="external noopener"><i
+                      class="fab fa-instagram fa-lg text-white mx-3"></i></a>
+                  <a href="https://www.linkedin.com/groups/12238485/" title="ACM at FSU LinkedIn" target="_blank" rel="external noopener"><i class="fab fa-linkedin fa-lg text-white ml-3"></i></a>
+                </div> 
+              </div>
             </div>
           </div>
-    
-          <div class="col-md-4 text-white text-center text-md-left ">
-            <div class="pt-2 mt-4">
+          <!-- center column -->
+          <div class="col-md-4 text-white my-3 pt-1 text-center text-md-left ">
+            <div>
               <div>
-                <a href="https://goo.gl/maps/AQz5K65kyfjjjQJb7" title="Google Maps - Love Building" class="text-white" target="_blank" rel="external noopener"><i class="fa-solid fa-map-location-dot"></i>
+                <a href="https://goo.gl/maps/AQz5K65kyfjjjQJb7" title="Google Maps - Love Building" class="text-white" target="_blank" rel="external noopener"><i class="fa-solid fa-map-location-dot fa-fw"></i>
                   James J. Love Building,
                   1017 Academic Way,
                   Tallahassee, FL 32304</a>
               </div>
               <div class="my-2">
-                <a class="text-white" href="https://www.cs.fsu.edu" title="FSU CS Department Homepage" target="_blank" rel="external noopener"><i class="fa-solid fa-up-right-from-square"></i> FSU Dept of Computer Science</a>
+                <a class="text-white" href="https://www.cs.fsu.edu" title="FSU CS Department Homepage" target="_blank" rel="external noopener"><i class="fa-solid fa-up-right-from-square fa-fw"></i> FSU Dept of Computer Science</a>
               </div>
               <div class="mt-2 pt-1">
-                <a class="text-white" href="https://icpc.global/" title="ICPC Global Homepage" target="_blank" rel="external noopener"><i class="fa-solid fa-up-right-from-square"></i> ICPC Global</a>
+                <a class="text-white" href="https://icpc.global/" title="ICPC Global Homepage" target="_blank" rel="external noopener"><i class="fa-solid fa-up-right-from-square fa-fw"></i> ICPC Global</a>
               </div>              
             </div>
           </div>
-    
-          <div class="col-md-4 text-white my-4 text-center text-md-left ">
-            <span class=" font-weight-bold">About the Contest</span>
+          <!-- right column -->
+          <div class="col-md-4 text-white my-3 pt-1 text-center text-md-left ">
+            <span class="font-weight-bold">About the Contest</span>
             <p class="text-info my-2">The ACM at FSU Programming Contest is a coding competition that emphasizes problem solving executed in code.</p>
             <a class="text-white" href="https://www.mmcinnestaylor.com" title="Marlan's Homepage" target="_blank" rel="external noopener">Built with &hearts; by Marlan Mc-T</a>
           </div>

@@ -34,7 +34,11 @@
 				</div>
 				<div class="card-footer">
 					<button class="btn btn-sm btn-primary" type="submit">Submit</button>
+					{% if heading == 'Team' %}
 					<a class="btn btn-secondary btn-sm" href="{% url 'manage_dashboard' %}" role="button">Cancel</a>
+					{% else %}
+					<a class="btn btn-secondary btn-sm" href="{% url 'index' %}" role="button">Cancel</a>
+					{% endif %}
 				</div>
 			</div>
 		</form>
