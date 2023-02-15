@@ -30,6 +30,14 @@ class Team(models.Model):
     def __str__(self):
         return (str(self.name) + ' : ' + ('U' if self.division == 1 else 'L'))
 
+    def get_division(self):
+        if self.division == 1:
+            division = 'Upper'
+        else:
+            division = 'Lower'
+
+        return division
+    
     def get_members(self):
         members = User.objects.filter(profile__team=self)
 
