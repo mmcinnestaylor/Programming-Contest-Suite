@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core.cache import cache
 
 import requests as req
 
@@ -22,11 +23,8 @@ def index(request):
     else:
         context['domjudge_status'] = r.status_code
 
-    context['cache_timeout'] = CACHE_TIMEOUT
-    try:
-        context['contest'] = Contest.objects.first()
-    except:
-        context['contest'] = None
+    context['contest'] = cache.get_or_set(
+        'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
     
     context['announcements'] = (Announcement.objects.filter(status=1))
     context['courses'] = Course.objects.all()
@@ -53,8 +51,6 @@ def teams(request):
 
     teams_set = Team.objects.all()
     participants_set = Profile.objects.all()
-
-    context['cache_timeout'] = CACHE_TIMEOUT
 
     # Aggregate upper division team and participant info
     upper_teams_set = teams_set.filter(division=1)

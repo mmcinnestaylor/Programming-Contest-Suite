@@ -22,7 +22,7 @@
 			</div>
 			<div class="card-footer">
 				{% if ec_files_available %}
-					<a href="{% url 'fac_ec_files_dl' uidb64=uid  %}" class="btn btn-primary"><i class="fa fa-download mx-1" aria-hidden="true"></i>Download</a>
+					<a href="{% url 'fac_ec_files_dl' uidb64=uid  %}" class="btn btn-primary"><i class="fa fa-download fa-fw" aria-hidden="true"></i> Download</a>
 				{% else %}
 					<a href="" class="btn btn-primary disabled"><i class="fa fa-download mx-1" aria-hidden="true"></i>Download</a>
 				{% endif %}
@@ -137,7 +137,7 @@
 		</div>
 		<div class="card-body overflow-auto">
 			<div class="row justify-content-center">
-				<div class="col-10">
+				<div class="col-12">
 					<div class="table-responsive">
 						<table class="table table-sm">
 							<thead class="thead-light">

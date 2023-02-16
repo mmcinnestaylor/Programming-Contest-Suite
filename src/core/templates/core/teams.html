@@ -9,17 +9,17 @@
 {% block section %}Teams{% endblock %}
 
 {% block content %}
-{% cache cache_timeout teams %}
+{% cache CACHE_TIMEOUT teams %}
 	<h1 class="text-center">Registered Teams</h1>
 	<div class="row">
 		<div class="col">
 			<h2>Upper Division</h2>
 			<button type="button" class="btn  btn-sm btn-primary mr-2" disabled>
-				<i class="fa-solid fa-users"></i> Teams <span class="badge badge-light">{{ num_upper_teams }}</span>
+				<i class="fa-solid fa-users fa-fw"></i> Teams <span class="badge badge-light">{{ num_upper_teams }}</span>
 				<span class="sr-only">number of upper division teams</span>
 			</button>
 			<button type="button" class="btn  btn-sm btn-info" disabled>
-				<i class="fa-solid fa-user"></i> Participants <span class="badge badge-light">{{ num_upper_participants }}</span>
+				<i class="fa-solid fa-user fa-fw"></i> Participants <span class="badge badge-light">{{ num_upper_participants }}</span>
 				<span class="sr-only">number of upper division participants</span>
 			</button>			
 			<div class="table-responsive mt-2">
@@ -60,11 +60,11 @@
 		<div class="col">
 			<h2>Lower Division</h2>		
 			<button type="button" class="btn  btn-sm btn-primary mr-2" disabled>
-				<i class="fa-solid fa-users"></i> Teams <span class="badge badge-light">{{ num_lower_teams }}</span>
+				<i class="fa-solid fa-users fa-fw"></i> Teams <span class="badge badge-light">{{ num_lower_teams }}</span>
 				<span class="sr-only">number of lower division teams</span>
 			</button>
 			<button type="button" class="btn  btn-sm btn-info" disabled>
-				<i class="fa-solid fa-user"></i> Participants <span class="badge badge-light">{{ num_lower_participants }}</span>
+				<i class="fa-solid fa-user fa-fw"></i> Participants <span class="badge badge-light">{{ num_lower_participants }}</span>
 				<span class="sr-only">number of lower division participants</span>
 			</button>
 			<div class="table-responsive mt-2">
