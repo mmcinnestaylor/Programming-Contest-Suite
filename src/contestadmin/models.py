@@ -32,3 +32,9 @@ class Contest(models.Model):
 
     def __str__(self):
         return ("Programming Contest on "+str(self.contest_date))
+
+    def get_participation(self):
+        if self.participation:
+            return self.FORMAT[self.participation - 1][1]
+        else:
+            return 'TBA'

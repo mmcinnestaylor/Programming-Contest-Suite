@@ -42,17 +42,7 @@
                   {% endif %}
                   <!-- Contest Format -->
                   <h4 class="text-center">Format</h4>
-                  {% if contest.participation is not None %}
-                    {% if contest.participation == 1 %}
-                      <p class="lead text-center text-white mb-3">In-Person Only</p>
-                    {% elif contest.participation == 2 %}
-                      <p class="lead text-center text-white mb-3">Virtual Only</p>
-                    {% else %}
-                      <p class="lead text-center text-white mb-3">In-Person or Virtual</p>
-                    {% endif %}
-                  {% else %}
-                      <p class="lead text-center text-white mb-3">TBA</p>
-                  {% endif %}
+                  <p class="lead text-center text-white mb-3">{{ contest.get_participation }}</p>
                 </div>
                 <!-- Date and Format Column end -->
               {% else %}
