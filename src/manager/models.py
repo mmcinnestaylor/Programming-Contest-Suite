@@ -90,3 +90,6 @@ class Profile(models.Model):
 
     def is_volunteer(self):
         return self.role > 1
+
+    def is_organizer(self):
+        return self.role == 5

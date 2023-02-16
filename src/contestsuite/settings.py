@@ -101,7 +101,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'core.context_processors.debug',
+                'core.context_processors.app_settings',
             ],
         },
     },
@@ -291,3 +291,9 @@ DOMJUDGE_URL = get_secret('DOMJUDGE_URL', 'https://domjudge.cs.fsu.edu')
 
 HASHID_FIELD_SALT = get_secret(
     'HASHID_FIELD_SALT', '0s97rx*t4%68jell&lw3^)97o*kr*+*2o^(76q)ix+ilc!4ax#')
+
+
+# Google Analytics
+
+GTAG = get_secret('GTAG')
+

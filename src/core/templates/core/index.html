@@ -17,7 +17,7 @@
 {% include 'core/messages.html' %}
 <!-- End Messages -->
 
-{% cache cache_timeout homepage %}
+{% cache CACHE_TIMEOUT homepage %}
   <h1 class="text-center display-4">ACM at FSU Programming Contest</h1>
 
   <div class="row justify-content-center">
@@ -29,7 +29,7 @@
             <div class="row">
               {% if contest is not None %}
                 <!-- Date and Format Column -->
-                <div class="col-sm-6">
+                <div class="col-md-6">
                   <!-- Contest Date -->
                   <h4 class="text-center">Contest Date</h4>
                   <p class="lead text-center text-white mb-3">{{ contest.contest_date }}</p>
@@ -42,22 +42,12 @@
                   {% endif %}
                   <!-- Contest Format -->
                   <h4 class="text-center">Format</h4>
-                  {% if contest.participation is not None %}
-                    {% if contest.participation == 1 %}
-                      <p class="lead text-center text-white mb-3">In-Person Only</p>
-                    {% elif contest.participation == 2 %}
-                      <p class="lead text-center text-white mb-3">Virtual Only</p>
-                    {% else %}
-                      <p class="lead text-center text-white mb-3">In-Person or Virtual</p>
-                    {% endif %}
-                  {% else %}
-                      <p class="lead text-center text-white mb-3">TBA</p>
-                  {% endif %}
+                  <p class="lead text-center text-white mb-3">{{ contest.get_participation }}</p>
                 </div>
                 <!-- Date and Format Column end -->
               {% else %}
                 <!-- Date and Format Column -->
-                <div class="col-sm-6">
+                <div class="col-md-6">
                   <!-- Contest Date -->
                   <h4 class="text-center">Contest Date</h4>
                   <p class="lead text-center text-white mb-3">TBA</p>
@@ -71,25 +61,48 @@
                 <!-- Date and Format Column end -->
               {% endif %}
               <!-- Buttons Column -->
-              <div class="col-sm-6 justify-content-center">
-                <div class="text-center">
+              <div class="col-md-6 d-block d-lg-none">
                   <!-- Register Button -->
-                  <a href="{% url 'register_base' %}" class="btn btn-lg btn-outline-light my-2"><i class="fa-solid fa-user-plus"></i> Register</a>
+                  <a href="{% url 'register_base' %}" class="btn btn-outline-light w-100 mb-2"><i class="fa-solid fa-user-plus fa-fw"></i> Register</a>
                   <br>
                   <!-- Registration Guide button -->
-                  <a href="https://drive.google.com/drive/folders/1uCylEYyFdXdxD_BxplYZIioW6_ragXTq?usp=sharing" class="btn btn-lg btn-outline-light my-2" target="_blank"><i class="fa-solid fa-book"></i> Registration Guide</a>
+                  <a href="https://drive.google.com/drive/folders/1uCylEYyFdXdxD_BxplYZIioW6_ragXTq?usp=sharing" class="btn btn-outline-light w-100 my-2" target="_blank"><i class="fa-solid fa-book fa-fw"></i> Registration Guide</a>
                   <br>
                   <!-- Contest Schedule button -->
-                  <button type="button" class="btn btn-lg btn-outline-light my-2" data-toggle="modal" data-target="#displayScheduleModal"><i class="fa-solid fa-clock"></i> Contest Schedule
+                  <button type="button" class="btn btn-outline-light w-100 my-2" data-toggle="modal" data-target="#displayScheduleModal"><i class="fa-solid fa-clock fa-fw"></i> Contest Schedule
                   </button>
-                </div>
+                  {% if contest.order_tshirt_url %}
+                  <!-- Contest T-shirt button -->
+                  <a href="{{ contest.order_tshirt_url }}"
+                    class="btn btn-outline-light w-100 my-2" target="_blank" rel="external noopener"><i class="fa-solid fa-shirt fa-fw"></i> Contest T-Shirt</a>
+                  {% endif %}
+              </div>
+              <div class="col-md-6 d-none d-lg-block">
+                <!-- Register Button -->
+                <a href="{% url 'register_base' %}" class="btn btn-lg btn-outline-light w-100 mb-2"><i
+                    class="fa-solid fa-user-plus fa-fw"></i> Register</a>
+                <br>
+                <!-- Registration Guide button -->
+                <a href="https://drive.google.com/drive/folders/1uCylEYyFdXdxD_BxplYZIioW6_ragXTq?usp=sharing"
+                  class="btn btn-lg btn-outline-light w-100 my-2" target="_blank"><i class="fa-solid fa-book fa-fw"></i> Registration
+                  Guide</a>
+                <br>
+                <!-- Contest Schedule button -->
+                <button type="button" class="btn btn-lg btn-outline-light w-100 my-2" data-toggle="modal"
+                  data-target="#displayScheduleModal"><i class="fa-solid fa-clock fa-fw"></i> Contest Schedule
+                </button>
+                {% if contest.order_tshirt_url %}
+                <!-- Contest T-shirt button -->
+                <a href="{{ contest.order_tshirt_url }}" class="btn btn-lg btn-outline-light w-100 my-2" target="_blank"
+                  rel="external noopener"><i class="fa-solid fa-shirt fa-fw"></i> Contest T-Shirt</a>
+                {% endif %}
               </div>
               <!-- Buttons Column end -->
             </div>              
           </div>
           <!-- Sponsors Column -->
-          <div class="col-md-4 border-left border-secondary d-none d-md-block">
-            <h4 class="text-center mt-3">Sponsors</h4>
+          <div class="col-md-4 border-left border-secondary d-none d-md-block my-3">
+            <h4 class="text-center">Sponsors</h4>
             <div class="text-center">
               <img src="{% static 'core/img/fsucslogo.png' %}" class="img-fluid w-75 my-2" alt="FSU CS Logo">
               <img src="{% static 'core/img/L3Harris_logo.png' %}" class="img-fluid w-75 my-2" alt="L3Harris Logo">
@@ -118,11 +131,12 @@
     <div class="col-md-5">
       <div class="card mt-3 border-secondary">
         <div class="card-header font-weight-bold bg-secondary text-white">
-          <i class="fa-solid fa-bullhorn"></i> <span class="d-inline d-sm-none">Recent Announcement</span><span class="d-none d-md-inline">Recent Announcements</span>
-          <a href="{% url 'announcements_feed' %}" class="float-right"><i class="fa fa-rss fa-sm" style="color: #f3a871;"></i></a>
+          <i class="fa-solid fa-bullhorn fa-fw"></i> <span class="d-inline d-md-none">Recent Announcement</span><span class="d-none d-md-inline">Recent Announcements</span>
+          <a href="{% url 'announcements_feed' %}" class="float-right" title="Announcements RSS feed"><i class="fa fa-rss fa-sm"
+              style="color: #f3a871;"></i></a>
         </div>
         <!-- Mobile Announcements -->
-        <div class="card-body d-block d-sm-none">
+        <div class="card-body d-block d-md-none">
           {% for announcement in announcements|slice:":1" %}
             <h5 class="card-title mb-0">{{ announcement.title }}</h5>
             {% if announcement.created_on < announcement.updated_on %}
@@ -190,7 +204,7 @@
           <!-- Domjudge Status card -->
           <div class="card mt-3 border-secondary">
             <div class="card-header font-weight-bold bg-secondary text-white">
-              <i class="fa-solid fa-server"></i> Contest Server Status
+              <i class="fa-solid fa-server fa-fw"></i> Contest Server Status
             </div>
             <div class="card-body">
               {% if domjudge_status == 200 %}
@@ -201,9 +215,9 @@
             </div>
             <div class="card-footer">
               {% if domjudge_status == 200 %}
-                <a href="https://domjudge.cs.fsu.edu" class="btn btn-sm btn-primary" target="_blank" rel="external noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Connect</a>
+                <a href="https://domjudge.cs.fsu.edu" class="btn btn-sm btn-primary" target="_blank" rel="external noopener"><i class="fa-solid fa-arrow-up-right-from-square fa-fw"></i> Connect</a>
               {% else %}
-                <a href="" class="btn btn-sm btn-primary disabled" target="_blank" rel="external"><i class="fa-solid fa-up-right-from-square"></i> Connect</a>
+                <a href="" class="btn btn-sm btn-primary disabled" target="_blank" rel="external"><i class="fa-solid fa-up-right-from-square fa-fw"></i> Connect</a>
               {% endif %}
             </div>
           </div>
@@ -212,7 +226,7 @@
           <!-- LFG card -->
           <div class="card mt-3 border-secondary">
             <div class="card-header font-weight-bold bg-secondary text-white">
-              <i class="fa-solid fa-arrows-down-to-people"></i> Looking For Group
+              <i class="fa-solid fa-arrows-down-to-people fa-fw"></i> Looking For Group
             </div>
             <div class="card-body">
               <div>
@@ -240,12 +254,12 @@
       <!-- Extra Credit card -->
       <div class="card border-secondary mt-3">
         <div class="card-header font-weight-bold bg-secondary text-white">
-          <i class="fa-solid fa-list-ul"></i> Extra Credit Courses
+          <i class="fa-solid fa-list-ul fa-fw"></i> Extra Credit Courses
         </div>
         <div class="card-body">
           {% for course in courses|slice:"5" %}
             <p class="card-text mb-1">
-              <span class="font-weight-bold">{{ course.code }} </span>{{ course.name }} - {{course.instructor.last_name }}
+              <span class="font-weight-bold">{{ course.code }} </span><i>{{ course.name }}</i> - {{course.instructor.last_name }}
             </p>
           {% empty %}
             <p class="card-text">No courses have been confirmed at this time.</p>
@@ -261,7 +275,7 @@
       <!-- About Contest Card -->
       <div class="card border-secondary mt-3">
         <div class="card-header font-weight-bold bg-secondary text-white">
-          <i class="fa-solid fa-circle-info"></i> The Contest
+          <i class="fa-solid fa-circle-info fa-fw"></i> The Contest
         </div>
         <div class="card-body">
           <h4 class="card-title">About</h4>
@@ -297,20 +311,26 @@
   <!-- Courses Modal -->
   <div class="modal fade" id="displayCoursesModal" tabindex="-1" role="dialog"
     aria-labelledby="displayCoursesModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h6 class="modal-title" id="displayCoursesModalLongTitle">Extra Credit</h6>
+          <h6 class="modal-title" id="displayCoursesModalLongTitle">Extra Credit Courses</h6>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          {% for course in courses %}
-            <p class="mb-1"><span class="font-weight-bold">{{ course.code }} </span>{{ course.name }} - {{ course.instructor.last_name }}</p>
-          {% empty %}
-            <p class="mb-1">No courses have been confirmed at this time.</p>
-          {% endfor %}
+          <div class="row justify-content-center">
+            <div class="col-lg-10">
+              <ul class="list-group list-group-flush">
+              {% for course in courses %}
+              <li class="list-group-item"><span class="font-weight-bold">{{ course.code }} </span><i>{{ course.name }}</i> - {{ course.instructor.last_name }}</li>
+              {% empty %}
+              <li class="list-group-item">No courses have been confirmed at this time.</li>
+              {% endfor %}
+              </ul>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -41,6 +41,7 @@ services:
             - contestsuite_email_user
             - contestsuite_email_password
             - contestsuite_discord_guild_id
+            - contestsuite_gtag
         environment:
             # Django
             SECRET_KEY: /run/secrets/contestsuite_django_key # Project secret key
@@ -62,6 +63,9 @@ services:
 
             # Hashid Module 
             HASHID_FIELD_SALT: /run/secrets/contestsuite_hashid_key # Global Salt
+
+            # Analytics
+            GTAG: /run/secrets/contestsuite_gtag # Google site tag
         volumes:
             - django_app:/app/media
             - django_static:/app/static
@@ -330,6 +334,9 @@ secrets:
     contestsuite_flower_password:
         external: true
     contestsuite_flower_cookie_key:
+        external: true
+    # Analytics
+    contestsuite_gtag:
         external: true
 volumes:
     django_app:
