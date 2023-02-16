@@ -29,7 +29,7 @@
             <div class="row">
               {% if contest is not None %}
                 <!-- Date and Format Column -->
-                <div class="col-sm-6">
+                <div class="col-md-6">
                   <!-- Contest Date -->
                   <h4 class="text-center">Contest Date</h4>
                   <p class="lead text-center text-white mb-3">{{ contest.contest_date }}</p>
@@ -57,7 +57,7 @@
                 <!-- Date and Format Column end -->
               {% else %}
                 <!-- Date and Format Column -->
-                <div class="col-sm-6">
+                <div class="col-md-6">
                   <!-- Contest Date -->
                   <h4 class="text-center">Contest Date</h4>
                   <p class="lead text-center text-white mb-3">TBA</p>
@@ -71,25 +71,48 @@
                 <!-- Date and Format Column end -->
               {% endif %}
               <!-- Buttons Column -->
-              <div class="col-sm-6 justify-content-center">
-                <div class="text-center">
+              <div class="col-md-6 d-block d-lg-none">
                   <!-- Register Button -->
-                  <a href="{% url 'register_base' %}" class="btn btn-lg btn-outline-light my-2"><i class="fa-solid fa-user-plus fa-fw"></i> Register</a>
+                  <a href="{% url 'register_base' %}" class="btn btn-outline-light w-100 mb-2"><i class="fa-solid fa-user-plus fa-fw"></i> Register</a>
                   <br>
                   <!-- Registration Guide button -->
-                  <a href="https://drive.google.com/drive/folders/1uCylEYyFdXdxD_BxplYZIioW6_ragXTq?usp=sharing" class="btn btn-lg btn-outline-light my-2" target="_blank"><i class="fa-solid fa-book fa-fw"></i> Registration Guide</a>
+                  <a href="https://drive.google.com/drive/folders/1uCylEYyFdXdxD_BxplYZIioW6_ragXTq?usp=sharing" class="btn btn-outline-light w-100 my-2" target="_blank"><i class="fa-solid fa-book fa-fw"></i> Registration Guide</a>
                   <br>
                   <!-- Contest Schedule button -->
-                  <button type="button" class="btn btn-lg btn-outline-light my-2" data-toggle="modal" data-target="#displayScheduleModal"><i class="fa-solid fa-clock fa-fw"></i> Contest Schedule
+                  <button type="button" class="btn btn-outline-light w-100 my-2" data-toggle="modal" data-target="#displayScheduleModal"><i class="fa-solid fa-clock fa-fw"></i> Contest Schedule
                   </button>
-                </div>
+                  {% if contest.order_tshirt_url %}
+                  <!-- Contest T-shirt button -->
+                  <a href="{{ contest.order_tshirt_url }}"
+                    class="btn btn-outline-light w-100 my-2" target="_blank" rel="external noopener"><i class="fa-solid fa-shirt fa-fw"></i> Contest T-Shirt</a>
+                  {% endif %}
+              </div>
+              <div class="col-md-6 d-none d-lg-block">
+                <!-- Register Button -->
+                <a href="{% url 'register_base' %}" class="btn btn-lg btn-outline-light w-100 mb-2"><i
+                    class="fa-solid fa-user-plus fa-fw"></i> Register</a>
+                <br>
+                <!-- Registration Guide button -->
+                <a href="https://drive.google.com/drive/folders/1uCylEYyFdXdxD_BxplYZIioW6_ragXTq?usp=sharing"
+                  class="btn btn-lg btn-outline-light w-100 my-2" target="_blank"><i class="fa-solid fa-book fa-fw"></i> Registration
+                  Guide</a>
+                <br>
+                <!-- Contest Schedule button -->
+                <button type="button" class="btn btn-lg btn-outline-light w-100 my-2" data-toggle="modal"
+                  data-target="#displayScheduleModal"><i class="fa-solid fa-clock fa-fw"></i> Contest Schedule
+                </button>
+                {% if contest.order_tshirt_url %}
+                <!-- Contest T-shirt button -->
+                <a href="{{ contest.order_tshirt_url }}" class="btn btn-lg btn-outline-light w-100 my-2" target="_blank"
+                  rel="external noopener"><i class="fa-solid fa-shirt fa-fw"></i> Contest T-Shirt</a>
+                {% endif %}
               </div>
               <!-- Buttons Column end -->
             </div>              
           </div>
           <!-- Sponsors Column -->
-          <div class="col-md-4 border-left border-secondary d-none d-md-block">
-            <h4 class="text-center mt-3">Sponsors</h4>
+          <div class="col-md-4 border-left border-secondary d-none d-md-block my-3">
+            <h4 class="text-center">Sponsors</h4>
             <div class="text-center">
               <img src="{% static 'core/img/fsucslogo.png' %}" class="img-fluid w-75 my-2" alt="FSU CS Logo">
               <img src="{% static 'core/img/L3Harris_logo.png' %}" class="img-fluid w-75 my-2" alt="L3Harris Logo">
@@ -119,7 +142,8 @@
       <div class="card mt-3 border-secondary">
         <div class="card-header font-weight-bold bg-secondary text-white">
           <i class="fa-solid fa-bullhorn fa-fw"></i> <span class="d-inline d-md-none">Recent Announcement</span><span class="d-none d-md-inline">Recent Announcements</span>
-          <a href="{% url 'announcements_feed' %}" class="float-right"><i class="fa fa-rss fa-sm" style="color: #f3a871;"></i></a>
+          <a href="{% url 'announcements_feed' %}" class="float-right" title="Announcements RSS feed"><i class="fa fa-rss fa-sm"
+              style="color: #f3a871;"></i></a>
         </div>
         <!-- Mobile Announcements -->
         <div class="card-body d-block d-md-none">
