@@ -28,6 +28,7 @@ class Contest(models.Model):
     participation = models.PositiveSmallIntegerField(choices=FORMAT, blank=True, null=True)
     lfg_active = models.BooleanField(default=False)
     lunch_form_url = models.URLField(blank=True, null=True)
+    order_tshirt_url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return ("Programming Contest on "+str(self.contest_date))
