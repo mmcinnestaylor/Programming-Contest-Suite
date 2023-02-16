@@ -11,10 +11,16 @@
 {% block content %}
 <h1 class="text-center">Contest Announcements</h1>
 
+<div class="row justify-content-center">
+    <div class="col-md-9 col-lg-8 mt-3">
+        <a href="{% url 'announcements_feed' %}" class="btn text-white" title="Announcements RSS feed"
+            style="background-color: #f3a871;"><i class="fa fa-rss fa-sm fa-fw"></i> Subscribe</a>
+    </div>
+</div>
 {% if is_paginated %}
     {% cache CACHE_TIMEOUT announcements page_obj.number %}
         <div class="row justify-content-center">
-            <div class="col-md-8 mt-3 left">
+            <div class="col-md-9 col-lg-8 mt-3">
                 {% for announcement in object_list %}
                     <div class="card mb-4 shadow">
                         <div class="card-body">
@@ -58,7 +64,7 @@
 {% else %}
     {% cache CACHE_TIMEOUT announcements %}
         <div class="row justify-content-center">
-            <div class="col-md-8 mt-3 left">
+            <div class="col-md-9 col-lg-8 mt-3">
                 {% for announcement in object_list %}
                     <div class="card mb-4 shadow">
                         <div class="card-body">
