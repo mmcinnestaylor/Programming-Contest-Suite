@@ -259,6 +259,12 @@ def delete_team(request):
 @user_passes_test(team_admin, login_url='/manage/')
 @transaction.atomic
 def remove_member(request, username):
+    if username == request.user.username:
+        messages.error(
+            request, 'Cannot remove self from team. Please use Leave option instead.', fail_silently=True)
+        
+        return redirect('manage_dashboard')
+
     try:
         #member = get_object_or_404(User, username=username)
         member = User.objects.get(username=username)
@@ -270,8 +276,9 @@ def remove_member(request, username):
         #Update user being removed
         member.profile.team = None
         member.profile.save()
-        
-        messages.success(request, str(member.get_full_name()) + ' removed from the team.', fail_silently=True)
     except:
         messages.error(request, 'Unable to remove member from the team. Please try again later.', fail_silently=True)
+    else:
+        messages.success(request, str(member.get_full_name()) +
+                         ' removed from the team.', fail_silently=True)
     return redirect('manage_dashboard')
