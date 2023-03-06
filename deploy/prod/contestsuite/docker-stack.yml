@@ -29,7 +29,7 @@ services:
                 delay: 5s
                 monitor: 60s
                 failure_action: rollback            
-    django:
+    gunicorn:
         image: acmfsu/contestsuite:latest
         command: /app/docker/start.sh server
         secrets:
