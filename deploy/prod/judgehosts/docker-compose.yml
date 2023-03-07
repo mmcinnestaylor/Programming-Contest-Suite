@@ -12,7 +12,6 @@ services:
             JUDGEDAEMON_USERNAME: judgehost
             JUDGEDAEMON_PASSWORD_FILE: /run/secrets/domjudge_jh_password
             DOMSERVER_BASEURL: http://domserver/
-            DOMJUDGE_CREATE_WRITABLE_TEMP_DIR: 1
         volumes:  
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
         networks:
@@ -28,7 +27,6 @@ services:
             JUDGEDAEMON_USERNAME: judgehost
             JUDGEDAEMON_PASSWORD_FILE: /run/secrets/bastion_jh_password
             DOMSERVER_BASEURL: http://domserver/
-            DOMJUDGE_CREATE_WRITABLE_TEMP_DIR: 1
         volumes:  
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
         networks:

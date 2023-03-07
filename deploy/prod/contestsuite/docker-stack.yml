@@ -29,7 +29,7 @@ services:
                 delay: 5s
                 monitor: 60s
                 failure_action: rollback            
-    django:
+    gunicorn:
         image: acmfsu/contestsuite:latest
         command: /app/docker/start.sh server
         secrets:
@@ -261,6 +261,7 @@ services:
                 failure_action: rollback
     redis:
         image: redis:5-buster
+        command: redis-server --save 600 1 --loglevel warning
         environment:
             TZ: America/New_York
         volumes:
