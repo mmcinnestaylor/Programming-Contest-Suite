@@ -6,7 +6,7 @@ services:
         environment:
             LETSENCRYPT_HOST: contest.cs.fsu.edu
             VIRTUAL_HOST: contest.cs.fsu.edu
-            
+            SERVER_TOKENS: 'off'
             TZ: America/New_York
         volumes:
             - ./config/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
