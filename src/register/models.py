@@ -27,6 +27,7 @@ class Team(models.Model):
     questions_answered = models.PositiveSmallIntegerField(default=0)
     score = models.PositiveSmallIntegerField(default=0)
     num_members = models.PositiveSmallIntegerField(default=0)
+    faculty = models.BooleanField(default=False)
 
     def __str__(self):
         return (str(self.name) + ' : ' + ('U' if self.division == 1 else 'L'))
