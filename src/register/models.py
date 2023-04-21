@@ -25,6 +25,7 @@ class Team(models.Model):
     contest_id = models.CharField(max_length=7, unique=True, blank=True, null=True)
     contest_password = models.CharField(max_length=6, unique=True, blank=True, null=True)
     questions_answered = models.PositiveSmallIntegerField(default=0)
+    score = models.PositiveSmallIntegerField(default=0)
     num_members = models.PositiveSmallIntegerField(default=0)
 
     def __str__(self):

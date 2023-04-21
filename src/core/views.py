@@ -54,13 +54,13 @@ def teams(request):
 
     # Aggregate upper division team and participant info
     upper_teams_set = teams_set.filter(division=1)
-    context['upper_teams'] = upper_teams_set
+    context['upper_teams'] = upper_teams_set.order_by('-questions_answered', 'score', 'name')
     context['num_upper_teams'] = upper_teams_set.count()
     context['num_upper_participants'] = participants_set.filter(team__division=1).count()
 
     #  Aggregate division team and participant info
     lower_teams_set = teams_set.filter(division=2)
-    context['lower_teams'] = lower_teams_set
+    context['lower_teams'] = lower_teams_set.order_by('-questions_answered', 'score', 'name')
     context['num_lower_teams'] = lower_teams_set.count()
     context['num_lower_participants'] = participants_set.filter(team__division=2).count()
 

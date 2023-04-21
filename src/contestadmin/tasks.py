@@ -275,7 +275,8 @@ def process_contest_results():
                 try:
                     #team= Team.objects.get(contest_id=row[0])
                     team = Team.objects.get(contest_id=id)
-                    team.questions_answered= row[3]
+                    team.questions_answered = row[3]
+                    team.score = row[4]
                     team.save()
                     num_teams += 1
                 except:
