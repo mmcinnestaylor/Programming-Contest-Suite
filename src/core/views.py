@@ -17,11 +17,10 @@ def index(request):
     context = {}
 
     try:
-        r = req.get(DOMJUDGE_URL)
-    except:
+        context['domjudge_status'] = cache.get_or_set(
+        'domjudge_status', (req.get(DOMJUDGE_URL)).status_code, CACHE_TIMEOUT)
+    except req.ConnectionError:
         context['domjudge_status'] = None
-    else:
-        context['domjudge_status'] = r.status_code
 
     context['contest'] = cache.get_or_set(
         'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
