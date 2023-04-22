@@ -17,11 +17,10 @@ def index(request):
     context = {}
 
     try:
-        r = req.get(DOMJUDGE_URL)
-    except:
+        context['domjudge_status'] = cache.get_or_set(
+        'domjudge_status', (req.get(DOMJUDGE_URL)).status_code, CACHE_TIMEOUT)
+    except req.ConnectionError:
         context['domjudge_status'] = None
-    else:
-        context['domjudge_status'] = r.status_code
 
     context['contest'] = cache.get_or_set(
         'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
@@ -53,15 +52,21 @@ def teams(request):
     participants_set = Profile.objects.all()
 
     # Aggregate upper division team and participant info
-    upper_teams_set = teams_set.filter(division=1)
-    context['upper_teams'] = upper_teams_set
+    upper_teams_set = teams_set.filter(division=1).filter(faculty=False).exclude(num_members=0)
+    context['upper_teams'] = upper_teams_set.order_by('-questions_answered', 'score', 'name')
     context['num_upper_teams'] = upper_teams_set.count()
     context['num_upper_participants'] = participants_set.filter(team__division=1).count()
 
-    #  Aggregate division team and participant info
-    lower_teams_set = teams_set.filter(division=2)
-    context['lower_teams'] = lower_teams_set
+    #  Aggregate lower division team and participant info
+    lower_teams_set = teams_set.filter(division=2).filter(faculty=False).exclude(num_members=0)
+    context['lower_teams'] = lower_teams_set.order_by('-questions_answered', 'score', 'name')
     context['num_lower_teams'] = lower_teams_set.count()
     context['num_lower_participants'] = participants_set.filter(team__division=2).count()
+
+    # Aggregate faculty team and participant info
+    faculty_teams_set = teams_set.filter(faculty=True).exclude(num_members=0)
+    context['faculty_teams'] = faculty_teams_set.order_by('-questions_answered', 'score', 'name')
+    context['num_faculty_teams'] = faculty_teams_set.count()
+    context['num_faculty_participants'] = participants_set.filter(team__faculty=True).count()
 
     return render(request, 'core/teams.html', context)

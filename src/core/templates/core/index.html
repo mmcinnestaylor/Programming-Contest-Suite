@@ -136,7 +136,7 @@
           {% for announcement in announcements|slice:":1" %}
             <h5 class="card-title mb-0">{{ announcement.title }}</h5>
             {% if announcement.created_on < announcement.updated_on %}
-              <small class="card-text text-muted">Updated: {{ announcement.updated_on}}</small>
+              <small class="card-text text-muted">Updated: {{ announcement.updated_on }}</small>
             {% else %}
               <small class="card-text text-muted">{{ announcement.created_on}}</small>
             {% endif %}
@@ -162,30 +162,30 @@
         <!-- Desktop Announcements -->
         <div class="card-body d-none d-md-block">
           {% for announcement in announcements|slice:":6" %}
-          <h5 class="card-title mb-0">{{ announcement.title }}</h5>
-          {% if announcement.created_on < announcement.updated_on %} <small class="card-text text-muted">Updated: {{
-            announcement.updated_on}}</small>
+            <h5 class="card-title mb-0">{{ announcement.title }}</h5>
+            {% if announcement.created_on < announcement.updated_on %}
+              <small class="card-text text-muted">Updated: {{ announcement.updated_on }}</small>
             {% else %}
-            <small class="card-text text-muted">{{ announcement.created_on}}</small>
+              <small class="card-text text-muted">{{ announcement.created_on}}</small>
             {% endif %}
         
             {% if announcement.content|length > 140 %}
-            <p class="card-text mt-1 mb-1">{{announcement.content|slice:":140" }}...</p>
-            <a href="{% url 'announcement_detail' announcement.slug  %}" class=" mb-3"><small>Read More</small></a>
+              <p class="card-text mt-1 mb-1">{{announcement.content|slice:":140" }}...</p>
+              <a href="{% url 'announcement_detail' announcement.slug  %}" class=" mb-3"><small>Read More</small></a>
             {% else %}
-            <p class="card-text mt-2">{{announcement.content }}</p>
+              <p class="card-text mt-2">{{announcement.content }}</p>
             {% endif %}
         
             {% if not forloop.last%}
-            <hr class="w-75">
+              <hr class="w-75">
             {% endif %}
-            {% empty %}
+          {% empty %}
             <p class="card-text mt-1 mb-1">No announcements have been posted.</p>
-            {% endfor %}
+          {% endfor %}
         
-            {% if announcements|length > 6%}
+          {% if announcements|length > 6%}
             <a href="{% url 'announcements' %}" class="mt-2" style="display: block;"><small>All Announcments &raquo;</small></a>
-            {% endif %}
+          {% endif %}
         </div>
       </div>
     </div>
