@@ -286,7 +286,7 @@ SCRAPE_BOT_TOKEN = get_secret('SCRAPE_BOT_TOKEN', None)
 
 # DOMjudge Status Button
 
-DOMJUDGE_URL = get_secret('DOMJUDGE_URL', 'https://domjudge.cs.fsu.edu')
+DOMJUDGE_URL = get_secret('DOMJUDGE_URL', 'https://domjudge.cs.fsu.edu/public')
 
 
 # Hashid Fields
