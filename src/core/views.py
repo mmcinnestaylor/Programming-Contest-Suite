@@ -16,12 +16,17 @@ from lfg.models import LFGProfile
 def index(request):
     context = {}
 
-    try:
-        context['domjudge_status'] = cache.get_or_set(
-        'domjudge_status', (req.get(DOMJUDGE_URL)).status_code, CACHE_TIMEOUT)
-    except req.ConnectionError:
-        context['domjudge_status'] = None
-
+    if cache.get('domjudge_status'):
+        context['domjudge_status'] = cache.get('domjudge_status')
+    else:
+        try:
+            r = req.head(DOMJUDGE_URL)
+        except req.ConnectionError:
+            context['domjudge_status'] = None
+        else:
+            context['domjudge_status'] = r.status_code
+            cache.set('domjudge_status', r.status_code, CACHE_TIMEOUT)
+    
     context['contest'] = cache.get_or_set(
         'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
     
