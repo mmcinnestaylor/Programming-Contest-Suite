@@ -19,7 +19,7 @@ def email_annoucement(id):
     try:
         announcement = Announcement.objects.get(id=id)
     except:
-        logger.info('Failed to send announcement with id %d ' % id)
+        logger.info(f'Failed to send announcement with id {id}')
     else:
         i=0
         users = User.objects.all()
@@ -37,14 +37,14 @@ def email_annoucement(id):
         messages = tuple(messages)
         send_mass_mail(messages, fail_silently=False)
 
-        logger.info('Sent announcement to %d users' % i)
+        logger.info(f'Sent announcement to {i} users')
 
 @shared_task
 def discord_announcement(id):
     try:
         announcement = Announcement.objects.get(id=id)
     except:
-        logger.info('Failed to send announcement with id %d ' % id)
+        logger.info(f'Failed to send announcement with id {id}')
     else:
         # Initializing webhook
         try:

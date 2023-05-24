@@ -44,7 +44,7 @@ def create_walkin_teams(division, total):
         name = base_name + str(existing_count+i+1).zfill(3)
         pin = User.objects.make_random_password(length=6)
         Team.objects.create(name=name, division=division, pin=pin)
-        logger.info('Created walk-in team %d' % (i+1))
+        logger.info(f'Created walk-in team {i+1}')
 
     logger.info('Walk-in team creation complete')
 
@@ -63,7 +63,7 @@ def generate_contest_files():
         team.contest_password = User.objects.make_random_password(length=6)
         team.save()
 
-    logger.info('Created credentials for %d teams' % count)
+    logger.info(f'Created credentials for {count} teams')
 
     
     for division in Team.DIVISION:
@@ -143,7 +143,7 @@ def check_in_out_users(action):
                     'checkin/team_credentials_practice_email.html', {'user': user})
             user.email_user(subject, message)
 
-            logger.info('Sent credentials to %s' % user.username)
+            logger.info(f'Sent credentials to {user.username}')
     # Check-out
     else:
         users = User.objects.all()
@@ -206,7 +206,7 @@ def generate_ec_reports():
                 continue
     
     logger.info(
-        'Processed extra credit files for %d courses' % num_courses)
+        f'Processed extra credit files for {num_courses} courses')
 
 
 @shared_task
@@ -280,11 +280,11 @@ def process_contest_results():
                     team.save()
                     num_teams += 1
                 except:
-                    logger.info('Could not process contest results for %s teams' % id)
+                    logger.info(f'Could not process contest results for team {id}')
             else:
                 pass
 
-    logger.info('Processed contest results for %d teams' % num_teams)
+    logger.info(f'Processed contest results for {num_teams} teams')
 
 
 @shared_task
