@@ -113,9 +113,9 @@ def create_db_members(members):
                 failed_adds += 1
 
     if failed_adds > 0:
-        logger.info(f"Failed to write {failed_adds} members to the database")
+        logger.warning(f"Failed to write {failed_adds} members to the database")
     else:
-        logger.info("Member scrape successful")
+        logger.debug("Member scrape successful")
 
 
 if __name__ == "__main__":
