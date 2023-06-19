@@ -25,7 +25,7 @@ logger = get_task_logger(__name__)
 @shared_task
 @transaction.atomic
 def create_walkin_teams(division, total):
-    logger.info('Starting walk-in team creation')
+    logger.debug('Starting walk-in team creation')
 
     if division == 1:
         base_name = 'Walk-in-U-'
@@ -44,9 +44,9 @@ def create_walkin_teams(division, total):
         name = base_name + str(existing_count+i+1).zfill(3)
         pin = User.objects.make_random_password(length=6)
         Team.objects.create(name=name, division=division, pin=pin)
-        logger.info(f'Created walk-in team {i+1}')
+        logger.debug(f'Created walk-in team {i+1}')
 
-    logger.info('Walk-in team creation complete')
+    logger.debug('Walk-in team creation complete')
 
 
 @shared_task
@@ -55,7 +55,7 @@ def generate_contest_files():
     count = 0
     teams = Team.objects.all()
 
-    logger.info('Starting team credential creation')
+    logger.debug('Starting team credential creation')
 
     for team in teams:
         count += 1
@@ -114,7 +114,7 @@ def generate_contest_files():
                             '',
                         ])
 
-    logger.info('Successfully generated contest files')
+    logger.debug('Successfully generated contest files')
 
 
 @shared_task
@@ -143,7 +143,7 @@ def check_in_out_users(action):
                     'checkin/team_credentials_practice_email.html', {'user': user})
             user.email_user(subject, message)
 
-            logger.info(f'Sent credentials to {user.username}')
+            logger.debug(f'Sent credentials to {user.username}')
     # Check-out
     else:
         users = User.objects.all()
@@ -280,7 +280,7 @@ def process_contest_results():
                     team.save()
                     num_teams += 1
                 except:
-                    logger.info(f'Could not process contest results for team {id}')
+                    logger.error(f'Could not process contest results for team {id}')
             else:
                 pass
 

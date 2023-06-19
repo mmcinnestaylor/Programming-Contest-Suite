@@ -19,12 +19,14 @@ def email_annoucement(id):
     try:
         announcement = Announcement.objects.get(id=id)
     except:
-        logger.info(f'Failed to send announcement with id {id}')
+        logger.error(f'Failed to fetch announcement with id {id}')
     else:
         i=0
         users = User.objects.all()
         messages = []
         
+        # Prepare email per user
+        # Using seperate message per user to avoid address exposure
         for user in users:
             if user.is_active and not user.profile.announcement_email_opt_out:
                 i += 1
@@ -44,14 +46,14 @@ def discord_announcement(id):
     try:
         announcement = Announcement.objects.get(id=id)
     except:
-        logger.info(f'Failed to send announcement with id {id}')
+        logger.error(f'Failed to fetch announcement with id {id}')
     else:
-        # Initializing webhook
         try:
+            # Initializing webhook
             webhook = Webhook.from_url(
                 ANNOUNCEMENT_WEBHOOK_URL, adapter=RequestsWebhookAdapter())
         except InvalidArgument:
-            logger.info('Failed to connect to announcement webhook')
+            logger.error('Failed to connect to announcement webhook')
         else:
             url = 'https://'+ALLOWED_HOSTS[0]+announcement.get_absolute_url()
             

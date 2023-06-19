@@ -16,4 +16,4 @@ def send_credentials(username):
     message = render_to_string('checkin/team_credentials_email.html', {'user': user})
     user.email_user(subject, message)
 
-    logger.info(f'Sent credentials to {username}')
+    logger.debug(f'Sent credentials to {username}')
