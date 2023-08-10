@@ -14,18 +14,22 @@ logger = get_task_logger(__name__)
 
 @shared_task
 def send_validation_email(domain, username):
-    user = User.objects.get(username=username)
-    subject = 'Activate Your Programming Contest Account'
-    message = render_to_string('register/account_activation_email.html', {
-        'user': user,
-        'domain': domain,
-        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': account_activation_token.make_token(user),
-    })
+    try:
+        user = User.objects.get(username=username)
+    except:
+        logger.error(f'Failed to send validation email to {username}')
+    else:
+        subject = 'Activate Your Programming Contest Account'
+        message = render_to_string('register/account_activation_email.html', {
+            'user': user,
+            'domain': domain,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': account_activation_token.make_token(user),
+        })
 
-    user.email_user(subject, message)
+        user.email_user(subject, message)
 
-    logger.debug(f'Validation sent to {user.email}')
+        logger.debug(f'Validation sent to {user.email}')
 
 
 @shared_task
