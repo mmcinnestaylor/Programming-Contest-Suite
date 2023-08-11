@@ -1,5 +1,6 @@
 import csv
 import os
+from math import ceil, log10
 
 from discord import Webhook, RequestsWebhookAdapter, InvalidArgument
 
@@ -25,29 +26,44 @@ logger = get_task_logger(__name__)
 @shared_task
 @transaction.atomic
 def create_walkin_teams(division, total):
-    logger.debug('Starting walk-in team creation')
+    if total > 0:
+        logger.debug('Starting walk-in team creation')
 
-    if division == 1:
-        base_name = 'Walk-in-U-'
-        existing_count = Team.objects.filter(
-            name__contains='Walk-in-U-').count()
-    else:
-        base_name = 'Walk-in-L-'
-        existing_count = Team.objects.filter(
-            name__contains='Walk-in-L-').count()
-
-    for i in range(total):
-        '''if division == 1:
-            name = 'Walk-in-U-' + str(upper_count+i+1).zfill(3)
+        if division == 1:
+            base_name = 'Walk-in-U-'
         else:
-            name = 'Walk-in-L-' + str(lower_count+i+1).zfill(3)'''
-        name = base_name + str(existing_count+i+1).zfill(3)
-        pin = User.objects.make_random_password(length=6)
-        Team.objects.create(name=name, division=division, pin=pin)
-        logger.debug(f'Created walk-in team {i+1}')
+            base_name = 'Walk-in-L-'
 
-    logger.debug('Walk-in team creation complete')
+        existing_teams = Team.objects.filter(
+            name__contains=base_name)
 
+        if existing_teams.exists():
+            existing_count = existing_teams.count()
+            existing_count_width = ceil(log10(existing_count))
+            new_count_width = ceil(log10(existing_count+total))
+
+            # Update existing team names if 0-padding width changes
+            if new_count_width > existing_count_width:
+                for team in existing_teams:
+                    walkin_id = int(team.name.split("-")[-1])
+                    team.name = f"{base_name}{str(walkin_id).zfill(new_count_width)}"
+                    team.save()
+
+                logger.debug("Renamed existing Walk-in teams.")
+        else:
+            existing_count = 0
+            new_count_width = ceil(log10(total))
+
+        # Create and write teams to db
+        for i in range(1, total+1):
+            name = f"{base_name}{str(existing_count+i).zfill(new_count_width)}"
+            pin = User.objects.make_random_password(length=6)
+            Team.objects.create(name=name, division=division, pin=pin)
+            logger.debug(f'Created walk-in team {existing_count+i}')
+
+        logger.info(f'{total} {base_name[:-1]} teams created.')
+    else:
+        logger.error("New Walk-in team count LEQ 0.")
 
 @shared_task
 @transaction.atomic
