@@ -5,7 +5,7 @@ from math import ceil, log10
 from discord import Webhook, RequestsWebhookAdapter, InvalidArgument
 
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
+from django.core.mail import send_mass_mail
 from django.db import transaction
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
@@ -236,14 +236,17 @@ def generate_ec_reports():
 @shared_task
 def email_faculty(domain):
     faculty_members = Faculty.objects.all()
-    fpath = MEDIA_ROOT + '/ec_files/'
+    fpath = f"{MEDIA_ROOT}/ec_files/"
+    message_subject = 'Programming Contest EC files'
+    messages = []
 
     for faculty in faculty_members:
         found_files = False
 
+        # Detemine if EC files exist for given faculty member
         for fname in os.listdir(fpath):
-            uid=((faculty.email).split('@'))[0]
-            if uid in fname: #not faculty_nanmer
+            uid = faculty.email.split('@')[0]
+            if uid in fname:
                 found_files = True
                 break
 
@@ -253,14 +256,6 @@ def email_faculty(domain):
                 'domain': domain,
                 'uid': urlsafe_base64_encode(force_bytes(uid)),
             })
-            
-            send_mail(
-                'Programming Contest EC files',
-                message,
-                DEFAULT_FROM_EMAIL,
-                [faculty.email],
-                fail_silently = False,
-            )     
         else:
             message = render_to_string('contestadmin/no_ec_available_email.html', {
                 'faculty': faculty,
@@ -268,13 +263,18 @@ def email_faculty(domain):
                 'uid': urlsafe_base64_encode(force_bytes(uid)),
             })
 
-            send_mail(
-                'Programming Contest EC files',
-                message,
-                DEFAULT_FROM_EMAIL,
-                [faculty.email],
-                fail_silently=False,
-            )
+        messages.append((
+            message_subject,
+            message,
+            DEFAULT_FROM_EMAIL,
+            [faculty.email]
+        ))
+
+    messages = tuple(messages)  # Group messages for mass mailing
+    try:
+        send_mass_mail(messages, fail_silently=False)
+    except:
+        logger.error("Failed to send extra credit notification to faculty.")
 
 
 @shared_task
