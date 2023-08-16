@@ -162,7 +162,6 @@ def check_in_out_users(action):
             user.profile.checked_in = True
             user.save()
 
-            
             if action == 1:
                 subject = 'Programming Contest DOMjudge Credentials'
                 message = render_to_string(
@@ -187,53 +186,48 @@ def check_in_out_users(action):
 def generate_ec_reports():
     num_courses = 0
     faculty_members = Faculty.objects.all()
-    roles = {role[0]:role[1] for role in Profile.ROLES}
 
     for faculty in faculty_members:
+        # All courses for given faculty member
         courses = Course.objects.filter(instructor=faculty)
         num_files = 0
 
         for course in courses:
+            # All students in given course
             students = User.objects.filter(profile__courses=course).filter(profile__checked_in=True)
 
             if students.exists():
                 num_courses += 1
                 num_files += 1
-                filename = MEDIA_ROOT+'/ec_files/'+(faculty.email.split('@'))[0]+'_'+course.code+'.csv'
+                filename = f"{MEDIA_ROOT}/ec_files/{faculty.email.split('@')[0]}_{course.code}.csv"
 
+                # Participation report for given course
                 with open(filename, 'w', newline='') as csvfile:
                     writer = csv.writer(csvfile, quoting=csv.QUOTE_MINIMAL)
+                    
+                    # File header
                     writer.writerow(
                         ['fsu_id', 'last_name', 'first_name', 'questions_answered', 'team_division', 'role'])
+                    
                     for student in students:
-                        role = roles[student.profile.role]
-
-                        if student.profile.team is None:
-                            questions_answered = 'none'
-                            team_division = 'none'
-                        else:
-                            questions_answered = student.profile.team.questions_answered
-
-                            if student.profile.team.division == 1:
-                                team_division = 'Upper'
-                            else:
-                                team_division = 'Lower'
-
                         if student.profile.fsu_id is None:
                             fsu_id = 'none'
                         else:
                             fsu_id = student.profile.fsu_id
+
+                        if student.profile.team is None:
+                            questions_answered = 'none'
+                        else:
+                            questions_answered = student.profile.team.questions_answered        
 
                         writer.writerow([
                             fsu_id,
                             student.last_name,
                             student.first_name,
                             questions_answered,
-                            team_division,
-                            role
+                            student.profile.team.get_division_code(),
+                            student.profile.get_role()
                         ])
-            else:
-                continue
     
     logger.info(
         f'Processed extra credit files for {num_courses} courses')
