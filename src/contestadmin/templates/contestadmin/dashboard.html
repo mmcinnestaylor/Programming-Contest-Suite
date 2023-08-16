@@ -149,6 +149,10 @@
 				<div class="row justify-content-center">
 					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#activateAccountModal"><i class="fa-solid fa-user-check fa-fw"></i> Activate User Account</button>
 				</div>
+				<div class="row justify-content-center">
+					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#facultyTeamModal"><i
+							class="fa-solid fa-chalkboard-user fa-fw"></i> Designate Faculty Team</button>
+				</div>
 			</div>
 		</div>
 		<!-- Placeholder card end -->
@@ -412,6 +416,32 @@
 		</div>
 	</div>
 	<!-- End Activate Account Modal -->
+
+
+	<!-- Designate Faculty Team Modal -->
+	<div class="modal fade" id="facultyTeamModal" tabindex="-1" role="dialog"
+		aria-labelledby="confirmClearModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmClearModalLongTitle">Designate Faculty Team</h5>
+				</div>
+				<form method="post" onSubmit="return confirm('Are you certain you want to assign this team faculty status?');">
+					<div class="modal-body overflow-auto">
+						{% csrf_token %}
+						<div class="form-group">
+							{{ faculty_team_form.teamname | placeholder:"Team name"}}
+						</div>
+					</div>
+					<div class="card-footer">
+						<button class="btn btn-primary btn-sm" type="submit">Submit</button>
+						<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- End Designate Faculty Team Modal -->
 
 
 	<!-- Create Discord Roles Confirm Modal -->

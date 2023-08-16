@@ -49,3 +49,10 @@ class ActivateAccountForm(forms.Form):
         max_length=150,
         label='Username',
         help_text="Person's account username.")
+    
+
+class DesignateFacultyTeamForm(forms.Form):
+    teamname = forms.CharField(
+        max_length=30,
+        label='Team name',
+        help_text="Name of faculty team.")

@@ -172,6 +172,8 @@ def dashboard(request):
         channel_form = forms.ClearChannelForm(request.POST)
         profile_role_form = forms.UpdateProfileRoleForm(request.POST)
         activate_account_form = forms.ActivateAccountForm(request.POST)
+        faculty_team_form = forms.DesignateFacultyTeamForm(
+            request.POST)
 
         if walkin_form.is_valid():
             tasks.create_walkin_teams.delay(int(walkin_form.cleaned_data['division']), int(walkin_form.cleaned_data['total']))  
@@ -211,6 +213,18 @@ def dashboard(request):
             else:
                 messages.success(
                     request, 'Activated user account.', fail_silently=True)
+        elif faculty_team_form.is_valid():
+            try:
+                team = Team.objects.get(
+                    name=faculty_team_form.cleaned_data['teamname'])
+                team.faculty = True
+                team.save()
+            except:
+                messages.error(
+                    request, 'Faculty team assignment failed.', fail_silently=True)
+            else:
+                messages.success(
+                    request, 'Assigned team faculty status.', fail_silently=True)
         elif file_form.is_valid():
             if Contest.objects.all().count() == 0:
                 file_form.save()
@@ -240,6 +254,7 @@ def dashboard(request):
         channel_form = forms.ClearChannelForm()
         profile_role_form = forms.UpdateProfileRoleForm()
         activate_account_form = forms.ActivateAccountForm()
+        faculty_team_form = forms.DesignateFacultyTeamForm()
         
     
     if len(os.listdir(MEDIA_ROOT + '/uploads/')) > 0:
@@ -267,6 +282,7 @@ def dashboard(request):
     context['channel_form'] = channel_form
     context['profile_role_form'] = profile_role_form
     context['activate_account_form'] = activate_account_form
+    context["faculty_team_form"] = faculty_team_form
 
     return render(request, 'contestadmin/dashboard.html', context)
 
