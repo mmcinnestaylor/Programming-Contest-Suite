@@ -1,8 +1,7 @@
 from django import forms
-from django.contrib.auth.models import User
-from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from contestadmin.models import Contest
+from manager.models import Profile
 
 
 class CheckinUsersForm(forms.Form):
@@ -33,3 +32,13 @@ class ResultsForm(forms.ModelForm):
 
 class ClearChannelForm(forms.Form):
     channel_id = forms.IntegerField()
+
+
+class UpdateProfileRoleForm(forms.ModelForm):
+    username = forms.CharField(
+        max_length=150,
+        label='Username',
+        help_text="Volunteer's account username.")
+    class Meta:
+        model = Profile
+        fields = ["role"]

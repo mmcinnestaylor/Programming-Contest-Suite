@@ -100,17 +100,51 @@
 			</div>
 			<div class="card-body overflow-auto">
 				<div class="row justify-content-center">
-					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal"
-						data-target="#walkinModal">Create walk-in teams</button>
+					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#walkinModal">Create walk-in teams</button>
 				</div>
 				<div class="row justify-content-center">
 					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#checkinModal">Check in/out Users</button>
-				</div>
+				</div>							
 			</div>
 		</div>
 		<!-- Tools card end -->
 	</div>
 	<!-- EC Control deck end -->
+
+	<!-- Account Control Card deck -->
+	<div class="card-deck">
+		<!-- Profile role card -->
+		<div class="card mt-4 border-secondary">
+			<div class="card-header font-weight-bold bg-secondary text-white">
+				<i class="fa-solid fa-user-pen fa-fw"></i> Update User Role
+			</div>
+			<form method="post" onSubmit="return confirm('Are you certain you want to update this user profile?');">
+				<div class="card-body overflow-auto">
+					{% csrf_token %}
+					<div class="form-group">
+						{{ profile_role_form.username | placeholder:"Username"}}
+					</div>
+					<div class="form-group">
+						{{ profile_role_form.role }}
+					</div>
+				</div>
+				<div class="card-footer">
+					<button class="btn btn-primary btn-sm" type="submit">Submit</button>
+				</div>
+			</form>
+		</div>
+		<!-- Profile role card end -->
+		<!-- Placeholder card -->
+		<div class="card mt-4 border-secondary">
+			<div class="card-header font-weight-bold bg-secondary text-white">
+				Placeholder
+			</div>
+			<div class="card-body overflow-auto">
+			</div>
+		</div>
+		<!-- Placeholder card end -->
+	</div>
+	<!-- Account Control deck end -->
 
 	<!-- Discord Control Card deck -->
 	<div class="card-deck">

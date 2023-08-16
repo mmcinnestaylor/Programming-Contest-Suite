@@ -170,6 +170,7 @@ def dashboard(request):
         file_form = forms.ResultsForm(request.POST, request.FILES)
         checkin_form = forms.CheckinUsersForm(request.POST)
         channel_form = forms.ClearChannelForm(request.POST)
+        profile_role_form = forms.UpdateProfileRoleForm(request.POST)
 
         if walkin_form.is_valid():
             tasks.create_walkin_teams.delay(int(walkin_form.cleaned_data['division']), int(walkin_form.cleaned_data['total']))  
@@ -184,6 +185,18 @@ def dashboard(request):
                 channel_form.cleaned_data['channel_id'])
             messages.info(request, 'Clear channel task scheduled.',
                           fail_silently=True)
+        elif profile_role_form.is_valid():
+            try:
+                profile = Profile.objects.get(
+                    user__username=profile_role_form.cleaned_data['username'])
+                profile.role = profile_role_form.cleaned_data['role']
+                profile.save()
+            except:
+                messages.error(request, 'User role update failed.',
+                               fail_silently=True)
+            else:
+                messages.success(request, 'Updated user role.',
+                                 fail_silently=True)
         elif file_form.is_valid():
             if Contest.objects.all().count() == 0:
                 file_form.save()
@@ -211,6 +224,7 @@ def dashboard(request):
         file_form = forms.ResultsForm()
         checkin_form = forms.CheckinUsersForm()
         channel_form = forms.ClearChannelForm()
+        profile_role_form = forms.UpdateProfileRoleForm()
         
     
     if len(os.listdir(MEDIA_ROOT + '/uploads/')) > 0:
@@ -291,6 +305,7 @@ def dashboard(request):
     context['file_form'] = file_form
     context['gen_walkin_form'] = walkin_form
     context['channel_form'] = channel_form
+    context['profile_role_form'] = profile_role_form
 
     return render(request, 'contestadmin/dashboard.html', context)
 
