@@ -36,9 +36,9 @@ def create_walkin_teams(division, total):
 
         existing_teams = Team.objects.filter(
             name__contains=base_name)
+        existing_count = existing_teams.count()
 
-        if existing_teams.exists():
-            existing_count = existing_teams.count()
+        if existing_count > 0:
             existing_count_width = ceil(log10(existing_count))
             new_count_width = ceil(log10(existing_count+total))
 
@@ -51,7 +51,6 @@ def create_walkin_teams(division, total):
 
                 logger.debug("Renamed existing Walk-in teams.")
         else:
-            existing_count = 0
             new_count_width = ceil(log10(total))
 
         # Create and write teams to db
@@ -68,23 +67,18 @@ def create_walkin_teams(division, total):
 @shared_task
 @transaction.atomic
 def generate_contest_files():
-    count = 0
     teams = Team.objects.all()
 
-    try:
+    if teams.count() > 0:
         fill_width = ceil(log10(teams.count()))
-    except:
-        logger.error("Encountered invalid Team count.")
-    else:
         logger.debug('Starting team credential creation')
 
-        for team in teams:
-            count += 1
-            team.contest_id = 'acm-' + str(count).zfill(fill_width)
+        for i,team in enumerate(teams):
+            team.contest_id = 'acm-' + str(i+1).zfill(fill_width)
             team.contest_password = User.objects.make_random_password(length=6)
             team.save()
 
-        logger.info(f'Created credentials for {count} teams')
+        logger.info(f'Created credentials for {teams.count()} teams')
 
         # Create DOMjudge contest files per division
         # https://www.domjudge.org/docs/manual/7.3/import.html
@@ -145,6 +139,8 @@ def generate_contest_files():
                             ])
 
         logger.debug('Successfully generated contest files')
+    else:
+        logger.error("No Team objects exist in database.")
 
 
 @shared_task
@@ -225,7 +221,7 @@ def generate_ec_reports():
                             student.last_name,
                             student.first_name,
                             questions_answered,
-                            student.profile.team.get_division_code(),
+                            student.profile.team.get_division_code() if student.profile.team else 'none',
                             student.profile.get_role()
                         ])
     
@@ -297,7 +293,7 @@ def process_contest_results():
                     if i > 0:
                         # acm-1 -> acm-(zfill)1
                         id = f"acm-{row[0].split('-')[1].zfill(fill_width)}"
-                        
+
                         try:
                             team = Team.objects.get(contest_id=id)
                             team.questions_answered = row[3]
