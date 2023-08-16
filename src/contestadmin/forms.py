@@ -38,7 +38,14 @@ class UpdateProfileRoleForm(forms.ModelForm):
     username = forms.CharField(
         max_length=150,
         label='Username',
-        help_text="Volunteer's account username.")
+        help_text="Person's account username.")
     class Meta:
         model = Profile
         fields = ["role"]
+
+
+class ActivateAccountForm(forms.Form):
+    username = forms.CharField(
+        max_length=150,
+        label='Username',
+        help_text="Person's account username.")

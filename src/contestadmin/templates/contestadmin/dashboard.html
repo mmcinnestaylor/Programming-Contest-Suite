@@ -64,7 +64,7 @@
 		<!-- EC card -->
 		<div class="card mt-4 border-secondary">
 			<div class="card-header font-weight-bold bg-secondary text-white">
-				<i class="fa-solid fa-arrow-up-right-dots fa-fw"></i> Extra Credit
+				<i class="fa-solid fa-user-graduate fa-fw"></i> Extra Credit
 			</div>
 			<div class="card-body overflow-auto">
 				<div class="row justify-content-center">
@@ -96,7 +96,7 @@
 		<!-- Tools card -->
 		<div class="card mt-4 border-secondary">
 			<div class="card-header font-weight-bold bg-secondary text-white">
-				<i class="fa-solid fa-screwdriver-wrench fa-fw"></i> Tools 
+				<i class="fa-solid fa-wrench fa-fw"></i> Contest Tools 
 			</div>
 			<div class="card-body overflow-auto">
 				<div class="row justify-content-center">
@@ -137,9 +137,12 @@
 		<!-- Placeholder card -->
 		<div class="card mt-4 border-secondary">
 			<div class="card-header font-weight-bold bg-secondary text-white">
-				Placeholder
+				<i class="fa-solid fa-wrench fa-fw"></i> Account Tools
 			</div>
 			<div class="card-body overflow-auto">
+				<div class="row justify-content-center">
+					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#activateAccountModal"><i class="fa-solid fa-user-check fa-fw"></i> Activate User Account</button>
+				</div>
 			</div>
 		</div>
 		<!-- Placeholder card end -->
@@ -529,6 +532,32 @@
 		</div>
 	</div>
 	<!-- End Create Walk-in Teams Modal -->
+
+
+	<!-- Activate Account Modal -->
+	<div class="modal fade" id="activateAccountModal" tabindex="-1" role="dialog"
+		aria-labelledby="confirmClearModalCenterTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmClearModalLongTitle">Activate User Account</h5>
+				</div>
+				<form method="post" onSubmit="return confirm('Are you certain you want to activate this account?');">
+					<div class="modal-body overflow-auto">
+						{% csrf_token %}
+						<div class="form-group">
+							{{ activate_account_form.username | placeholder:"Username"}}
+						</div>
+					</div>
+					<div class="card-footer">
+						<button class="btn btn-primary btn-sm" type="submit">Submit</button>
+						<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- End Activate Account Modal -->
 
 
 	<!-- Create Discord Roles Confirm Modal -->
