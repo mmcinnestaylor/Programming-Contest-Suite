@@ -225,7 +225,7 @@
 							<tbody>
 								{% for volunteer in volunteers %}
 								<tr>
-									<td>{{ roles | return_item:volunteer.role }}</td>
+									<td>{{ volunteer.get_role }}</td>
 									
 									<td>{{ volunteer.user.get_full_name }}</td>
 

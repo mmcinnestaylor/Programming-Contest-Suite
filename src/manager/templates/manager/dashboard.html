@@ -72,7 +72,9 @@
 					{% else %}
 						<li class="list-group-item"><span class="font-weight-bolder">Checked-in:</span> <span class="text-danger">No</span></li>
 					{% endif %}
-					<li class="list-group-item"><span class="font-weight-bolder">Role:</span> {{ roles | return_item:user.profile.role }}</li>
+					<!--<li class="list-group-item"><span class="font-weight-bolder">Role:</span> {{ roles | return_item:user.profile.role }}</li>-->
+					<li class="list-group-item"><span class="font-weight-bolder">Role:</span> {{ user.profile.get_role }}
+					</li>
 				</ul>
 			</div>
 			<div class="card-footer">

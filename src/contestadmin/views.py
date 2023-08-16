@@ -258,7 +258,6 @@ def dashboard(request):
         context['dj_files_available'] = False
     
     # Volunteer card data
-    context['roles'] = {role[0]:role[1] for role in Profile.ROLES}
     context['volunteers'] = [user for user in Profile.objects.order_by('role').all() if user.is_volunteer()]
 
     # Forms
