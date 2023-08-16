@@ -40,6 +40,16 @@ class Team(models.Model):
 
         return division
     
+    def get_division_code(self):
+        if self.faculty:
+            division = "F"
+        elif self.division == 1:
+            division = "U"
+        else:
+            division = "L"
+
+        return division            
+    
     def get_members(self):
         members = User.objects.filter(profile__team=self)
 
