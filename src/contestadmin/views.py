@@ -257,63 +257,9 @@ def dashboard(request):
     else:
         context['dj_files_available'] = False
     
-    
-    # Users card data
-    context['users_registered'] = User.objects.all().count()
-    context['users_verified'] = User.objects.filter(is_active=True).count()
-    context['users_checkedin'] = Profile.objects.filter(checked_in=True).count()
-    context['added_fsu_num'] = Profile.objects.exclude(fsu_num=None).count()
-    context['added_fsu_id'] = Profile.objects.exclude(fsu_id=None).count()
-    context['added_courses'] = Profile.objects.exclude(courses=None).count()
-
-    # Teams card data
-    context['total_teams'] = Team.objects.all().count()
-    context['registered_teams'] = Team.objects.exclude(name__contains='Walk-in-').count()
-    context['active_teams'] = [ team.is_active() for team in Team.objects.exclude(name__contains='Walk-in-')].count(True)
-    context['total_walkin'] = Team.objects.filter(name__contains='Walk-in-').count()
-    context['walkin_used'] = Team.objects.filter(name__contains='Walk-in-').exclude(num_members=0).count()
-
-    # Teams Upper division card data
-    context['num_upper_teams'] = Team.objects.filter(division=1).exclude(name__contains='Walk-in-').count()
-    context['num_upper_active_teams'] = [ team.is_active() for team in Team.objects.filter(division=1).exclude(name__contains='Walk-in-')].count(True)
-    context['num_upper_reg_participants'] = Profile.objects.filter(team__division=1).exclude(team__name__contains='Walk-in-').count()
-    context['num_upper_reg_checkedin_participants'] = Profile.objects.filter(team__division=1).filter(checked_in=True).exclude(team__name__contains='Walk-in-').count()
-    context['num_upper_walkin_teams'] = Team.objects.filter(
-        division=1).filter(name__contains='Walk-in-').count()
-    context['num_upper_walkin_used'] = Team.objects.filter(division=1).filter(
-        name__contains='Walk-in-').exclude(num_members=0).count()
-    context['num_upper_walkin_participants'] = Profile.objects.filter(team__division=1).filter(team__name__contains='Walk-in-').count()
-
-    # Teams Lower division card data
-    context['num_lower_teams'] = Team.objects.filter(division=2).exclude(name__contains='Walk-in-').count()
-    context['num_lower_active_teams'] = [ team.is_active() for team in Team.objects.filter(division=2).exclude(name__contains='Walk-in-')].count(True)
-    context['num_lower_reg_participants'] = Profile.objects.filter(team__division=2).exclude(team__name__contains='Walk-in-').count()
-    context['num_lower_reg_checkedin_participants'] = Profile.objects.filter(team__division=2).filter(checked_in=True).exclude(team__name__contains='Walk-in-').count()
-    context['num_lower_walkin_teams'] = Team.objects.filter(
-        division=2).filter(name__contains='Walk-in-').count()
-    context['num_lower_walkin_used'] = Team.objects.filter(division=2).filter(
-        name__contains='Walk-in-').exclude(num_members=0).count()
-    context['num_lower_walkin_participants'] = Profile.objects.filter(team__division=2).filter(team__name__contains='Walk-in-').count()
-
-    # LFG Overview card data
-    context['num_lfg_profiles'] = LFGProfile.objects.count()
-    context['num_lfg_profiles_incomplete'] = LFGProfile.objects.filter(completed=False).count()
-    context['num_lfg_profiles_unverified'] = LFGProfile.objects.filter(completed=True).filter(verified=False).count()
-    context['num_lfg_profiles_inactive'] = LFGProfile.objects.filter(completed=True).filter(verified=True).filter(active=False).count()
-    context['num_lfg_profiles_active'] = LFGProfile.objects.filter(active=True).count()
-    
-    # LFG Divisions card data
-    context['num_upper_lfg_profiles'] = LFGProfile.objects.filter(division=1).count()
-    context['num_upper_lfg_profiles_active'] = LFGProfile.objects.filter(division=1).filter(active=True).count()
-    context['num_lower_lfg_profiles'] = LFGProfile.objects.filter(division=2).count()
-    context['num_lower_lfg_profiles_active'] = LFGProfile.objects.filter(division=2).filter(active=True).count()
-    
     # Volunteer card data
     context['roles'] = {role[0]:role[1] for role in Profile.ROLES}
     context['volunteers'] = [user for user in Profile.objects.order_by('role').all() if user.is_volunteer()]
-    
-    # Course card data
-    context['courses'] = Course.objects.all()
 
     # Forms
     context['checkin_form'] = checkin_form
@@ -324,6 +270,90 @@ def dashboard(request):
     context['activate_account_form'] = activate_account_form
 
     return render(request, 'contestadmin/dashboard.html', context)
+
+
+@login_required
+@user_passes_test(contestadmin_auth, login_url='/', redirect_field_name=None)
+def contest_statistics(request):
+    context = {}
+
+    # Users card data
+    context['users_registered'] = User.objects.all().count()
+    context['users_verified'] = User.objects.filter(is_active=True).count()
+    context['users_checkedin'] = Profile.objects.filter(
+        checked_in=True).count()
+    context['added_fsu_num'] = Profile.objects.exclude(fsu_num=None).count()
+    context['added_fsu_id'] = Profile.objects.exclude(fsu_id=None).count()
+    context['added_courses'] = Profile.objects.exclude(courses=None).count()
+
+    # Teams card data
+    context['total_teams'] = Team.objects.all().count()
+    context['registered_teams'] = Team.objects.exclude(
+        name__contains='Walk-in-').count()
+    context['active_teams'] = [team.is_active() for team in Team.objects.exclude(
+        name__contains='Walk-in-')].count(True)
+    context['total_walkin'] = Team.objects.filter(
+        name__contains='Walk-in-').count()
+    context['walkin_used'] = Team.objects.filter(
+        name__contains='Walk-in-').exclude(num_members=0).count()
+
+    # Teams Upper division card data
+    context['num_upper_teams'] = Team.objects.filter(
+        division=1).exclude(name__contains='Walk-in-').count()
+    context['num_upper_active_teams'] = [team.is_active() for team in Team.objects.filter(
+        division=1).exclude(name__contains='Walk-in-')].count(True)
+    context['num_upper_reg_participants'] = Profile.objects.filter(
+        team__division=1).exclude(team__name__contains='Walk-in-').count()
+    context['num_upper_reg_checkedin_participants'] = Profile.objects.filter(
+        team__division=1).filter(checked_in=True).exclude(team__name__contains='Walk-in-').count()
+    context['num_upper_walkin_teams'] = Team.objects.filter(
+        division=1).filter(name__contains='Walk-in-').count()
+    context['num_upper_walkin_used'] = Team.objects.filter(division=1).filter(
+        name__contains='Walk-in-').exclude(num_members=0).count()
+    context['num_upper_walkin_participants'] = Profile.objects.filter(
+        team__division=1).filter(team__name__contains='Walk-in-').count()
+
+    # Teams Lower division card data
+    context['num_lower_teams'] = Team.objects.filter(
+        division=2).exclude(name__contains='Walk-in-').count()
+    context['num_lower_active_teams'] = [team.is_active() for team in Team.objects.filter(
+        division=2).exclude(name__contains='Walk-in-')].count(True)
+    context['num_lower_reg_participants'] = Profile.objects.filter(
+        team__division=2).exclude(team__name__contains='Walk-in-').count()
+    context['num_lower_reg_checkedin_participants'] = Profile.objects.filter(
+        team__division=2).filter(checked_in=True).exclude(team__name__contains='Walk-in-').count()
+    context['num_lower_walkin_teams'] = Team.objects.filter(
+        division=2).filter(name__contains='Walk-in-').count()
+    context['num_lower_walkin_used'] = Team.objects.filter(division=2).filter(
+        name__contains='Walk-in-').exclude(num_members=0).count()
+    context['num_lower_walkin_participants'] = Profile.objects.filter(
+        team__division=2).filter(team__name__contains='Walk-in-').count()
+
+    # LFG Overview card data
+    context['num_lfg_profiles'] = LFGProfile.objects.count()
+    context['num_lfg_profiles_incomplete'] = LFGProfile.objects.filter(
+        completed=False).count()
+    context['num_lfg_profiles_unverified'] = LFGProfile.objects.filter(
+        completed=True).filter(verified=False).count()
+    context['num_lfg_profiles_inactive'] = LFGProfile.objects.filter(
+        completed=True).filter(verified=True).filter(active=False).count()
+    context['num_lfg_profiles_active'] = LFGProfile.objects.filter(
+        active=True).count()
+
+    # LFG Divisions card data
+    context['num_upper_lfg_profiles'] = LFGProfile.objects.filter(
+        division=1).count()
+    context['num_upper_lfg_profiles_active'] = LFGProfile.objects.filter(
+        division=1).filter(active=True).count()
+    context['num_lower_lfg_profiles'] = LFGProfile.objects.filter(
+        division=2).count()
+    context['num_lower_lfg_profiles_active'] = LFGProfile.objects.filter(
+        division=2).filter(active=True).count()
+
+    # Course card data
+    context['courses'] = Course.objects.all()
+
+    return render(request, 'contestadmin/statistics_dashboard.html', context)
 
 
 @login_required

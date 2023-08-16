@@ -11,6 +11,12 @@
 	{% include 'messages.html' %}
 	<!-- End Messages -->
 
+	<div class="row">
+		<div class="col mt-3">
+			<a href="{% url 'contest_stats' %}" class="btn btn-info" title="Contest EC, registration, & participation statistics."><i class="fa-solid fa-chart-line fa-sm fa-fw"></i> Contest Statistics</a>
+		</div>
+	</div>
+
 	<!-- Contest Control Card deck -->
 	<div class="card-deck">
 		<!-- Team card -->
@@ -197,122 +203,6 @@
 	</div>
 	<!-- Discord Control deck end -->
 
-	<!-- Contest Stats Card deck -->
-	<div class="card-deck">
-		<!-- User Stats card -->
-		<div class="card mt-4 border-secondary">
-			<div class="card-header font-weight-bold bg-secondary text-white">
-				<i class="fa-solid fa-user fa-fw"></i> Users
-			</div>
-			<div class="card-body overflow-auto">
-				<ul class="list-group list-group-flush">
-					<li class="list-group-item"><span class="font-weight-bolder">Total:</span> {{ users_registered }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Verified:</span> {{ users_verified }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Checked-in:</span> {{ users_checkedin }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Added FSU num:</span> {{ added_fsu_num }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Added FSU ID:</span> {{ added_fsu_id }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Added Courses:</span> {{ added_courses }}</li>
-				</ul>
-			</div>
-		</div>
-		<!-- User Stats card end -->
-		<!-- Team Stats card -->
-		<div class="card mt-4 border-secondary">
-			<div class="card-header font-weight-bold bg-secondary text-white">
-				<i class="fa-solid fa-users fa-fw"></i> Teams
-			</div>
-			<div class="card-body overflow-auto">
-				<ul class="list-group list-group-flush">
-					<li class="list-group-item"><span class="font-weight-bolder">Total:</span> {{ total_teams }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Registered Total:</span> {{ registered_teams }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Registered Active:</span> {{ active_teams }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Walk-ins Total:</span> {{ total_walkin }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Walk-ins Used:</span> {{ walkin_used }}</li>
-					
-				</ul>
-			</div>
-		</div>
-		<!-- Team Stats card end -->		
-	</div>
-	<!-- Contest Stats Card deck end -->
-
-	<!-- Division Stats Card deck -->
-	<div class="card-deck">
-		<!-- Upper Stats card -->
-		<div class="card mt-4 border-secondary">
-			<div class="card-header font-weight-bold bg-secondary text-white">
-				<i class="fa-solid fa-users fa-fw"></i> Teams - Upper Division
-			</div>
-			<div class="card-body overflow-auto">
-				<ul class="list-group list-group-flush">
-					<li class="list-group-item"><span class="font-weight-bolder">Registered Teams:</span> {{ num_upper_teams }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Registered Active:</span> {{ num_upper_active_teams }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Registered Participants:</span> {{ num_upper_reg_participants }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Registered Check-ins:</span> {{ num_upper_reg_checkedin_participants }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Walk-in Teams:</span> {{ num_upper_walkin_teams }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Walk-in Teams used:</span> {{ num_upper_walkin_used }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Walk-in Participants:</span> {{ num_upper_walkin_participants }}</li>
-				</ul>
-			</div>
-		</div>
-		<!-- Upper Stats card end -->
-		<!-- Lower Stats card -->
-		<div class="card mt-4 border-secondary">
-			<div class="card-header font-weight-bold bg-secondary text-white">
-				<i class="fa-solid fa-users fa-fw"></i> Teams - Lower Division
-			</div>
-			<div class="card-body overflow-auto">
-				<ul class="list-group list-group-flush">
-					<li class="list-group-item"><span class="font-weight-bolder">Registered Teams:</span> {{ num_lower_teams }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Registered Active:</span> {{ num_lower_active_teams }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Registered Participants:</span> {{ num_lower_reg_participants }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Registered Check-ins:</span> {{ num_lower_reg_checkedin_participants }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Walk-in Teams:</span> {{ num_lower_walkin_teams }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Walk-in Teams used:</span> {{ num_lower_walkin_used }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Walk-in Participants:</span> {{ num_lower_walkin_participants }}</li>
-				</ul>
-			</div>
-		</div>
-		<!-- Lower Stats card end -->		
-	</div>
-	<!-- LFG Stats Card deck end -->
-
-	<!-- Division Stats Card deck -->
-	<div class="card-deck">
-		<!-- Upper Stats card -->
-		<div class="card mt-4 border-secondary">
-			<div class="card-header font-weight-bold bg-secondary text-white">
-				<i class="fa-solid fa-arrows-down-to-people fa-fw"></i> LFG Profiles - Overview
-			</div>
-			<div class="card-body overflow-auto">
-				<ul class="list-group list-group-flush">
-					<li class="list-group-item"><span class="font-weight-bolder">Total:</span> {{ num_lfg_profiles }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Incomplete:</span> {{ num_lfg_profiles_incomplete }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Complete, Unverified:</span> {{ num_lfg_profiles_unverified }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Verified, Inactive:</span> {{ num_lfg_profiles_inactive }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Active:</span> {{ num_lfg_profiles_active }}</li>
-				</ul>
-			</div>
-		</div>
-		<!-- Upper Stats card end -->
-		<!-- Lower Stats card -->
-		<div class="card mt-4 border-secondary">
-			<div class="card-header font-weight-bold bg-secondary text-white">
-				<i class="fa-solid fa-arrows-down-to-people fa-fw"></i> LFG Profiles - Divisions
-			</div>
-			<div class="card-body overflow-auto">
-				<ul class="list-group list-group-flush">
-					<li class="list-group-item"><span class="font-weight-bolder">Upper Total:</span> {{ num_upper_lfg_profiles }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Upper Active:</span> {{ num_upper_lfg_profiles_active }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Lower Total:</span> {{ num_lower_lfg_profiles }}</li>
-					<li class="list-group-item"><span class="font-weight-bolder">Lower Active:</span> {{ num_lower_lfg_profiles_active }}</li>
-				</ul>
-			</div>
-		</div>
-		<!-- Lower Stats card end -->		
-	</div>
-	<!-- LFG Stats Card deck end -->
-
 	<!-- Volunteer Summary card -->
 	<div class="card mt-4 mb-3 border-secondary">
 		<div class="card-header font-weight-bold bg-secondary text-white">
@@ -360,42 +250,6 @@
 		</div>
 	</div>
 	<!-- Volunteer Summary card end -->
-
-	<!-- Course Summary card -->
-	<div class="card mt-4 mb-3 border-secondary">
-		<div class="card-header font-weight-bold bg-secondary text-white">
-			<i class="fa-solid fa-list-ul fa-fw"></i> Courses
-		</div>
-		<div class="card-body overflow-auto">
-			<div class="row justify-content-center">
-				<div class="col-12">
-					<div class="table-responsive">
-						<table class="table table-sm">
-							<thead class="thead-light">
-								<tr>
-									<th scope="col">Code</th>
-									<th scope="col">Name</th>
-									<th scope="col">Instructor</th>
-									<th scope="col" class="text-center">Students</th>
-								</tr>
-							</thead>
-							<tbody>
-								{% for course in courses %}
-								<tr>
-									<td>{{ course.code }}</td>
-									<td>{{ course.name }}</td>
-									<td>{{ course.instructor.last_name }}</td>
-									<td class="text-center">{{ course.num_registered }}</td>
-								</tr>
-								{% endfor %}
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- Course Summary card end -->
 
 
 	<!-- Generate DOMjudge TSVs Modal -->
