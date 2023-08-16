@@ -283,32 +283,36 @@ def process_contest_results():
     num_teams = 0
     contest = Contest.objects.all().first()
 
-    with open(contest.results.path) as resultsfile:
-        results = csv.reader(resultsfile, delimiter="\t", quotechar='"')
-        for row in results:
-            #if 'acm-' in row[0]:
-            # Exclude header of file
-            if 'results' not in row[0]:
-                if int(row[0]) < 10:
-                    id='acm-00'+row[0]
-                elif int(row[0]) < 100:
-                    id='acm-0'+row[0]
-                else:
-                    id='acm-'+row[0]
+    if not contest:
+        logger.error("No Contest object exists in database.")
+    else:
+        if Team.objects.all().count() > 0:
+            fill_width = ceil(log10(Team.objects.all().count()))
 
-                try:
-                    #team= Team.objects.get(contest_id=row[0])
-                    team = Team.objects.get(contest_id=id)
-                    team.questions_answered = row[3]
-                    team.score = row[4]
-                    team.save()
-                    num_teams += 1
-                except:
-                    logger.error(f'Could not process contest results for team {id}')
-            else:
-                pass
+            with open(contest.results.path) as resultsfile:
+                results = csv.reader(resultsfile, delimiter="\t", quotechar='"')
+                
+                for i,row in enumerate(results):
+                    # Exclude header of file
+                    if i > 0:
+                        # acm-1 -> acm-(zfill)1
+                        id = f"acm-{row[0].split('-')[1].zfill(fill_width)}"
+                        
+                        try:
+                            team = Team.objects.get(contest_id=id)
+                            team.questions_answered = row[3]
+                            team.score = row[4]
+                            team.save()
+                        except:
+                            logger.error(
+                                f"Could not process contest results for team {id}")
+                        else:
+                            logger.debug(f"Processed team {id}")
+                            num_teams += 1
 
-    logger.info(f'Processed contest results for {num_teams} teams')
+                logger.info(f"Processed contest results for {num_teams} teams")
+        else:
+            logger.error("No Team objects exist in database.")
 
 
 @shared_task
