@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.10-slim
 LABEL maintainer="ACM at FSU <contact@fsu.acm.org>"
 
 ENV PYTHONUNBUFFERED 1
@@ -11,6 +11,8 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends build-essential \
   # Translations dependencies
   && apt-get install -y gettext \
+  # mysqlclient dependency 
+  && apt-get install -y pkg-config \
   # MariaDB dependency
   && apt-get install -y libmariadb-dev \
   # cleaning up unused files

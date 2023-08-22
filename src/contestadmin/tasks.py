@@ -16,6 +16,7 @@ from celery.utils.log import get_task_logger
 
 from contestsuite.settings import MEDIA_ROOT, DEFAULT_FROM_EMAIL, BOT_CHANNEL_WEBHOOK_URL
 from contestadmin.models import Contest
+from core.utils import make_random_password
 from manager.models import Course, Faculty, Profile
 from register.models import Team
 
@@ -56,7 +57,7 @@ def create_walkin_teams(division, total):
         # Create and write teams to db
         for i in range(1, total+1):
             name = f"{base_name}{str(existing_count+i).zfill(new_count_width)}"
-            pin = User.objects.make_random_password(length=6)
+            pin = make_random_password(length=6)
             Team.objects.create(name=name, division=division, pin=pin)
             logger.debug(f'Created walk-in team {existing_count+i}')
 
@@ -75,7 +76,7 @@ def generate_contest_files():
 
         for i,team in enumerate(teams):
             team.contest_id = 'acm-' + str(i+1).zfill(fill_width)
-            team.contest_password = User.objects.make_random_password(length=6)
+            team.contest_password = make_random_password(length=6)
             team.save()
 
         logger.info(f'Created credentials for {teams.count()} teams')
