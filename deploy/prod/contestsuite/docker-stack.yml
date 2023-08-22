@@ -217,7 +217,7 @@ services:
             FLOWER_COOKIE_KEY: /run/secrets/contestsuite_flower_cookie_key
         volumes:
             - django_static:/app/static
-            - flower_static:/usr/local/lib/python3.9/site-packages/flower/static
+            - flower_static:/usr/local/lib/python3.10/site-packages/flower/static
         networks:
             - nginx-backend
             - db-backend
