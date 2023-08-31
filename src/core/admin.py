@@ -13,6 +13,9 @@ class UserResource(resources.ModelResource):
 
 class UserAdmin(ImportExportModelAdmin):
     resource_class = UserResource
+    list_display = ("last_name", "first_name", "username", "email", "is_active",)
+    list_filter = ("is_active",)
+    search_fields = ["last_name", "first_name", "username", "email"]
 
 
 # Register your models here.

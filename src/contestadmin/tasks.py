@@ -1,10 +1,11 @@
 import csv
 import os
+from math import ceil, log10
 
 from discord import Webhook, RequestsWebhookAdapter, InvalidArgument
 
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
+from django.core.mail import send_mass_mail
 from django.db import transaction
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
@@ -15,6 +16,7 @@ from celery.utils.log import get_task_logger
 
 from contestsuite.settings import MEDIA_ROOT, DEFAULT_FROM_EMAIL, BOT_CHANNEL_WEBHOOK_URL
 from contestadmin.models import Contest
+from core.utils import make_random_password
 from manager.models import Course, Faculty, Profile
 from register.models import Team
 
@@ -25,96 +27,121 @@ logger = get_task_logger(__name__)
 @shared_task
 @transaction.atomic
 def create_walkin_teams(division, total):
-    logger.info('Starting walk-in team creation')
+    if total > 0:
+        logger.debug('Starting walk-in team creation')
 
-    if division == 1:
-        base_name = 'Walk-in-U-'
-        existing_count = Team.objects.filter(
-            name__contains='Walk-in-U-').count()
-    else:
-        base_name = 'Walk-in-L-'
-        existing_count = Team.objects.filter(
-            name__contains='Walk-in-L-').count()
-
-    for i in range(total):
-        '''if division == 1:
-            name = 'Walk-in-U-' + str(upper_count+i+1).zfill(3)
+        if division == 1:
+            base_name = 'Walk-in-U-'
         else:
-            name = 'Walk-in-L-' + str(lower_count+i+1).zfill(3)'''
-        name = base_name + str(existing_count+i+1).zfill(3)
-        pin = User.objects.make_random_password(length=6)
-        Team.objects.create(name=name, division=division, pin=pin)
-        logger.info('Created walk-in team %d' % (i+1))
+            base_name = 'Walk-in-L-'
 
-    logger.info('Walk-in team creation complete')
+        existing_teams = Team.objects.filter(
+            name__contains=base_name)
+        existing_count = existing_teams.count()
 
+        if existing_count > 0:
+            existing_count_width = ceil(log10(existing_count))
+            new_count_width = ceil(log10(existing_count+total))
+
+            # Update existing team names if 0-padding width changes
+            if new_count_width > existing_count_width:
+                for team in existing_teams:
+                    walkin_id = int(team.name.split("-")[-1])
+                    team.name = f"{base_name}{str(walkin_id).zfill(new_count_width)}"
+                    team.save()
+
+                logger.debug("Renamed existing Walk-in teams.")
+        else:
+            new_count_width = ceil(log10(total))
+
+        # Create and write teams to db
+        for i in range(1, total+1):
+            name = f"{base_name}{str(existing_count+i).zfill(new_count_width)}"
+            pin = make_random_password(length=6)
+            Team.objects.create(name=name, division=division, pin=pin)
+            logger.debug(f'Created walk-in team {existing_count+i}')
+
+        logger.info(f'{total} {base_name[:-1]} teams created.')
+    else:
+        logger.error("New Walk-in team count LEQ 0.")
 
 @shared_task
 @transaction.atomic
 def generate_contest_files():
-    count = 0
     teams = Team.objects.all()
 
-    logger.info('Starting team credential creation')
+    if teams.count() > 0:
+        fill_width = ceil(log10(teams.count()))
+        logger.debug('Starting team credential creation')
 
-    for team in teams:
-        count += 1
-        team.contest_id = 'acm-' + str(count).zfill(3)
-        team.contest_password = User.objects.make_random_password(length=6)
-        team.save()
+        for i,team in enumerate(teams):
+            team.contest_id = 'acm-' + str(i+1).zfill(fill_width)
+            team.contest_password = make_random_password(length=6)
+            team.save()
 
-    logger.info('Created credentials for %d teams' % count)
+        logger.info(f'Created credentials for {teams.count()} teams')
 
-    
-    for division in Team.DIVISION:
-        if division[0] == 1:
-            account_file = MEDIA_ROOT + '/contest_files/accounts_upper.tsv'
-            group_file = MEDIA_ROOT + '/contest_files/groups_upper.tsv'
-            team_file = MEDIA_ROOT + '/contest_files/teams_upper.tsv'
-        else:
-            account_file = MEDIA_ROOT + '/contest_files/accounts_lower.tsv'
-            group_file = MEDIA_ROOT + '/contest_files/groups_lower.tsv'
-            team_file = MEDIA_ROOT + '/contest_files/teams_lower.tsv'
+        # Create DOMjudge contest files per division
+        # https://www.domjudge.org/docs/manual/7.3/import.html
+        for division in Team.DIVISION:
+            if division[0] == 1:  # Upper
+                account_file = MEDIA_ROOT + '/contest_files/accounts_upper.tsv'
+                group_file = MEDIA_ROOT + '/contest_files/groups_upper.tsv'
+                team_file = MEDIA_ROOT + '/contest_files/teams_upper.tsv'
+            else:  # Lower
+                account_file = MEDIA_ROOT + '/contest_files/accounts_lower.tsv'
+                group_file = MEDIA_ROOT + '/contest_files/groups_lower.tsv'
+                team_file = MEDIA_ROOT + '/contest_files/teams_lower.tsv'
 
-        with open(account_file, 'w', newline='') as account_tsv:
-            with open(group_file, 'w', newline='') as group_tsv:
-                with open(team_file, 'w', newline='') as team_tsv:
-                    account_writer = csv.writer(
-                        account_tsv, delimiter='\t', quoting=csv.QUOTE_MINIMAL)
-                    group_writer = csv.writer(
-                        group_tsv, delimiter='\t', quoting=csv.QUOTE_MINIMAL)
-                    team_writer = csv.writer(
-                        team_tsv, delimiter='\t', quoting=csv.QUOTE_MINIMAL)
+            with open(account_file, 'w', newline='') as account_tsv:
+                with open(group_file, 'w', newline='') as group_tsv:
+                    with open(team_file, 'w', newline='') as team_tsv:
+                        account_writer = csv.writer(
+                            account_tsv, delimiter='\t', quoting=csv.QUOTE_MINIMAL)
+                        group_writer = csv.writer(
+                            group_tsv, delimiter='\t', quoting=csv.QUOTE_MINIMAL)
+                        team_writer = csv.writer(
+                            team_tsv, delimiter='\t', quoting=csv.QUOTE_MINIMAL)
 
-                    account_writer.writerow(['accounts', '1'])
-                    group_writer.writerow(['File_Version', '1'])
-                    # Upper Division Group -> 6
-                    # Lower Division Group -> 7
-                    group_writer.writerow([division[0]+5, division[1]])
-                    team_writer.writerow(['File_Version', '2'])                    
+                        # File headers
+                        account_writer.writerow(['accounts', '1'])
+                        group_writer.writerow(['File_Version', '1'])
+                        team_writer.writerow(['File_Version', '2'])
 
-                    teams = Team.objects.filter(division=division[0])
-                    for team in teams:
-                        account_writer.writerow([
-                            'team', 
-                            team.contest_id, 
-                            team.contest_id, 
-                            team.contest_password, 
-                            int((team.contest_id).strip("acm-")),
+                        # Group info
+                        # Upper Division Group -> 6
+                        # Lower Division Group -> 7
+                        group_writer.writerow([
+                            division[0]+5,  # Category ID (int)
+                            division[1]  # Name of the team category (str)
                         ])
 
-                        team_writer.writerow([
-                            int((team.contest_id).strip("acm-")), 
-                            '', 
-                            team.division + 5, 
-                            team.name, 
-                            'Florida State University', 
-                            'FSU', 
-                            'USA', 
-                            '',
-                        ])
+                        # Write teams info for current division
+                        teams = Team.objects.filter(division=division[0])
+                        for team in teams:
+                            # Account info
+                            account_writer.writerow([
+                                'team',  # User type (str): 'team' or 'judge'
+                                team.contest_id,  # Full name of the user (str)
+                                team.contest_id,  # DOMjudge Username (str)
+                                team.contest_password,  # DOMjudge Password (str)
+                                int((team.contest_id).strip("acm-")),
+                            ])
+                            # Team profile
+                            team_writer.writerow([
+                                int((team.contest_id).strip("acm-")), # Team Number (int)
+                                '', # External ID (int) ** not used in our config **
+                                team.division + 5, # Group ID (int)
+                                team.name, # Team name (str)
+                                'Florida State University', # Institution name (str)
+                                'FSU', # Institution short name (str)
+                                'USA', # Country code in ISO 3166-1 alpha-3 format
+                                '', # external institution ID ** not used in our config **
+                            ])
 
-    logger.info('Successfully generated contest files')
+        logger.debug('Successfully generated contest files')
+    else:
+        logger.error("No Team objects exist in database.")
 
 
 @shared_task
@@ -132,7 +159,6 @@ def check_in_out_users(action):
             user.profile.checked_in = True
             user.save()
 
-            
             if action == 1:
                 subject = 'Programming Contest DOMjudge Credentials'
                 message = render_to_string(
@@ -143,7 +169,7 @@ def check_in_out_users(action):
                     'checkin/team_credentials_practice_email.html', {'user': user})
             user.email_user(subject, message)
 
-            logger.info('Sent credentials to %s' % user.username)
+            logger.debug(f'Sent credentials to {user.username}')
     # Check-out
     else:
         users = User.objects.all()
@@ -157,69 +183,67 @@ def check_in_out_users(action):
 def generate_ec_reports():
     num_courses = 0
     faculty_members = Faculty.objects.all()
-    roles = {role[0]:role[1] for role in Profile.ROLES}
 
     for faculty in faculty_members:
+        # All courses for given faculty member
         courses = Course.objects.filter(instructor=faculty)
         num_files = 0
 
         for course in courses:
+            # All students in given course
             students = User.objects.filter(profile__courses=course).filter(profile__checked_in=True)
 
             if students.exists():
                 num_courses += 1
                 num_files += 1
-                filename = MEDIA_ROOT+'/ec_files/'+(faculty.email.split('@'))[0]+'_'+course.code+'.csv'
+                filename = f"{MEDIA_ROOT}/ec_files/{faculty.email.split('@')[0]}_{course.code}.csv"
 
+                # Participation report for given course
                 with open(filename, 'w', newline='') as csvfile:
                     writer = csv.writer(csvfile, quoting=csv.QUOTE_MINIMAL)
+                    
+                    # File header
                     writer.writerow(
                         ['fsu_id', 'last_name', 'first_name', 'questions_answered', 'team_division', 'role'])
+                    
                     for student in students:
-                        role = roles[student.profile.role]
-
-                        if student.profile.team is None:
-                            questions_answered = 'none'
-                            team_division = 'none'
-                        else:
-                            questions_answered = student.profile.team.questions_answered
-
-                            if student.profile.team.division == 1:
-                                team_division = 'Upper'
-                            else:
-                                team_division = 'Lower'
-
                         if student.profile.fsu_id is None:
                             fsu_id = 'none'
                         else:
                             fsu_id = student.profile.fsu_id
+
+                        if student.profile.team is None:
+                            questions_answered = 'none'
+                        else:
+                            questions_answered = student.profile.team.questions_answered        
 
                         writer.writerow([
                             fsu_id,
                             student.last_name,
                             student.first_name,
                             questions_answered,
-                            team_division,
-                            role
+                            student.profile.team.get_division_code() if student.profile.team else 'none',
+                            student.profile.get_role()
                         ])
-            else:
-                continue
     
     logger.info(
-        'Processed extra credit files for %d courses' % num_courses)
+        f'Processed extra credit files for {num_courses} courses')
 
 
 @shared_task
 def email_faculty(domain):
     faculty_members = Faculty.objects.all()
-    fpath = MEDIA_ROOT + '/ec_files/'
+    fpath = f"{MEDIA_ROOT}/ec_files/"
+    message_subject = 'Programming Contest EC files'
+    messages = []
 
     for faculty in faculty_members:
         found_files = False
 
+        # Detemine if EC files exist for given faculty member
         for fname in os.listdir(fpath):
-            uid=((faculty.email).split('@'))[0]
-            if uid in fname: #not faculty_nanmer
+            uid = faculty.email.split('@')[0]
+            if uid in fname:
                 found_files = True
                 break
 
@@ -229,14 +253,6 @@ def email_faculty(domain):
                 'domain': domain,
                 'uid': urlsafe_base64_encode(force_bytes(uid)),
             })
-            
-            send_mail(
-                'Programming Contest EC files',
-                message,
-                DEFAULT_FROM_EMAIL,
-                [faculty.email],
-                fail_silently = False,
-            )     
         else:
             message = render_to_string('contestadmin/no_ec_available_email.html', {
                 'faculty': faculty,
@@ -244,13 +260,18 @@ def email_faculty(domain):
                 'uid': urlsafe_base64_encode(force_bytes(uid)),
             })
 
-            send_mail(
-                'Programming Contest EC files',
-                message,
-                DEFAULT_FROM_EMAIL,
-                [faculty.email],
-                fail_silently=False,
-            )
+        messages.append((
+            message_subject,
+            message,
+            DEFAULT_FROM_EMAIL,
+            [faculty.email]
+        ))
+
+    messages = tuple(messages)  # Group messages for mass mailing
+    try:
+        send_mass_mail(messages, fail_silently=False)
+    except:
+        logger.error("Failed to send extra credit notification to faculty.")
 
 
 @shared_task
@@ -259,31 +280,36 @@ def process_contest_results():
     num_teams = 0
     contest = Contest.objects.all().first()
 
-    with open(contest.results.path) as resultsfile:
-        results = csv.reader(resultsfile, delimiter="\t", quotechar='"')
-        for row in results:
-            #if 'acm-' in row[0]:
-            # Exclude header of file
-            if 'results' not in row[0]:
-                if int(row[0]) < 10:
-                    id='acm-00'+row[0]
-                elif int(row[0]) < 100:
-                    id='acm-0'+row[0]
-                else:
-                    id='acm-'+row[0]
+    if not contest:
+        logger.error("No Contest object exists in database.")
+    else:
+        if Team.objects.all().count() > 0:
+            fill_width = ceil(log10(Team.objects.all().count()))
 
-                try:
-                    #team= Team.objects.get(contest_id=row[0])
-                    team = Team.objects.get(contest_id=id)
-                    team.questions_answered= row[3]
-                    team.save()
-                    num_teams += 1
-                except:
-                    logger.info('Could not process contest results for %s teams' % id)
-            else:
-                pass
+            with open(contest.results.path) as resultsfile:
+                results = csv.reader(resultsfile, delimiter="\t", quotechar='"')
+                
+                for i,row in enumerate(results):
+                    # Exclude header of file
+                    if i > 0:
+                        # acm-1 -> acm-(zfill)1
+                        id = f"acm-{row[0].split('-')[1].zfill(fill_width)}"
 
-    logger.info('Processed contest results for %d teams' % num_teams)
+                        try:
+                            team = Team.objects.get(contest_id=id)
+                            team.questions_answered = row[3]
+                            team.score = row[4]
+                            team.save()
+                        except:
+                            logger.error(
+                                f"Could not process contest results for team {id}")
+                        else:
+                            logger.debug(f"Processed team {id}")
+                            num_teams += 1
+
+                logger.info(f"Processed contest results for {num_teams} teams")
+        else:
+            logger.error("No Team objects exist in database.")
 
 
 @shared_task

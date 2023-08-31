@@ -6,7 +6,7 @@ services:
         environment:
             LETSENCRYPT_HOST: contest.cs.fsu.edu
             VIRTUAL_HOST: contest.cs.fsu.edu
-            
+            SERVER_TOKENS: 'off'
             TZ: America/New_York
         volumes:
             - ./config/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
@@ -67,7 +67,7 @@ services:
             # Analytics
             GTAG: /run/secrets/contestsuite_gtag # Google site tag
         volumes:
-            - django_app:/app/media
+            - django_media:/app/media
             - django_static:/app/static
         networks:
             - nginx-backend
@@ -150,7 +150,7 @@ services:
             ANNOUNCEMENT_WEBHOOK_URL: /run/secrets/contestsuite_announcement_channel_url # URL of announcement channel webhook
             BOT_CHANNEL_WEBHOOK_URL: /run/secrets/contestsuite_bot_channel_url # URL of bot control channel webhook
         volumes:
-            - django_app:/app/media
+            - django_media:/app/media
             - django_static:/app/static
         networks:
             - db-backend
@@ -217,7 +217,7 @@ services:
             FLOWER_COOKIE_KEY: /run/secrets/contestsuite_flower_cookie_key
         volumes:
             - django_static:/app/static
-            - flower_static:/usr/local/lib/python3.9/site-packages/flower/static
+            - flower_static:/usr/local/lib/python3.10/site-packages/flower/static
         networks:
             - nginx-backend
             - db-backend
@@ -261,7 +261,7 @@ services:
                 failure_action: rollback
     redis:
         image: redis:5-buster
-        command: redis-server --save 600 1 --loglevel warning
+        command: redis-server --save 600 1
         environment:
             TZ: America/New_York
         volumes:
@@ -340,8 +340,8 @@ secrets:
     contestsuite_gtag:
         external: true
 volumes:
-    django_app:
     django_db:
+    django_media:
     django_static:
     flower_static:
     rabbitmq:

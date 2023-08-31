@@ -10,7 +10,8 @@ services:
             # Domain name
             LETSENCRYPT_HOST: domjudge.cs.fsu.edu
             VIRTUAL_HOST: domjudge.cs.fsu.edu
-
+            SERVER_TOKENS: 'off'
+            
             # Time config
             CONTAINER_TIMEZONE: America/New_York
 

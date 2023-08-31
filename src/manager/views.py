@@ -29,7 +29,6 @@ def dashboard(request):
 
     context['announcements'] = cache.get_or_set('manage_dash_announcement_latest', (Announcement.objects.filter(status=1))[:1], CACHE_TIMEOUT)
     context['courses'] = request.user.profile.courses.all()
-    context['roles'] = {role[0]:role[1] for role in Profile.ROLES}
     context['total_num_courses'] = cache.get_or_set('manage_dash_courses_total', Course.objects.count(), CACHE_TIMEOUT)
     context['team_members'] = User.objects.filter(profile__team=request.user.profile.team).exclude(username=request.user.username)
 

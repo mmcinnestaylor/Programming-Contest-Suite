@@ -1,4 +1,4 @@
-{% extends 'core/base.html' %}
+{% extends 'base.html' %}
 {% load cache %}
 {% load static %}
 
@@ -15,7 +15,8 @@
 		<div class="col">
 			<h2>Upper Division</h2>
 			<button type="button" class="btn  btn-sm btn-primary mr-2" disabled>
-				<i class="fa-solid fa-users fa-fw"></i> Teams <span class="badge badge-light">{{ num_upper_teams }}</span>
+				<i class="fa-solid fa-users fa-fw"></i> Teams <span class="badge badge-light">
+					{{ num_upper_teams }}</span>
 				<span class="sr-only">number of upper division teams</span>
 			</button>
 			<button type="button" class="btn  btn-sm btn-info" disabled>
@@ -28,16 +29,21 @@
 						<tr>
 							<th scope="col">Team Name</th>
 							<th scope="col">Questions Answered</th>
+							<th scope="col">Score</th>
 							<th scope="col">Team Members</th>
 						</tr>
 					</thead>
 					<tbody class="bg-light">
 						{% for team in upper_teams %}
 						<tr>
-							<td class="text-center">{{ team.name }}</td>
+							<td>
+								<span class="d-block d-md-none ml-1">{{ team.name }}</span>
+								<span class="d-none d-md-block ml-3">{{ team.name }}</span>
+							</td>
 							<td class="text-center">{{ team.questions_answered }}</td>
-							<td class="text-center">
-								<small>
+							<td class="text-center">{{ team.score }}</td>
+							<td>
+								<span class="d-block d-md-none ml-2"><small>
 									{% with team.get_members|last as last %}							
 										{% for member in team.get_members %}
 											{% if member == last %}
@@ -47,7 +53,18 @@
 											{% endif %}
 										{% endfor %}
 									{% endwith %}
-								</small>
+								</small></span>
+								<span class="d-none d-md-block ml-3"><small>
+									{% with team.get_members|last as last %}
+										{% for member in team.get_members %}
+											{% if member == last %}
+												{{ member }}
+											{% else %}
+												{{ member }},&puncsp;
+											{% endif %}
+										{% endfor %}
+									{% endwith %}
+								</small></span>
 							</td>
 						</tr>
 						{% endfor %}
@@ -60,7 +77,8 @@
 		<div class="col">
 			<h2>Lower Division</h2>		
 			<button type="button" class="btn  btn-sm btn-primary mr-2" disabled>
-				<i class="fa-solid fa-users fa-fw"></i> Teams <span class="badge badge-light">{{ num_lower_teams }}</span>
+				<i class="fa-solid fa-users fa-fw"></i> Teams <span class="badge badge-light">
+					{{ num_lower_teams }}</span>
 				<span class="sr-only">number of lower division teams</span>
 			</button>
 			<button type="button" class="btn  btn-sm btn-info" disabled>
@@ -73,16 +91,21 @@
 						<tr>
 							<th scope="col">Team Name</th>
 							<th scope="col">Questions Answered</th>
+							<th scope="col">Score</th>
 							<th scope="col">Team Members</th>
 						</tr>
 					</thead>
 					<tbody class="bg-light">
 						{% for team in lower_teams %}
 						<tr>
-							<td class="text-center">{{ team.name }}</td>
+							<td>
+								<span class="d-block d-md-none ml-1">{{ team.name }}</span>
+								<span class="d-none d-md-block ml-3">{{ team.name }}</span>
+							</td>
 							<td class="text-center">{{ team.questions_answered }}</td>
-							<td class="text-center">
-								<small>
+							<td class="text-center">{{ team.score }}</td>
+							<td>
+								<span class="d-block d-md-none ml-2"><small>
 									{% with team.get_members|last as last %}
 										{% for member in team.get_members %}
 											{% if member == last %}
@@ -92,7 +115,80 @@
 											{% endif %}
 										{% endfor %}
 									{% endwith %}
-								</small>
+								</small></span>
+								<span class="d-none d-md-block ml-3"><small>
+									{% with team.get_members|last as last %}
+										{% for member in team.get_members %}
+											{% if member == last %}
+												{{ member }}
+											{% else %}
+												{{ member }},&puncsp;
+											{% endif %}
+										{% endfor %}
+									{% endwith %}
+								</small></span>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<h2>Faculty</h2>
+			<button type="button" class="btn  btn-sm btn-primary mr-2" disabled>
+				<i class="fa-solid fa-users fa-fw"></i> Teams <span class="badge badge-light">
+					{{ num_faculty_teams }}</span>
+				<span class="sr-only">number of faculty teams</span>
+			</button>
+			<button type="button" class="btn  btn-sm btn-info" disabled>
+				<i class="fa-solid fa-user fa-fw"></i> Participants <span class="badge badge-light">{{ num_faculty_participants }}</span>
+				<span class="sr-only">number of faculty participants</span>
+			</button>
+			<div class="table-responsive mt-2">
+				<table class="table table-sm table-striped shadow ">
+					<thead class="thead-dark text-center">
+						<tr>
+							<th scope="col">Team Name</th>
+							<th scope="col">Questions Answered</th>
+							<th scope="col">Score</th>
+							<th scope="col">Team Members</th>
+						</tr>
+					</thead>
+					<tbody class="bg-light">
+						{% for team in faculty_teams %}
+						<tr>
+							<td>
+								<span class="d-block d-md-none ml-1">{{ team.name }}</span>
+								<span class="d-none d-md-block ml-3">{{ team.name }}</span>
+							</td>
+							<td class="text-center">{{ team.questions_answered }}</td>
+							<td class="text-center">{{ team.score }}</td>
+							<td>
+								<span class="d-block d-md-none ml-2"><small>
+									{% with team.get_members|last as last %}
+										{% for member in team.get_members %}
+											{% if member == last %}
+												{{ member }}
+											{% else %}
+												{{ member }},&puncsp;
+											{% endif %}
+										{% endfor %}
+									{% endwith %}
+								</small></span>
+								<span class="d-none d-md-block ml-3"><small>
+									{% with team.get_members|last as last %}
+										{% for member in team.get_members %}
+											{% if member == last %}
+												{{ member }}
+											{% else %}
+												{{ member }},&puncsp;
+											{% endif %}
+										{% endfor %}
+									{% endwith %}
+								</small></span>
 							</td>
 						</tr>
 						{% endfor %}

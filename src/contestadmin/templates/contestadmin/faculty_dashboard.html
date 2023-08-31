@@ -1,4 +1,4 @@
-{% extends 'core/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block section %}Faculty Dashboard{% endblock %}
@@ -17,7 +17,7 @@
 					The zip file linked below contains CSVs with participant information for each of the courses you confirmed with the contest. You will only receive reports for classes where at least one student checked in to the contest either as a contestant or volunteer. Additionally, only individuals who checked in to the contest will appear in a file.
 				</p>
 				<p class="card-text">
-					For in-person contests, we strive to ensure that individuals who are marked as checked-in actually attended the contest by requiring that check-in is performed in-person. We do not verify the identity of the individuals who check-in, so if Student A possesses Student B's credentials, then Student A could hypothetically check in on behalf of student B.      
+					For in-person contests, we strive to ensure that persons who are marked as checked-in actually attended the contest by requiring that check-in is performed in-person. We do not verify the identity of the individuals who check in, so if Person A possesses Person B's account credentials, then Person A could hypothetically check in on behalf of Person B.      
 				</p>
 			</div>
 			<div class="card-footer">
@@ -68,7 +68,7 @@
 			<div class="card-body overflow-auto">
 				<ul class="card-text" style="list-style-type: none;  margin: 0;  padding: 0;">
 					<li>
-						<div class="font-weight-bold">Contestant</div> A student who competed in the contest either alone or with teammates.
+						<div class="font-weight-bold">Contestant</div> A person who competed in the contest either alone or with teammates.
 					</li>
 					<li>
 						<div class="font-weight-bold">Docent</div> A contest volunteer who assisted with check-in, preparing/serving food, or any other activity required to host the event.
@@ -94,14 +94,14 @@
 			<div class="card-body overflow-auto">
 				<h5>Division<span class="text-danger">&dagger;</span></h5>
 				<ul class="card-text">
-					<li><span class="font-weight-bold">Upper:</span> competed in the Upper Division
+					<li><span class="font-weight-bold">U:</span> competed in the Upper Division
 					</li>
-					<li><span class="font-weight-bold">Lower:</span> competed in the Lower Division
+					<li><span class="font-weight-bold">L:</span> competed in the Lower Division
 					</li>
 					<li><span class="font-weight-bold">none:</span> reserved for contest volunteers </li>
 				</ul>
 
-				<p>The Lower Division is intended for students in CDA3100, COP3014, COP3363, or COP3330 who are typically first or second year undergrads. All other students are expected to participate in the Upper Division.</p>
+				<p>The Lower Division is intended for students in COP3014, COP3363, or COP3330 who are typically first or second year undergrads. All other students are expected to participate in the Upper Division.</p>
 				
 				<h5>Questions Answered<span class="text-danger">&dagger;</h5>
 				<p class="card-text">
@@ -175,7 +175,7 @@
 		<div class="col-10">
 			<small>
 				<span class="text-danger">&Dagger;</span>
-				NOTE: The Registered value represents the number of individuals who signed up for the contest and added the given course to their profile. The Checked-in value repsresents the number of individuals who signed up, added the given course, <i>and</i> checked in to the contest. 
+				NOTE: The Registered value represents the number of individuals who signed up for the contest and added the given course to their profile. The Checked-in value represents the number of individuals who signed up, added the given course, <i>and</i> checked in to the contest. 
 			</small>
 		</div>
 	</div>
