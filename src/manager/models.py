@@ -82,6 +82,9 @@ class Profile(models.Model):
     def __str__(self):
         return (str(self.user.first_name) + ' ' + str(self.user.last_name))
 
+    def get_role(self):
+        return self.ROLES[self.role-1][1]
+    
     def has_team(self):
         return self.team is not None
 

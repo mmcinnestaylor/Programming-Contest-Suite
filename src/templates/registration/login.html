@@ -1,9 +1,9 @@
-{% extends 'core/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 {% load custom_filters %}
 
 {% block head %}
-<link rel="stylesheet" type="text/css" href="{% static 'core/css/login.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
 {% endblock %}
 
 {% block section %}Login{% endblock %}
@@ -21,7 +21,7 @@
 	{% endif %}
 
 	<!-- Messages -->
-	{% include 'core/messages.html' %}
+	{% include 'messages.html' %}
 	<!-- End Messages -->
 
 

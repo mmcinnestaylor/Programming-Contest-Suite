@@ -78,7 +78,7 @@ def manage_discord_lfg_role(username, division, action=None):
 
             # Executing webhook.
             webhook.send(content=message)
-            logger.info(f'Success - {action} role: {username}')
+            logger.debug(f'Success - {action} role: {username}')
         else:
             if division == 1:
                 message = '$remove_role ' + username + ' LFG_Upper'
@@ -93,7 +93,7 @@ def manage_discord_lfg_role(username, division, action=None):
                 message = '$add_role ' + username + ' LFG_Upper'
                 webhook.send(content=message)
             
-            logger.info(f'Success - {action} role: {username}')
+            logger.debug(f'Success - {action} role: {username}')
 
 
 @shared_task
@@ -105,7 +105,7 @@ def scrape_discord_members():
     else:
         message = '!scrape_members'
         webhook.send(content=message)
-        logger.info('Scrape members call sent')
+        logger.debug('Scrape members call sent')
      
 
 @shared_task

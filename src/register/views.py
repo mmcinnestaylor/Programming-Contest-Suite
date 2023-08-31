@@ -18,6 +18,7 @@ from . import tasks
 from .tokens import account_activation_token
 from contestadmin.models import Contest
 from contestsuite.settings import CACHE_TIMEOUT
+from core.utils import make_random_password
 from manager.utils import has_no_team, not_registered
 
 # Create your views here.
@@ -135,7 +136,7 @@ def team(request):
         if form.is_valid():
             # Create a temporary object, add additional attribute data, then save to DB
             newTeam = form.save(commit=False)
-            newTeam.pin = User.objects.make_random_password(length=6)
+            newTeam.pin = make_random_password(length=6)
             newTeam.num_members += 1
             newTeam.save()
 

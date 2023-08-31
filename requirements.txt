@@ -1,61 +1,61 @@
 -i https://pypi.python.org/simple
-aiohttp==3.7.4.post0 ; python_version >= '3.6'
-amqp==5.1.1 ; python_version >= '3.6'
-asgiref==3.6.0 ; python_version >= '3.7'
-async-timeout==3.0.1 ; python_full_version >= '3.5.3'
-attrs==22.2.0 ; python_version >= '3.6'
-billiard==3.6.4.0
-celery==5.2.7
-certifi==2022.12.7 ; python_version >= '3.6'
+aiohttp==3.7.4.post0; python_version >= '3.6'
+amqp==5.1.1; python_version >= '3.6'
+asgiref==3.7.2; python_version >= '3.7'
+async-timeout==3.0.1; python_full_version >= '3.5.3'
+attrs==23.1.0; python_version >= '3.7'
+billiard==4.1.0; python_version >= '3.7'
+celery==5.3.1
+certifi==2023.7.22; python_version >= '3.6'
 channels==4.0.0
-chardet==4.0.0 ; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
-charset-normalizer==3.0.1 ; python_full_version >= '3.6.0'
-click==8.1.3 ; python_version >= '3.7'
-click-didyoumean==0.3.0 ; python_full_version >= '3.6.2' and python_full_version < '4.0.0'
+chardet==4.0.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+charset-normalizer==3.2.0; python_full_version >= '3.7.0'
+click==8.1.7; python_version >= '3.7'
+click-didyoumean==0.3.0; python_full_version >= '3.6.2' and python_full_version < '4.0.0'
 click-plugins==1.1.1
-click-repl==0.2.0
-defusedxml==0.7.1 ; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
-deprecated==1.2.13 ; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
-diff-match-patch==20200713 ; python_version >= '2.7'
+click-repl==0.3.0; python_version >= '3.6'
+cron-descriptor==1.4.0
+defusedxml==0.7.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+deprecated==1.2.14; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+diff-match-patch==20230430; python_version >= '3.7'
 discord.py==1.7.3
-django==4.1.7
-django-celery-beat==2.4.0
+django==4.2.4
+django-celery-beat==2.5.0
 django-hashid-field==3.3.7
-django-import-export==3.0.2
-django-timezone-field==5.0 ; python_version >= '3.7' and python_version < '4.0'
-et-xmlfile==1.1.0 ; python_version >= '3.6'
-flower==1.2.0
-gunicorn==20.1.0
-hashids==1.3.1 ; python_version >= '2.7'
-hiredis==2.2.2
-humanize==4.6.0 ; python_version >= '3.7'
-idna==3.4 ; python_version >= '3.5'
-kombu==5.2.4 ; python_version >= '3.7'
+django-import-export==3.2.0
+django-timezone-field==6.0; python_version >= '3.8' and python_version < '4.0'
+et-xmlfile==1.1.0; python_version >= '3.6'
+flower==2.0.1
+gunicorn==21.2.0
+hashids==1.3.1; python_version >= '2.7'
+hiredis==2.2.3
+humanize==4.8.0; python_version >= '3.8'
+idna==3.4; python_version >= '3.5'
+kombu==5.3.1; python_version >= '3.8'
 markuppy==1.14
-multidict==6.0.4 ; python_version >= '3.7'
-mysqlclient==2.1.1
+multidict==6.0.4; python_version >= '3.7'
+mysqlclient==2.2.0
 odfpy==1.4.1
-openpyxl==3.1.1
-packaging==23.0 ; python_version >= '3.7'
-prometheus-client==0.16.0 ; python_version >= '3.6'
-prompt-toolkit==3.0.36 ; python_full_version >= '3.6.2'
-python-crontab==2.7.1
-python-dateutil==2.8.2 ; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
-pytz==2022.7.1
-pyyaml==6.0
+openpyxl==3.1.2
+packaging==23.1; python_version >= '3.7'
+prometheus-client==0.17.1; python_version >= '3.6'
+prompt-toolkit==3.0.39; python_full_version >= '3.7.0'
+python-crontab==3.0.0
+python-dateutil==2.8.2; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+pytz==2023.3
+pyyaml==6.0.1
 redis==4.1.4
-requests==2.28.2
-setuptools==67.3.2 ; python_version >= '3.7'
+requests==2.31.0
 six==1.16.0
-sqlparse==0.4.3 ; python_version >= '3.5'
-tablib[html,ods,xls,xlsx,yaml]==3.3.0 ; python_version >= '3.7'
-tornado==6.2 ; python_version >= '3.7'
-typing-extensions==4.5.0 ; python_version >= '3.7'
-tzdata==2022.7 ; python_version >= '2'
-urllib3==1.26.14 ; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5'
-vine==5.0.0 ; python_version >= '3.6'
+sqlparse==0.4.4; python_version >= '3.5'
+tablib[html,ods,xls,xlsx,yaml]==3.5.0; python_version >= '3.8'
+tornado==6.3.3; python_version >= '3.8'
+typing-extensions==4.7.1; python_version >= '3.7'
+tzdata==2023.3; python_version >= '2'
+urllib3==2.0.4; python_version >= '3.7'
+vine==5.0.0; python_version >= '3.6'
 wcwidth==0.2.6
-wrapt==1.14.1 ; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+wrapt==1.15.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
 xlrd==2.0.1
 xlwt==1.3.0
-yarl==1.8.2 ; python_version >= '3.7'
+yarl==1.9.2; python_version >= '3.7'

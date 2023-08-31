@@ -15,4 +15,5 @@ urlpatterns = [
     path('ec_files/generate', login_required((user_passes_test(contestadmin_auth, login_url='/', redirect_field_name=None))(views.GenerateExtraCreditReports.as_view())), name='gen_ec_reports'),
     path('faculty/<uidb64>/', views.FacultyDashboard.as_view(), name='fac_ec_dashboard'),
     path('faculty/<uidb64>/download', views.FacultyDashboard.download, name='fac_ec_files_dl'),
+    path('statistics/', views.contest_statistics, name='contest_stats')
 ]

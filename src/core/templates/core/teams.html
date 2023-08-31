@@ -1,4 +1,4 @@
-{% extends 'core/base.html' %}
+{% extends 'base.html' %}
 {% load cache %}
 {% load static %}
 
@@ -36,11 +36,14 @@
 					<tbody class="bg-light">
 						{% for team in upper_teams %}
 						<tr>
-							<td class="text-center">{{ team.name }}</td>
+							<td>
+								<span class="d-block d-md-none ml-1">{{ team.name }}</span>
+								<span class="d-none d-md-block ml-3">{{ team.name }}</span>
+							</td>
 							<td class="text-center">{{ team.questions_answered }}</td>
 							<td class="text-center">{{ team.score }}</td>
-							<td class="text-center">
-								<small>
+							<td>
+								<span class="d-block d-md-none ml-2"><small>
 									{% with team.get_members|last as last %}							
 										{% for member in team.get_members %}
 											{% if member == last %}
@@ -50,7 +53,18 @@
 											{% endif %}
 										{% endfor %}
 									{% endwith %}
-								</small>
+								</small></span>
+								<span class="d-none d-md-block ml-3"><small>
+									{% with team.get_members|last as last %}
+										{% for member in team.get_members %}
+											{% if member == last %}
+												{{ member }}
+											{% else %}
+												{{ member }},&puncsp;
+											{% endif %}
+										{% endfor %}
+									{% endwith %}
+								</small></span>
 							</td>
 						</tr>
 						{% endfor %}
@@ -84,11 +98,14 @@
 					<tbody class="bg-light">
 						{% for team in lower_teams %}
 						<tr>
-							<td class="text-center">{{ team.name }}</td>
+							<td>
+								<span class="d-block d-md-none ml-1">{{ team.name }}</span>
+								<span class="d-none d-md-block ml-3">{{ team.name }}</span>
+							</td>
 							<td class="text-center">{{ team.questions_answered }}</td>
 							<td class="text-center">{{ team.score }}</td>
-							<td class="text-center">
-								<small>
+							<td>
+								<span class="d-block d-md-none ml-2"><small>
 									{% with team.get_members|last as last %}
 										{% for member in team.get_members %}
 											{% if member == last %}
@@ -98,7 +115,18 @@
 											{% endif %}
 										{% endfor %}
 									{% endwith %}
-								</small>
+								</small></span>
+								<span class="d-none d-md-block ml-3"><small>
+									{% with team.get_members|last as last %}
+										{% for member in team.get_members %}
+											{% if member == last %}
+												{{ member }}
+											{% else %}
+												{{ member }},&puncsp;
+											{% endif %}
+										{% endfor %}
+									{% endwith %}
+								</small></span>
 							</td>
 						</tr>
 						{% endfor %}
@@ -132,11 +160,14 @@
 					<tbody class="bg-light">
 						{% for team in faculty_teams %}
 						<tr>
-							<td class="text-center">{{ team.name }}</td>
+							<td>
+								<span class="d-block d-md-none ml-1">{{ team.name }}</span>
+								<span class="d-none d-md-block ml-3">{{ team.name }}</span>
+							</td>
 							<td class="text-center">{{ team.questions_answered }}</td>
 							<td class="text-center">{{ team.score }}</td>
-							<td class="text-center">
-								<small>
+							<td>
+								<span class="d-block d-md-none ml-2"><small>
 									{% with team.get_members|last as last %}
 										{% for member in team.get_members %}
 											{% if member == last %}
@@ -146,7 +177,18 @@
 											{% endif %}
 										{% endfor %}
 									{% endwith %}
-								</small>
+								</small></span>
+								<span class="d-none d-md-block ml-3"><small>
+									{% with team.get_members|last as last %}
+										{% for member in team.get_members %}
+											{% if member == last %}
+												{{ member }}
+											{% else %}
+												{{ member }},&puncsp;
+											{% endif %}
+										{% endfor %}
+									{% endwith %}
+								</small></span>
 							</td>
 						</tr>
 						{% endfor %}
