@@ -125,7 +125,7 @@ DATABASES = {
         'USER': get_secret('SQL_USER', 'contestadmin'),
         'PASSWORD': get_secret('SQL_PASSWORD', 'seminoles1!'),
         'OPTIONS': {'charset': 'utf8mb4'},
-        'TIME_ZONE': 'America/New_York',
+        'TIME_ZONE': get_secret('SQL_TIMEZONE', 'America/New_York'),
         'AUTOCOMMIT': True,
         'CONN_MAX_AGE': 0,
     }
