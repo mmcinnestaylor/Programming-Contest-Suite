@@ -57,7 +57,7 @@ class Team(models.Model):
 
         member_names = []
         for member in members:
-            member_names.append(member.first_name+' '+member.last_name)
+            member_names.append(member.get_full_name())
 
         return member_names
 

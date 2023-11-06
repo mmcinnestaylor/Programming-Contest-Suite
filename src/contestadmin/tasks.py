@@ -1,5 +1,6 @@
 import csv
 import os
+from itertools import islice
 from math import ceil, log10
 
 from discord import Webhook, RequestsWebhookAdapter, InvalidArgument
@@ -289,23 +290,22 @@ def process_contest_results():
             with open(contest.results.path) as resultsfile:
                 results = csv.reader(resultsfile, delimiter="\t", quotechar='"')
                 
-                for i,row in enumerate(results):
-                    # Exclude header of file
-                    if i > 0:
-                        # acm-1 -> acm-(zfill)1
-                        id = f"acm-{row[0].split('-')[1].zfill(fill_width)}"
+                # islice - Skip header of file
+                for row in islice(results, 1, None):
+                    # [DOMjudge team ID] <id> -> [Registration team ID] acm-(zfill)<id>
+                    id = f"acm-{row[0].zfill(fill_width)}"
 
-                        try:
-                            team = Team.objects.get(contest_id=id)
-                            team.questions_answered = row[3]
-                            team.score = row[4]
-                            team.save()
-                        except:
-                            logger.error(
-                                f"Could not process contest results for team {id}")
-                        else:
-                            logger.debug(f"Processed team {id}")
-                            num_teams += 1
+                    try:
+                        team = Team.objects.get(contest_id=id)
+                        team.questions_answered = row[3]
+                        team.score = row[4]
+                        team.save()
+                    except:
+                        logger.error(
+                            f"Could not process contest results for team {id}")
+                    else:
+                        logger.debug(f"Processed team {id}")
+                        num_teams += 1
 
                 logger.info(f"Processed contest results for {num_teams} teams")
         else:
