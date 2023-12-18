@@ -6,6 +6,27 @@ from django.urls import reverse
 
 
 class Announcement(models.Model):
+    """
+    Contest announcement model. Each announcement stores text content displayable on the
+    registration site and optionally distributed via Discord and/or email.
+
+    STATUS:
+        Draft: announcement is saved in the database and viewable in Django Admin but not displayed in the
+            public announcement list nor sent via Discord/email.
+        
+        Publish: announcement is is saved in the database, viewable in Django Admin, displayed in the
+            public announcement, optionally sent via Discord/email.
+
+    slug: unique text ID
+    
+    content: announcement text 
+
+    send_discord: If False the announcement is not delivered to the Discord endpoint. If True the announcement
+        is delivered to the Discord webhook using the URL defined in the ANNOUNCEMENT_WEBHOOK_URL environment variable.
+
+    send_email: If False the announcement is not distributed to users' email. If True the announcement
+        is delivered to users whose profile have the announcement_email_opt_out feature set to False.
+    """
 
     STATUS = (
         (0,"Draft"),
@@ -23,6 +44,7 @@ class Announcement(models.Model):
     send_email = models.BooleanField(default=True)
 
     class Meta:
+        # Descending order: most -> least recently updated
         ordering = ['-updated_on']
 
     def __str__(self):

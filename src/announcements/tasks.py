@@ -16,6 +16,12 @@ logger = get_task_logger(__name__)
 
 @shared_task
 def email_annoucement(id):
+    """
+    Celery task to distribute a published announcement to users.
+
+    id: unique database id of the accouncement
+    """
+
     try:
         announcement = Announcement.objects.get(id=id)
     except:
@@ -24,18 +30,19 @@ def email_annoucement(id):
         i=0
         users = User.objects.all()
         messages = []
+        # Prepare email content
+        message = render_to_string(
+            'announcements/new_announcement_email.html',
+            {'announcement': announcement})
         
         # Prepare email per user
         # Using seperate message per user to avoid address exposure
         for user in users:
             if user.is_active and not user.profile.announcement_email_opt_out:
                 i += 1
-
-                message = render_to_string(
-                'announcements/new_announcement_email.html', {'announcement': announcement})
-
                 messages.append((announcement.title, message, DEFAULT_FROM_EMAIL, [user.email]))
 
+        # send_mass_mail requires Tuple type
         messages = tuple(messages)
         send_mass_mail(messages, fail_silently=False)
 
@@ -43,6 +50,12 @@ def email_annoucement(id):
 
 @shared_task
 def discord_announcement(id):
+    """
+    Celery task to deliver a published announcement to a Discord webhook.
+
+    id: unique database id of the accouncement
+    """
+
     try:
         announcement = Announcement.objects.get(id=id)
     except:
