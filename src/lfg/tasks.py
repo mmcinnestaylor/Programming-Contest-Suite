@@ -1,6 +1,8 @@
 from celery import shared_task
 from celery.utils.log import get_task_logger
+
 from discord import Webhook, RequestsWebhookAdapter, InvalidArgument
+
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.template.loader import render_to_string
@@ -16,8 +18,13 @@ logger = get_task_logger(__name__)
 @shared_task
 @transaction.atomic
 def cleanup_lfg_rosters():
+    """
+    Celery task to deactivate LFG profiles where the user is also on a full team.
+    """
+
     members_upper = []
     members_lower = []
+    # max team size is 3
     teams = Team.objects.filter(num_members=3)
 
     for team in teams:
@@ -25,6 +32,7 @@ def cleanup_lfg_rosters():
 
         for member in members:
             if LFGProfile.objects.filter(user=member).exists() and member.lfgprofile.active == True:
+                # Deactivate profile
                 member.lfgprofile.active = False
                 member.lfgprofile.save()
                 
@@ -60,9 +68,12 @@ def cleanup_lfg_rosters():
 
 @shared_task
 def manage_discord_lfg_role(username, division, action=None):
-    '''
-        action: 'add', 'remove', 'swap'
-    '''
+    """
+    Celery task to update an existing LFG profile.
+
+    action: 'add', 'remove', 'swap'
+    """
+    
     assert action == 'add' or action == 'remove' or action == 'swap', "Invalid action passed: ['add' | 'remove' | 'swap']"
     
     try:
@@ -98,6 +109,10 @@ def manage_discord_lfg_role(username, division, action=None):
 
 @shared_task
 def scrape_discord_members():
+    """
+    Celery task to trigger a scrape of the target Discord server member list.
+    """
+
     try:
         webhook = Webhook.from_url(BOT_CHANNEL_WEBHOOK_URL, adapter=RequestsWebhookAdapter())
     except InvalidArgument:
@@ -111,10 +126,15 @@ def scrape_discord_members():
 @shared_task
 @transaction.atomic
 def verify_lfg_profiles():
+    """
+    Celery task which attempts to verify any unverified LFGProfiles.
+    """
+    
     lfg_profiles = LFGProfile.objects.filter(completed=True).filter(verified=False)
     count = 0
 
     for profile in lfg_profiles:
+        # verification: provided username + discriminator matches a username scraped from the target Discord server
         if DiscordMember.objects.filter(username=profile.discord_username).filter(discriminator=profile.discord_discriminator).exists():
             profile.verified = True
             profile.save()

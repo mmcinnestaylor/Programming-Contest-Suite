@@ -5,6 +5,15 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 # Create your models here.
 
 class DiscordMember(models.Model):
+    """
+    Discord user model which stores the username and discriminator
+    of a full Discord username.
+
+    *** IMPORTANT Dec 2023 *** Discord has updated their username format and
+    no longer utilizes discriminators. This model MUST be updated to support
+    the new format.
+    """
+
     username = models.CharField(max_length=32)
     discriminator = models.SmallIntegerField()
 
@@ -14,8 +23,30 @@ class DiscordMember(models.Model):
 
 class LFGProfile(models.Model):
     """
-    LFG Profile Model
-    - Class for looking for group feature
+    Looking For Group Profile model. Each instance is tied to a single contestant.
+
+    *** IMPORTANT Dec 2023 *** Discord has updated their username format and
+    no longer utilizes discriminators. This model MUST be updated to support
+    the new format.
+
+    discord_username
+    discord_discriminator
+    ***
+
+    user: the user instance attached to an LFG profile
+
+    division: division in which a contestant wants to compete
+
+    standing: participant's collegiate standing
+
+    active: If False, the profile is inactive and not participating in the LFG service. If
+        True the profile is active and particpating in LFG.
+
+    completed: If False, the profile is incomplete, if True the profile is complete.
+
+    verified: If False, the profile is unverified, meaning the username has not
+        yet been matched to a member of the target Discord server. If True, the
+        username has been matched.
     """
 
     DIVISION = (
