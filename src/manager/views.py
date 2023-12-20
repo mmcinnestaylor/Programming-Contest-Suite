@@ -18,10 +18,15 @@ from contestsuite.settings import CACHE_TIMEOUT
 
 @login_required
 def dashboard(request):
+    """
+    View to display the main user dashboard.
+    """
+
     context = {}
 
     contest = cache.get_or_set(
         'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
+    
     if contest:
         context['lunch_form_url'] = contest.lunch_form_url
     else:
@@ -52,6 +57,10 @@ def dashboard(request):
 @login_required
 @transaction.atomic
 def manage_profile(request):
+    """
+    View to update a user profile.
+    """
+    
     context = {}
 
     if request.method == 'POST':
@@ -68,6 +77,7 @@ def manage_profile(request):
         else:
             messages.error(request, 'Please correct the error(s) below.')
     else:
+        # Populate form with existing user data to edit
         user_form = forms.UserForm(instance=request.user, user=request.user)
         profile_form = forms.ProfileForm(instance=request.user.profile)
 
@@ -80,11 +90,16 @@ def manage_profile(request):
 @user_passes_test(has_fsuid, login_url='/manage/', redirect_field_name=None)
 @transaction.atomic
 def manage_courses(request):
+    """
+    View to select/update extra credit courses attached to a profile.
+    """
+    
     context = {}
 
     if request.method == 'POST':
         form = forms.CourseForm(request.POST, instance=request.user.profile)
         if form.is_valid():
+            # Update course selection
             request.user.profile.courses.set(form.cleaned_data['courses'])
             request.user.save()
 
@@ -92,17 +107,21 @@ def manage_courses(request):
                 request, 'Your courses were successfully updated!', fail_silently=True)
             return redirect('manage_dashboard')
     else:
+        # Populate form with existing course selection
         form = forms.CourseForm(instance=request.user.profile)
 
     context['form'] = form
     return render(request, 'manager/course_form.html', context)
 
 
-# Remove all courses user has selected for extra credit
 @login_required
 @user_passes_test(has_fsuid, login_url='/manage/', redirect_field_name=None)
 @transaction.atomic
 def clear_courses(request):
+    """
+    View to remove all courses user has selected for extra credit
+    """
+
     request.user.profile.courses.clear()
     request.user.save()
 
@@ -111,16 +130,20 @@ def clear_courses(request):
     return redirect('manage_dashboard')
 
 
-# Only team admin can access view
 @login_required
 @user_passes_test(team_admin, login_url='/manage/', redirect_field_name=None)
 @transaction.atomic
 def manage_team(request):
+    """
+    View to manage a contest team.
+    """
+    
     context = {}
 
     if request.method == 'POST':
         form = forms.TeamForm(request.POST, instance=request.user.profile.team)
         if form.is_valid():
+            # Update team
             form.save()
             messages.success(
                 request, 'Your team was successfully updated!', fail_silently=True)
@@ -128,8 +151,10 @@ def manage_team(request):
         else:
             messages.error(request, 'Please correct the error(s) below.', fail_silently=True)
     else:
+        # Populate form with existing team data
         form = forms.TeamForm(instance=request.user.profile.team)
     
+    # Get user's teammates
     team_members = User.objects.filter(
         profile__team=request.user.profile.team).exclude(username=request.user.username)
 
@@ -138,11 +163,14 @@ def manage_team(request):
     return render(request, 'manager/team_form.html', context)
 
 
-# Only person not on a team can access view
 @login_required
 @user_passes_test(has_no_team, login_url='/manage/', redirect_field_name=None)
 @transaction.atomic
 def join_team(request):
+    """
+    View to join an existing team.
+    """
+    
     context = {}
 
     if request.method == 'POST':
@@ -177,11 +205,14 @@ def join_team(request):
     return render(request, 'manager/join_form.html', context)
 
 
-# Only person on a team can access view.
 @login_required
 @user_passes_test(has_team, login_url='/manage/', redirect_field_name=None)
 @transaction.atomic
 def leave_team(request):
+    """
+    View to remove a team from a user profile.
+    """
+
     # If user is the team admin.
     if request.user.profile.team_admin:
         # If admin tries to leave a solo team, then just delete it
@@ -226,11 +257,14 @@ def leave_team(request):
     return redirect('manage_dashboard')
 
 
-# Only team admin can access delete view
 @login_required
 @user_passes_test(team_admin, login_url='/manage/', redirect_field_name=None)
 @transaction.atomic
 def delete_team(request):
+    """
+    View to delete a team and update any connected user profiles.
+    """
+    
     try:
         members = Profile.objects.filter(team=request.user.profile.team)
         
@@ -258,6 +292,10 @@ def delete_team(request):
 @user_passes_test(team_admin, login_url='/manage/')
 @transaction.atomic
 def remove_member(request, username):
+    """
+    View to remove a user profile from a team.
+    """
+    
     if username == request.user.username:
         messages.error(
             request, 'Cannot remove self from team. Please use Leave option instead.', fail_silently=True)
