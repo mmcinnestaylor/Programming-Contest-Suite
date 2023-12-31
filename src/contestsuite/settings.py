@@ -14,6 +14,12 @@ import os
 
 
 def get_secret(key, default=None):
+    """
+    Simple function to read an environment variable and return a default if the variable
+    does not exist. Supports values passed via Docker Secrets.
+    """
+
+    
     value = os.getenv(key, default)
     if value and os.path.isfile(value):
         with open(value) as f:
