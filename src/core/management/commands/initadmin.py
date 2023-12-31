@@ -2,6 +2,9 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 
 class Command(BaseCommand):
+    """
+    System startup command to create initial Superuser is no accounts exist.
+    """
 
     def handle(self, *args, **options):
         if User.objects.count() == 0:

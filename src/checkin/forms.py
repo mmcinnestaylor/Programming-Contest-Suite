@@ -2,16 +2,24 @@ from django import forms
 
 
 class EmailCheckinForm(forms.Form):
-	email = forms.EmailField(widget=forms.EmailInput(
+    """
+    Form for email based check-in.
+    """
+     
+    email = forms.EmailField(widget=forms.EmailInput(
             attrs={'placeholder': 'Enter your registered email'}),
-			required=False,
-	)
+            required=False,
+    )
 
 
 class SwipeCheckinForm(forms.Form):
+    """
+    Form for swipe based check-in with FSUCard.
+    """
+
     fsu_num = forms.CharField(widget=forms.PasswordInput(
         attrs={'placeholder': 'Swipe your FSU Card'}),
-		required=False,
+        required=False,
     )
 
     # determines if the swipe is valid
@@ -25,7 +33,10 @@ class SwipeCheckinForm(forms.Form):
 
 
 class WalkinForm(forms.Form):
-    # iterable
+    """
+    Form for walk-in contestant check-in.
+    """
+    
     DIVISIONS = (
         (1, "Upper"),
         (2, "Lower"),
@@ -35,5 +46,9 @@ class WalkinForm(forms.Form):
 
 
 class VolunteerForm(forms.Form):
+    """
+    Form for contest volunteer check-in.
+    """
+
     username = forms.CharField(max_length=150, label='Username', help_text='Your account username.')
     pin = forms.CharField(max_length=8, label='Volunteer PIN', help_text='Provided by contest organizers.', widget=forms.PasswordInput())

@@ -1,3 +1,7 @@
+"""
+Functions useable by @user_passes_test view decorator
+"""
+
 from django.core.exceptions import ObjectDoesNotExist
 from .models import LFGProfile
 
