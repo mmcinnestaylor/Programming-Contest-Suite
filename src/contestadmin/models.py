@@ -29,7 +29,7 @@ class Contest(models.Model):
 
     volunteer_pin (CharField): the pass code contest volunteers must provide to complete volunteer check-in
 
-    participation (PositiveSmallIntegerField): the contest participation format specified by Contest.FORMAT
+    participation (PositiveSmallIntegerField): the contest participation format with choices deinfed in Contest.FORMAT
 
     lfg_active (BooleanField): If False, the Looking For Group is inacitve. If True, the service is active.
 

@@ -7,13 +7,30 @@ from django.contrib.auth.models import User
 class Team(models.Model):
     """
     Team Model
-    - name attribute is unique but not primary key
-    - division is the contest division
-    - pin used to allow nonmembers to join team
-    - contest_id used by domjudge as team login username
-    - contest_password used by domjudge as team login password
-    - num_members used to avoid extra DB queries
+
+    DIVISION:
+        Upper Division: the team is a member of the Upper Division
+        Lower Division: the team is a member of the Lower Division
+
+    name (CharField): the team's name
+
+    division (PositiveSmallIntegerField): the division in which the team will compete with choices defined in Team.DIVISION
+
+    pin (CharField): the alphanumeric code a user must provide to join an existing team
+
+    contest_id (CharField): the team's DOMjudge username
+
+    contest_password (CharField): the team's DOMjudge password
+
+    questions_answered (PositiveSmallIntegerField): the number of contest packet questions the team successfully answered 
+
+    score (PositiveSmallIntegerField): the team's final DOMjudge score
+
+    num_members (PositiveSmallIntegerField): the number of users on the team
+
+    faculty (BooleanField): If True, the team contains at least one faculty member. Otherwise the team does not contain a faculty member.
     """
+
     DIVISION = (
         (1, 'Upper Division'),
         (2, 'Lower Division')
@@ -33,6 +50,10 @@ class Team(models.Model):
         return (str(self.name) + ' : ' + ('U' if self.division == 1 else 'L'))
 
     def get_division(self):
+        """
+        Returns the team's division name.
+        """
+        
         if self.faculty:
             division = "Faculty"
         elif self.division == 1:
@@ -43,6 +64,10 @@ class Team(models.Model):
         return division
     
     def get_division_code(self):
+        """
+        Returns the team's division short name.
+        """
+        
         if self.faculty:
             division = "F"
         elif self.division == 1:
@@ -53,6 +78,10 @@ class Team(models.Model):
         return division            
     
     def get_members(self):
+        """
+        Returns a list of team member names.
+        """
+        
         members = User.objects.filter(profile__team=self)
 
         member_names = []
@@ -62,6 +91,10 @@ class Team(models.Model):
         return member_names
 
     def is_active(self):
+        """
+        Returns whether at least one team member checked into the contest.
+        """
+
         members = User.objects.filter(profile__team=self)
 
         for member in members:

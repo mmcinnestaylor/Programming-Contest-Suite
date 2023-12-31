@@ -17,14 +17,24 @@ class Announcement(models.Model):
         Publish: announcement is is saved in the database, viewable in Django Admin, displayed in the
             public announcement, optionally sent via Discord/email.
 
-    slug: unique text ID
+    title (CharField): the announcement title (unique)
     
-    content: announcement text 
+    slug (SlugField): announcement text slug (unique)
 
-    send_discord: If False the announcement is not delivered to the Discord endpoint. If True the announcement
+    author (ForeignKey: User): announcement author
+
+    updated_on (DateTimeField): date and time the announcement was last updated
+    
+    content (TextField): announcement's content
+
+    created_on (DateTimeField): date and time the announcement was created
+
+    status (IntegerField): the announcement's state with choices defined in Announcement.STATUS 
+
+    send_discord (BooleanField): If False the announcement is not delivered to the Discord endpoint. If True the announcement
         is delivered to the Discord webhook using the URL defined in the ANNOUNCEMENT_WEBHOOK_URL environment variable.
 
-    send_email: If False the announcement is not distributed to users' email. If True the announcement
+    send_email (BooleanField): If False the announcement is not distributed to users' email. If True the announcement
         is delivered to users whose profile have the announcement_email_opt_out feature set to False.
     """
 
