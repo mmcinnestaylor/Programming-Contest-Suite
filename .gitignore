@@ -129,10 +129,14 @@ dmypy.json
 .pyre/
 
 .vscode
-src/boot.sh
 .DS_Store
+
+# Django assets
 src/media/*
 src/static/*
 
-# Project Webpage
-/docs
+# Jekyll 
+docs/_site
+docs/.sass-cache
+docs/.jekyll-cache
+docs/.jekyll-metadata

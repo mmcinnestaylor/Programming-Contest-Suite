@@ -1,3 +1,8 @@
+"""
+Functions useable by @user_passes_test view decorator. Each function accepts a User object
+as its only parameter.
+"""
+
 def has_team(user):
     return user.profile.has_team()
 

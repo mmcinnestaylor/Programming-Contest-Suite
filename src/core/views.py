@@ -12,10 +12,15 @@ from lfg.models import LFGProfile
 
 # Create your views here.
 
-# Display index page
 def index(request):
+    """
+    View to display site index(home) page. Displays announcements, DOMjudge server status, and information on 
+    extra credit courses, participation, teams, and looking for group participants. 
+    """
+
     context = {}
 
+    # Get cached DOMjudge server status or ping server
     if cache.get('domjudge_status'):
         context['domjudge_status'] = cache.get('domjudge_status')
     else:
@@ -27,13 +32,17 @@ def index(request):
             context['domjudge_status'] = r.status_code
             cache.set('domjudge_status', r.status_code, CACHE_TIMEOUT)
     
+    # Get contest object or set to None
     context['contest'] = cache.get_or_set(
         'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
     
+    # Get published announcements
     context['announcements'] = (Announcement.objects.filter(status=1))
+    # Get all courses
     context['courses'] = Course.objects.all()
 
     if context['contest'] and context['contest'].lfg_active:
+        # Get Looking For Group profile totals
         context['lfg_profiles_upper'] = LFGProfile.objects.filter(active=True).filter(division=1).count()
         context['lfg_profiles_lower'] = LFGProfile.objects.filter(active=True).filter(division=2).count()
 
@@ -65,18 +74,27 @@ def index(request):
     return render(request, 'core/index.html', context)
 
 
-# Display contact us page
 def contact(request):
+    """
+    View to display contact us page.
+    """
+
     return render(request, 'core/contact.html')
 
 
-# Display faq page
 def faq(request):
+    """
+    View to display faq page.
+    """
+
     return render(request, 'core/faq.html')
 
 
-# Display teams page
 def teams(request):
+    """
+    View to display teams page.
+    """
+
     context = {}
 
     teams_set = Team.objects.all()

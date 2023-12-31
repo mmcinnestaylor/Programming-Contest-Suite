@@ -16,6 +16,10 @@ from contestsuite.settings import CACHE_TIMEOUT
 
 @login_required
 def dashboard(request):
+    """
+    View for displaying the LFG dashboard. 
+    """
+
     context = {}
 
     contest = cache.get_or_set('contest_model', Contest.objects.first(), CACHE_TIMEOUT)
@@ -24,17 +28,19 @@ def dashboard(request):
     else:
         context['lfg_active'] = False
 
-    #['Graduate', 'Senior', 'Junior', 'Sophomore', 'Freshman', 'Other']
+    # Dict mapping of standings Graduate/Senior/Junior/Sophomore/Freshman/Other
     context['standings'] = {standing[0]:standing[1] for standing in LFGProfile.STANDING}
+    # Dict mapping of divisions Upper/Lower
     context['divisions'] = {division[0]:division[1] for division in LFGProfile.DIVISION}
+    # Gather LFG profiles by division
     context['lfg_upper'] = cache.get_or_set(
         'lfg_dash_users_upper', LFGProfile.objects.filter(active=True).filter(division=1), CACHE_TIMEOUT)
     context['lfg_lower'] = cache.get_or_set(
         'lfg_dash_users_lower', LFGProfile.objects.filter(active=True).filter(division=2), CACHE_TIMEOUT)
+    # LFG Profile counts
     context['lfg_upper_count'] = context['lfg_upper'].count()
     context['lfg_lower_count'] = context['lfg_lower'].count()
     
-
     return render(request, 'lfg/dashboard.html', context)
 
 
@@ -42,16 +48,23 @@ def dashboard(request):
 @user_passes_test(profile_activatable, login_url='/lfg/', redirect_field_name=None)
 @transaction.atomic
 def activate_profile(request):
+    """
+    View to activate an LFG profile 
+    """
 
+    # Check LFG status
     contest = cache.get_or_set(
         'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
+    
     if not contest or not contest.lfg_active:
         messages.error(request, 'The LFG service is currently offline.', fail_silently=True)
         return redirect('lfg_dashboard')
 
+    # Update user
     request.user.lfgprofile.active = True
     request.user.lfgprofile.save()
 
+    # Schedule Discord profile role change(s)
     tasks.manage_discord_lfg_role.delay(request.user.lfgprofile.get_discord_username(), request.user.lfgprofile.division, 'add')
     messages.success(request, 'Profile scheduled for activation.', fail_silently=True)
     
@@ -62,10 +75,16 @@ def activate_profile(request):
 @user_passes_test(new_lfg_user, login_url='/lfg/', redirect_field_name=None)
 @transaction.atomic
 def create_profile(request):
+    """
+    View to create an LFG profile.
+    """
+    
     context = {}
 
+    # Check LFG status
     contest = cache.get_or_set(
         'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
+    
     if not contest or not contest.lfg_active:
         messages.error(request, 'The LFG service is currently offline.', fail_silently=True)
         return redirect('lfg_dashboard')
@@ -74,6 +93,7 @@ def create_profile(request):
         profile_form = forms.ProfileForm(request.POST)
         
         if profile_form.is_valid():
+            # Create the profile
             lfg_profile = profile_form.save(commit=False)
             lfg_profile.completed = lfg_profile.is_completed()
             lfg_profile.user=request.user
@@ -96,16 +116,23 @@ def create_profile(request):
 @user_passes_test(lfg_profile_active, login_url='/lfg/', redirect_field_name=None)
 @transaction.atomic
 def deactivate_profile(request):
+    """
+    View to deactivate an LFG profile.
+    """
 
+    # Check LFG status
     contest = cache.get_or_set(
         'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
+    
     if not contest or not contest.lfg_active:
         messages.error(request, 'The LFG service is currently offline.', fail_silently=True)
         return redirect('lfg_dashboard')
 
+    # Deactivate profile
     request.user.lfgprofile.active = False
     request.user.lfgprofile.save()
 
+    # Schedule Discord profile role change(s)
     tasks.manage_discord_lfg_role.delay(request.user.lfgprofile.get_discord_username(), request.user.lfgprofile.division, 'remove')
     messages.warning(request, 'Profile scheduled for deactivation.', fail_silently=True)
 
@@ -116,10 +143,16 @@ def deactivate_profile(request):
 @user_passes_test(current_lfg_user, login_url='/lfg/', redirect_field_name=None)
 @transaction.atomic
 def manage_profile(request):
+    """
+    View to manage an LFG profile.
+    """
+
     context = {}
 
+    # Check LFG status
     contest = cache.get_or_set(
         'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
+    
     if not contest or not contest.lfg_active:
         messages.error(request, 'The LFG service is currently offline.', fail_silently=True)
         return redirect('lfg_dashboard')
@@ -130,21 +163,24 @@ def manage_profile(request):
         if profile_form.is_valid():
             lfg_profile = profile_form.save(commit=False)
 
-            # Username change
+            # Discord username change: profile must be reverified and reactivated
             if 'discord_username' in profile_form.changed_data or 'discord_discriminator' in profile_form.changed_data:
                 if lfg_profile.verified:
                     lfg_profile.verified = False
                 if lfg_profile.active:
                     lfg_profile.active = False
+
+                    # Get previous username
                     username = profile_form['discord_username'].initial+'#'+str(profile_form['discord_discriminator'].initial)
 
+                    # Remove roles from previous username 
                     if 'division' not in profile_form.changed_data:
                         tasks.manage_discord_lfg_role.delay(username, lfg_profile.division, 'remove')
                     else:
                         tasks.manage_discord_lfg_role.delay(username, profile_form['division'].initial, 'remove')
 
                 messages.warning(request, 'Discord username changed. Profile reverification required.', fail_silently=True)
-            # Username unchanged
+            # Discord username unchanged
             else:
                 # Division was updated 
                 if 'division' in profile_form.changed_data:
@@ -156,6 +192,7 @@ def manage_profile(request):
                             
                             tasks.manage_discord_lfg_role.delay(lfg_profile.get_discord_username(), profile_form['division'].initial, 'remove')
                             messages.warning(request, 'Profile deactivated because it is incomplete. Complete the blank field(s)  to reactivate.', fail_silently=True)
+                # Standing was updated
                 elif 'standing' in profile_form.changed_data and lfg_profile.active:
                     if profile_form.cleaned_data['standing'] is None:
                         tasks.manage_discord_lfg_role.delay(lfg_profile.get_discord_username(), profile_form['division'].initial, 'remove')

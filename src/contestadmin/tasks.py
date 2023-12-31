@@ -28,6 +28,14 @@ logger = get_task_logger(__name__)
 @shared_task
 @transaction.atomic
 def create_walkin_teams(division, total):
+    """
+    Celery task to create walk-in teams.
+    
+    division(int): the division in which the team(s) will compete
+
+    total(int): the number of teams to create
+    """
+    
     if total > 0:
         logger.debug('Starting walk-in team creation')
 
@@ -69,6 +77,14 @@ def create_walkin_teams(division, total):
 @shared_task
 @transaction.atomic
 def generate_contest_files():
+    """
+    Celery task to create input files for the DOMjudge jury system.
+        - Currently each division (U/L) is set up as a separate contest in DOMjudge
+        - Generator creates necessary files (teams, accounts, groups) to set up a contest for each division
+
+    https://www.domjudge.org/docs/manual/7.3/import.html
+    """
+    
     teams = Team.objects.all()
 
     if teams.count() > 0:
@@ -83,7 +99,6 @@ def generate_contest_files():
         logger.info(f'Created credentials for {teams.count()} teams')
 
         # Create DOMjudge contest files per division
-        # https://www.domjudge.org/docs/manual/7.3/import.html
         for division in Team.DIVISION:
             if division[0] == 1:  # Upper
                 account_file = MEDIA_ROOT + '/contest_files/accounts_upper.tsv'
@@ -126,7 +141,7 @@ def generate_contest_files():
                                 team.contest_id,  # Full name of the user (str)
                                 team.contest_id,  # DOMjudge Username (str)
                                 team.contest_password,  # DOMjudge Password (str)
-                                int((team.contest_id).strip("acm-")),
+                                int((team.contest_id).strip("acm-")), # Team Number (int)
                             ])
                             # Team profile
                             team_writer.writerow([
@@ -148,6 +163,13 @@ def generate_contest_files():
 @shared_task
 @transaction.atomic
 def check_in_out_users(action):
+    """
+    Celery task to allow an admin to check in/out all users.
+
+    action(int): If 1, check in for the main contest. If 2 check in for a
+        practice contest. Othetwise check out users.
+    """
+    
     # Check-in
     if action == 1 or action == 2:
         users = User.objects.all()
@@ -182,21 +204,34 @@ def check_in_out_users(action):
 
 @shared_task
 def generate_ec_reports():
+    """
+    Celery task to create contest participation reports used by faculty to assign
+    extra credit for contest participation.
+        - Each file maps to a course registered in the database.
+        - File creation condition: At least one user has selected
+            the course in their profile AND checked into the contest
+
+    IMPORTANT:
+        Faculty model currently requires an FSU CS dept email address, so file naming
+        format <faculty-email_course-code.csv> will map correctly.
+
+        Updating Faculty model to support non-FSU CS addresses will require file naming update.
+    """
+    
     num_courses = 0
     faculty_members = Faculty.objects.all()
 
     for faculty in faculty_members:
         # All courses for given faculty member
         courses = Course.objects.filter(instructor=faculty)
-        num_files = 0
 
         for course in courses:
-            # All students in given course
+            # All students in given course who checked in on contest day
             students = User.objects.filter(profile__courses=course).filter(profile__checked_in=True)
 
             if students.exists():
                 num_courses += 1
-                num_files += 1
+                # Filename format: faculty-email_course-code.csv
                 filename = f"{MEDIA_ROOT}/ec_files/{faculty.email.split('@')[0]}_{course.code}.csv"
 
                 # Participation report for given course
@@ -233,6 +268,12 @@ def generate_ec_reports():
 
 @shared_task
 def email_faculty(domain):
+    """
+    Celery task to notify faculty members of available participation reports.
+
+    domain(str): the domain name of the host server (ex. contest.cs.fsu.edu)
+    """
+    
     faculty_members = Faculty.objects.all()
     fpath = f"{MEDIA_ROOT}/ec_files/"
     message_subject = 'Programming Contest EC files'
@@ -268,7 +309,8 @@ def email_faculty(domain):
             [faculty.email]
         ))
 
-    messages = tuple(messages)  # Group messages for mass mailing
+    # Group messages for mass mailing, send_mass_mail requires Tuple format
+    messages = tuple(messages)
     try:
         send_mass_mail(messages, fail_silently=False)
     except:
@@ -278,6 +320,10 @@ def email_faculty(domain):
 @shared_task
 @transaction.atomic
 def process_contest_results():
+    """
+    Celery task which processes a DOMjudge results file uploaded to the server.
+    """
+    
     num_teams = 0
     contest = Contest.objects.all().first()
 
@@ -285,6 +331,7 @@ def process_contest_results():
         logger.error("No Contest object exists in database.")
     else:
         if Team.objects.all().count() > 0:
+            # Determine width of numerical portion of DOMjudge usernames
             fill_width = ceil(log10(Team.objects.all().count()))
 
             with open(contest.results.path) as resultsfile:
@@ -314,6 +361,13 @@ def process_contest_results():
 
 @shared_task
 def clear_discord_channel(id):
+    """
+    Celery task to send a clear channel command message to a target Discord server.
+        - Command used by the ACM-FSU/pcs-bot
+
+    id: ID of the target channel on the Discord server which will be cleared
+    """
+    
     try:
         webhook = Webhook.from_url(
             BOT_CHANNEL_WEBHOOK_URL, adapter=RequestsWebhookAdapter())
@@ -327,6 +381,11 @@ def clear_discord_channel(id):
 
 @shared_task
 def create_discord_lfg_roles():
+    """
+    Celery task to send a create roles command message to a target Discord server.
+        - Command used by the ACM-FSU/pcs-bot
+    """
+
     try:
         webhook = Webhook.from_url(
             BOT_CHANNEL_WEBHOOK_URL, adapter=RequestsWebhookAdapter())
@@ -340,6 +399,11 @@ def create_discord_lfg_roles():
 
 @shared_task
 def remove_all_discord_lfg_roles():
+    """
+    Celery task to send a remove roles command message to a target Discord server.
+        - Command used by the ACM-FSU/pcs-bot
+    """
+
     try:
         webhook = Webhook.from_url(
             BOT_CHANNEL_WEBHOOK_URL, adapter=RequestsWebhookAdapter())

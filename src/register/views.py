@@ -25,15 +25,20 @@ from manager.utils import has_no_team, not_registered
 
 
 class ActivateAccount(View):
+    """
+    View to activate an account after email verification.
+    """
 
     def get(self, request, uidb64, token):
         try:
+            # Decode username and check for account
             uid = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
 
         if user is not None and account_activation_token.check_token(user, token):
+            # Activate account
             user.is_active = True
             user.profile.email_confirmed = True
             user.save()
@@ -50,15 +55,19 @@ def base(request):
     return render(request, 'register/register.html')
 
 
-# Limit view to those who are not logged in. Others redirected to manage.
 @user_passes_test(not_registered, login_url='/manage/')
 @transaction.atomic
 def account(request):
+    """
+    View to create a user account. Limit view to those who are not logged in. Others redirected to manage.
+    """
+    
     context = {}
 
     if request.method == 'POST':
         form = forms.ExtendedUserCreationForm(request.POST)
         if form.is_valid():
+            # Create user
             user = form.save(commit=False)
             user.is_active = False # Deactivate account until it is validated
             user.save()
@@ -117,15 +126,20 @@ def account(request):
     return render(request, 'register/group_register_form.html', {'formset': formset})'''
 
 
-# Limit view to those are not on a team. Others redirected to manage.
 @login_required
 @user_passes_test(has_no_team, login_url='/manage/')
 @transaction.atomic
 def team(request):
+    """
+    View to create a team. Limit view to those are not on a team. Others redirected to manage.
+    """
+    
     context = {}
 
     contest = cache.get_or_set(
         'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
+    
+    # Enforce registration deadline
     if contest and contest.team_deadline and timezone.now() > contest.team_deadline:
         messages.error(
             request, 'Team registration closed. The registration deadline has already passed.', fail_silently=True)
@@ -160,8 +174,11 @@ def team(request):
     return render(request, 'register/register_form.html', context)
 
 
-# Recover username
 def recover_username(request):
+    """
+    View to recover a user's username.
+    """
+    
     context = {}
 
     if request.method == 'POST':

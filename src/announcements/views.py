@@ -6,9 +6,13 @@ from django.views.generic.list import ListView
 from .models import Announcement
 
 # Create your views here.
+# https://docs.djangoproject.com/en/4.2/ref/class-based-views/generic-display/
 
 
 class AnnouncementListView(ListView):
+    """
+    Simple view which lists all announcement objects in the database.
+    """
 
     model = Announcement
     paginate_by = 5
@@ -24,6 +28,9 @@ class AnnouncementListView(ListView):
 
 
 class AnnouncementDetailView(DetailView):
+    """
+    Simple view which lists the details of an announcement object in the database.
+    """
 
     model = Announcement
 

@@ -6,6 +6,11 @@ from . import models
 
 
 class LatestAnnouncementsFeed(Feed):
+    """
+    Simple Django RSS feed of published contest announcements. 
+    https://docs.djangoproject.com/en/4.2/ref/contrib/syndication/
+    """
+    
     title = "ACM at FSU Programming Contest Announcements"
     link = "/announcements/"
     description = "Latest announcments from The Programming Contest Team."
