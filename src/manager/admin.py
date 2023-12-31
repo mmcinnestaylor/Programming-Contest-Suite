@@ -8,7 +8,12 @@ from . import models
 # Register your models here.
 
 class ProfileAdmin(admin.ModelAdmin):
-    # list_display field incompatible with the "user__first|last_name" format
+    """
+    Define Profile model interface in Django Admin.
+    https://docs.djangoproject.com/en/4.2/ref/contrib/admin/#modeladmin-objects
+    """
+
+    # list_display field incompatible with the "user__[first|last]_name" format so cant use Meta
     list_display = ("last_name", "first_name", "role",)
     list_filter = ("role", "checked_in",)
     search_fields = ["user__last_name", "user__first_name"]
@@ -21,22 +26,41 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 class FacultyResource(resources.ModelResource):
+    """
+	Attach Faculty model to Django-Import-Export
+	https://django-import-export.readthedocs.io/en/latest/getting_started.html#creating-a-resource
+	"""
     class Meta:
         model = models.Faculty
         import_id_fields = ('email',)
 
 
 class FacultyAdmin(ImportExportModelAdmin):
+    """
+    Django-Import-Export resource admin intrgration
+    https://django-import-export.readthedocs.io/en/latest/advanced_usage.html#admin-integration
+    """
+
     resource_class = FacultyResource
 
 
 class CourseResource(resources.ModelResource):
+    """
+	Attach Course model to Django-Import-Export
+	https://django-import-export.readthedocs.io/en/latest/getting_started.html#creating-a-resource
+	"""
+
     instructor = fields.Field(column_name='instructor',attribute='instructor',widget=ForeignKeyWidget(models.Faculty))
     class Meta:
         model = models.Course
 
 
 class CourseAdmin(ImportExportModelAdmin):
+    """
+    Django-Import-Export resource admin intrgration
+    https://django-import-export.readthedocs.io/en/latest/advanced_usage.html#admin-integration
+    """
+
     resource_class = CourseResource
 
 

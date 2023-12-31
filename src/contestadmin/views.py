@@ -25,6 +25,9 @@ from register.models import Team
 # Create your views here.
 
 class DownloadExtraCreditFiles(View):
+    """
+    View which aggregates all contest participation files into a single ZIP file which is served for download.
+    """
 
     def get(self, request):
         in_memory = BytesIO()
@@ -48,7 +51,11 @@ class DownloadExtraCreditFiles(View):
         
         return response
 
+
 class DownloadTSVFiles(View):
+    """
+    View which aggregates all DOMjudge input files into a single ZIP file which is served for download.
+    """
 
     def get(self, request):
         in_memory = BytesIO()
@@ -74,6 +81,9 @@ class DownloadTSVFiles(View):
 
 
 class EmailFaculty(View):
+    """
+    View which schedules a Celery task to email faculty of participation file availability.
+    """
 
     def get(self, request):
         tasks.email_faculty.delay(request.META['HTTP_HOST'])
@@ -83,8 +93,17 @@ class EmailFaculty(View):
 
 
 class FacultyDashboard(View):
+    """
+    Views for the faculty dashboard.
+    """
 
     def get(self, request, uidb64):
+        """
+        View which displays the faculty dashboard.
+
+        uidb64(str): encoding of unique portion of faculty email address
+        """
+
         try:
             faculty_member = Faculty.objects.get(email__contains=force_str(urlsafe_base64_decode(uidb64)))
         except: #(TypeError, ValueError, OverflowError):
@@ -100,6 +119,7 @@ class FacultyDashboard(View):
 
             fpath = MEDIA_ROOT + '/ec_files/'
             faculty_id = faculty_member.email.split('@')[0]
+            # Determine existance of participation file(s) attached to a faculty mbr
             for fname in os.listdir(fpath):
                 if faculty_id in fname:
                     context['ec_files_available'] = True
@@ -110,6 +130,12 @@ class FacultyDashboard(View):
             return HttpResponse('Unable to access faculty dashboard. Please try again later or contact the ACM team.')
     
     def download(self, uidb64):
+        """
+        View which aggregates all relevant participation files into a single ZIP file which is served for download.
+
+        uidb64(str): encoding of unique portion of faculty email address
+        """
+        
         try:
             faculty_member = force_str(urlsafe_base64_decode(uidb64))
         except: #(TypeError, ValueError, OverflowError):
@@ -121,8 +147,9 @@ class FacultyDashboard(View):
 
             fpath = MEDIA_ROOT + '/ec_files/'
             for fname in os.listdir(fpath):
-                    if faculty_member in fname:
-                        zip.write(fpath+fname, fname)
+                # Only append participation files for a given faculty mbr
+                if faculty_member in fname:
+                    zip.write(fpath+fname, fname)
 
             # fix for Linux zip files read in Windows
             for file in zip.filelist:
@@ -142,6 +169,9 @@ class FacultyDashboard(View):
 
 
 class GenerateDomJudgeTSV(View):
+    """
+    View which schedules a Celery task to generate DOMjudge input files
+    """
 
     def get(self, request):
         tasks.generate_contest_files.delay()
@@ -151,6 +181,9 @@ class GenerateDomJudgeTSV(View):
 
 
 class GenerateExtraCreditReports(View):
+    """
+    View which schedules a Celery task to generate contest participation files.
+    """
 
     def get(self, request):
         tasks.generate_ec_reports.delay()
@@ -163,9 +196,14 @@ class GenerateExtraCreditReports(View):
 @user_passes_test(contestadmin_auth, login_url='/', redirect_field_name=None)
 @transaction.atomic
 def dashboard(request):
+    """
+    View which displays the contst administration dashboard.
+    """
+    
     context = {}
 
     if request.method == 'POST':
+        # Populate forms with submitted data
         walkin_form = forms.GenerateWalkinForm(request.POST)
         file_form = forms.ResultsForm(request.POST, request.FILES)
         checkin_form = forms.CheckinUsersForm(request.POST)
@@ -175,23 +213,28 @@ def dashboard(request):
         faculty_team_form = forms.DesignateFacultyTeamForm(
             request.POST)
 
+        # Process walk-in team creation form
         if walkin_form.is_valid():
             tasks.create_walkin_teams.delay(int(walkin_form.cleaned_data['division']), int(walkin_form.cleaned_data['total']))  
             messages.info(request, 'Create teams task scheduled.', fail_silently=True)
+        # Process admin check-in form
         elif checkin_form.is_valid():
             tasks.check_in_out_users.delay(
                 int(checkin_form.cleaned_data['action']))
             messages.info(request, 'Check in/out task scheduled.',
                           fail_silently=True)
+        # Process clear Discord channel form
         elif channel_form.is_valid():
             tasks.clear_discord_channel.delay(
                 channel_form.cleaned_data['channel_id'])
             messages.info(request, 'Clear channel task scheduled.',
                           fail_silently=True)
+        # Process profile role change form
         elif profile_role_form.is_valid():
             try:
                 profile = Profile.objects.get(
                     user__username=profile_role_form.cleaned_data['username'])
+                # Update role
                 profile.role = profile_role_form.cleaned_data['role']
                 profile.save()
             except:
@@ -200,10 +243,12 @@ def dashboard(request):
             else:
                 messages.success(request, 'Updated user role.',
                                  fail_silently=True)
+        # Process admin account activation form
         elif activate_account_form.is_valid():
             try:
                 account = User.objects.get(
                     username=activate_account_form.cleaned_data['username'])
+                # Activate account
                 account.is_active = True
                 account.profile.email_confirmed = True
                 account.save()
@@ -213,10 +258,12 @@ def dashboard(request):
             else:
                 messages.success(
                     request, 'Activated user account.', fail_silently=True)
+        # Process faculty team designation form
         elif faculty_team_form.is_valid():
             try:
                 team = Team.objects.get(
                     name=faculty_team_form.cleaned_data['teamname'])
+                # Assign faculty team status
                 team.faculty = True
                 team.save()
             except:
@@ -225,6 +272,7 @@ def dashboard(request):
             else:
                 messages.success(
                     request, 'Assigned team faculty status.', fail_silently=True)
+        # Process contest results file upload form
         elif file_form.is_valid():
             if Contest.objects.all().count() == 0:
                 file_form.save()
@@ -238,8 +286,10 @@ def dashboard(request):
                     messages.error(
                         request, 'Failed to upload results. Please try again.', fail_silently=True)
                 else:
-                    messages.success(
-                        request, str(file_form.cleaned_data['results']), fail_silently=True)
+                    #messages.success(
+                    #    request, str(file_form.cleaned_data['results']), fail_silently=True)
+
+                    # Attach results to contest object
                     contest.results = request.FILES['results']
                     contest.save()
                     tasks.process_contest_results.delay()
@@ -257,16 +307,19 @@ def dashboard(request):
         faculty_team_form = forms.DesignateFacultyTeamForm()
         
     
+    # Determine if results files have been uploaded
     if len(os.listdir(MEDIA_ROOT + '/uploads/')) > 0:
         context['dj_results_processed'] = True
     else:
         context['dj_results_processed'] = False
 
+    # Determine if participation reports have been generated
     if len(os.listdir(MEDIA_ROOT + '/ec_files/')) > 0:
         context['ec_files_available'] = True
     else:
         context['ec_files_available'] = False
 
+    # Determine if DOMjudge input files have been generated
     if len(os.listdir(MEDIA_ROOT + '/contest_files/')) > 0:
         context['dj_files_available'] = True
     else:
@@ -290,6 +343,10 @@ def dashboard(request):
 @login_required
 @user_passes_test(contestadmin_auth, login_url='/', redirect_field_name=None)
 def contest_statistics(request):
+    """
+    View which displays the contest statistics page.
+    """
+    
     context = {}
 
     # Users card data
@@ -374,6 +431,10 @@ def contest_statistics(request):
 @login_required
 @user_passes_test(contestadmin_auth, login_url='/', redirect_field_name=None)
 def create_discord_roles(request):
+    """
+    View which schedules a Celery task to create LFG roles in a target Discord server.
+    """
+    
     tasks.create_discord_lfg_roles.delay()
     messages.info(request, 'Create roles task scheduled.', fail_silently=True)
     return redirect('admin_dashboard')
@@ -382,6 +443,10 @@ def create_discord_roles(request):
 @login_required
 @user_passes_test(contestadmin_auth, login_url='/', redirect_field_name=None)
 def remove_discord_roles(request):
+    """
+    View which schedules a Celery task to remove all LFG roles from a target Discord server.
+    """
+    
     tasks.remove_all_discord_lfg_roles.delay()
     messages.info(request, 'Remove roles task scheduled.', fail_silently=True)
     return redirect('admin_dashboard')

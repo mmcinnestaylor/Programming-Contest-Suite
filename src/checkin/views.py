@@ -22,6 +22,11 @@ from register.models import Team
 @user_passes_test(checkin_auth, login_url='/', redirect_field_name=None)
 @transaction.atomic
 def checkin(request):
+	"""
+	View to handle contestant check-in. Parses the email, swipe, and walk-in forms for valid check-in input.
+	Form precedence (high > low): walk-in, swipe, email
+	"""
+	
 	context = {}
 
 	if request.method == 'POST':
@@ -59,14 +64,18 @@ def checkin(request):
 							request, 'Check in failed. FSU number not found. ', fail_silently=True)
 						messages.info(request, 'Retry using email check in.', fail_silently=True)
 					else:
+						# User already checked in
 						if user.profile.checked_in and not checkin_auth(user):
 							messages.info(request, 'You are already checked in.',
 							              fail_silently=True)
+						# User exists but no team selection (walk-in/registered) provided
 						elif user.profile.team is None and not is_walkin:
 							messages.info(
 								request, 'You are not a member of a registered team. Join a registered team, or select NO at the registered team prompt.', fail_silently=True)
+						# Check in user
 						else:
 							user.profile.checked_in = True
+							# If walk-in contestant, add walk-in team to profile
 							if is_walkin == True:
 								if user.profile.has_team():
 									messages.info(
@@ -99,12 +108,16 @@ def checkin(request):
 					messages.error(
 						request, 'Check in failed. Email address not found.', fail_silently=True)
 				else:
+					# User already checked in
 					if user.profile.checked_in and not checkin_auth(user):
 						messages.info(request, 'You are already checked in.', fail_silently=True)
+					# User exists but no team selection (walk-in/registered) provided
 					elif user.profile.team is None and not is_walkin:
 						messages.info(request, 'You are not a member of a registered team. Join a registered team, or select NO at the registered team prompt.', fail_silently=True)
+					# Check in user
 					else:
 						user.profile.checked_in = True
+						# If walk-in contestant, add walk-in team to profile
 						if is_walkin == True:
 							if user.profile.has_team():
 								messages.info(request, 'You are a member of a registered team. Walk-in selection ignored.', fail_silently=True)
@@ -142,6 +155,10 @@ def checkin(request):
 @login_required
 @user_passes_test(checkin_auth, login_url='/', redirect_field_name=None)
 def checkin_result(request):
+	"""
+	View to display the result of a check in attempt.
+	"""
+
 	return render(request, 'checkin/checkin_result.html')
 
 
@@ -149,6 +166,10 @@ def checkin_result(request):
 @user_passes_test(checkin_auth, login_url='/', redirect_field_name=None)
 @transaction.atomic
 def volunteer_checkin(request):
+	"""
+	View to handle contest volunteer check in.
+	"""
+
 	context = {}
 
 	if request.method == 'POST':
@@ -163,9 +184,11 @@ def volunteer_checkin(request):
 				contest = cache.get_or_set(
                                     'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
 				
+				# Contest object must exist to validate volunteerpassword entry
 				if contest is None:
 					messages.warning(request, 'Unable to verify PIN. Please try again later.', fail_silently=True)
 				else:
+					# Validate volunteer password entry
 					if volunteer_form.cleaned_data['pin'] == contest.volunteer_pin:
 						user.profile.checked_in = True
 						user.save()

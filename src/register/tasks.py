@@ -14,6 +14,14 @@ logger = get_task_logger(__name__)
 
 @shared_task
 def send_validation_email(domain, username):
+    """
+    Celery task to send a validation email during user account creation.
+
+    domain(str): the domain name of the hosting server
+
+    username(str): a user's username 
+    """
+    
     try:
         user = User.objects.get(username=username)
     except:
@@ -34,6 +42,12 @@ def send_validation_email(domain, username):
 
 @shared_task
 def send_username_email(email):
+    """
+    Celery task to email a user their username.
+
+    email(str): the user's registered email address
+    """
+    
     try:
         user = User.objects.get(email=email)
     except:

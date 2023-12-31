@@ -4,6 +4,21 @@ from .models import LFGProfile
 
 
 class ProfileForm(forms.ModelForm):
+    """
+    Form for LFG profile creation.
+
+    division - a contestant's preferred division (Lower/Upper)
+    standing - a contestants collegiate standing(Other, Freshman -> Senior, Graduate)
+
+    *** IMPORTANT Dec 2023 *** Discord has updated their username format and
+    no longer utilizes discriminators. This form MUST be updated to support
+    the new format.
+
+    discord_username
+    discord_discriminator
+    ***
+    """
+    
     class Meta:
         model = LFGProfile
         fields = ('discord_username', 'discord_discriminator', 'division', 'standing')

@@ -9,6 +9,10 @@ from register.models import Team
 
 
 class UserForm(forms.ModelForm):
+    """
+    Form to edit a user's name or email address.
+    """
+
     first_name = forms.CharField(
         required=True, max_length=30, help_text='30 characters max')
     last_name = forms.CharField(
@@ -49,6 +53,10 @@ class UserForm(forms.ModelForm):
 
 
 class ProfileForm(forms.ModelForm):
+    """
+    Form to edit a user's FSU credentials and email opt-out.
+    """
+
     class Meta:
         EMAIL_CHOICES = (
             (False, 'Opt-in'),
@@ -76,6 +84,10 @@ class ProfileForm(forms.ModelForm):
         }
         widgets = {'announcement_email_opt_out': forms.Select(choices=EMAIL_CHOICES)}
 
+    """
+    Hack to populate the form with the existing FSU number.
+        - the fsu_num model field uses the hashid package and doesn't decrypt automatically for typical form populating
+    """
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
         if self.instance.fsu_num:
@@ -88,6 +100,10 @@ class ProfileForm(forms.ModelForm):
         
 
 class CourseForm(forms.ModelForm):
+    """
+    Form to select extra credit courses.
+    """
+    
     class Meta:
         model = Profile
         fields = ('courses',)
@@ -98,6 +114,10 @@ class CourseForm(forms.ModelForm):
 
 
 class TeamForm(forms.ModelForm):
+    """
+    Form to update team information.
+    """
+    
     class Meta:
         model = Team
         fields = ('name', 'division')
@@ -106,7 +126,7 @@ class TeamForm(forms.ModelForm):
             'division': 'The division in which your team will compete.',
         }
 
-
+    # Automatically check team name entry against reserved names
     def clean_name(self):
         reserved_names = ['Walk-in-U', 'Walk-in-L']
         team_name = self.cleaned_data['name']
@@ -119,6 +139,10 @@ class TeamForm(forms.ModelForm):
 
 
 class JoinForm(forms.Form):
+    """
+    Form to join an existing team.
+    """
+    
     team = forms.ModelChoiceField(
         queryset=Team.objects.all(),
         label='Registered Teams',
