@@ -1,80 +1,92 @@
-# ACM at FSU Programming Contest Suite
+# Programming Contest Suite
 
-The Programming Contest Suite is a set of tools for running [ICPC](https://icpc.global) style programming competitions hosted by the [Association for Computing Machinery Florida State University Student Chapter](https://fsu.acm.org). The PCS is a [Django](https://www.djangoproject.com/) powered contest account registration &  management application working alongside the [DOMJudge](https://www.domjudge.org/) jury system.
+The Programming Contest Suite (PCS) is a set of tools for running [ICPC](https://icpc.global) style programming competitions hosted by the [Association for Computing Machinery Florida State University Student Chapter](https://fsu.acm.org). The suite is designed to work with a [DOMJudge](https://www.domjudge.org/) jury system by facilitating contest registration and management, generating contestant data files required by DOMjudge, and processing contest results. 
 
-## Installation
-Ensure the target machine has a functioning installation of [Docker](https://www.docker.com) with `docker-compose` and `docker-swarm`. Obtain a copy of the project by cloning the reposity, or downloading one of our [official releases](https://github.com/FSU-ACM/Programming-Contest-Suite/releases).  
+### Development Update: January 2024
 
-#### Clone  
-	git clone https://github.com/FSU-ACM/Programming-Contest-Suite.git  
+Future development of this project has been handed off to the ACM at FSU chapter. Please reference `CONTRIBUTING.md` for additional information.
 
-## Deployment  
-### Development    
-From the project root, navigate to the development folder:  
+# Features
 
-	cd deploy/dev
+### Contestants
 
-If you are running the development deployment for the first time, or have made any changes to the project's Celery tasks run this:  
+- **Registration**: quickly register for an upcoming programming contest, or as a walk-in participant on contest day
+- **Teams**: form and manage teams of up to three individuals, all within the profile management dashboard
+- **Courses**: select any available FSU classes in which the individual is registered in order to receive extra credit for contest participation (subject to instructor approval)
+- **Matchmaking**: Discord powered matchmaking service to assist in team formation
+- **Check-in**: simple student-ID card based check-in
 
-	docker-compose build  
+### Organizers
 
-Launch the project in dev mode:  
+- **Announcements**: create public contest announcements viewable in the web app and optionally distributed via email and/or Discord webhook
+- **Tools**: easy-to-use faculty and course data input file generation utilities
+- **Courses**: one-click upload and processing of faculty + course data files in Django Admin
+- **DOMjudge**: one-click generation of contestant data input files used to initialize DOMjudge
+- **Participation**: one-click generation of contestant participation files invididually curated for each faculty member
+- **Volunteer Management**: volunteer role assignment interface and volunteer check-in monitoring 
 
-	docker-compose up
+### Volunteers
 
-NOTE: In order to monitor the debug logs, as well as view any emails the suite sends while in debug, it is suggested to NOT use the `-d` flag with the `docker-compose up` command.
-### Production  
-The following steps are intended for deploying the suite on the Chapter's server, Agon.   
+- **Check-in**: easy-to-use dedicated volunteer check-in interface
 
-Initialize the swarm:  
+### Faculty Members
 
-	docker swarm init
-	
-From the project root, navigate to the production folder:  
+- **Integration**: automatic notification post contest of participation file availability, accessible via secure download
 
-	cd deploy/prod
+# Installation
+
+Simply clone this repository: 
+
+	git clone https://github.com/mmcinnestaylor/Programming-Contest-Suite.git
 
 
-Deploy the services needed to run both registration (contestsuite) and judging (DOMjudge) platforms. Deployment of services uses the Docker stacks, and will utilize the following format:  
+Alternatively, download one of the versions available on the [releases](https://github.com/mmcinnestaylor/Programming-Contest-Suite/releases) page.  
 
-	docker stack deploy -c path/to/compose-file.yaml service_name
+# Deployment
 
-NOTE: The `service_name` above is the stack service name, and does not need to match the name of the app being deployed. Picking good service names aids in monitoring running stacks in the swarm.
+There are many ways to [deploy Django](https://docs.djangoproject.com/en/4.2/howto/deployment/). The project has been extenively tested with and includes files for deploying using [Docker](https://www.docker.com/).
 
-Deploy nginx-proxy, which routes traffic between the registration platform and the judging platform:  
+### Docker
 
-	docker stack deploy -c ./nginx-proxy/docker-compose.yaml nginxproxy
+Please reference `docs/docker/` for image creation and usage documentation. Pre-built images are available in the project's [Docker Hub repository](https://hub.docker.com/r/acmfsu/contestsuite). Reference `deploy/dev/docker-compose.yml` for an example deployment intended for [Docker Compose](https://docs.docker.com/compose/) and suitable for local development and testing purposes.
 
-Next, deploy the registration platform.  
+### Quick-start
 
-	docker stack deploy -c ./contestsuite/docker-compose.yaml contestsuite
+The following steps outline running the PCS outside of a Docker context. This is minimally sufficient for development or internal testing, but not for a production deployment. 
 
-* The `MAIL` environment variables in the Compose file should be updated in order to connect to a valid smtp email account.  
-* The `SECRET_KEY` environment variable in the Compose file should be updated as well. Django secret key generators are easily found with a Google search.  
-* The `MARIADB` and `SQL` environment variables in the Compose file should be updated to properly secure the service. The credentils should match, as Django uses them to connect to MariaDB.  
-* If the suite it being initialized (i.e. an empty database with no users), the default Django superuser's password should be updated from it's default of `seminoles1!` This should be performed in Django Admin. 
+#### Install Project Requirements
 
-Then deploy DOMjudge:  
+Package manifest files are located in the repository's root directory. The `Pipfile` can be used to set up a virtual environment using [Pipenv](https://pipenv.pypa.io/en/latest/), which is also used to generate a `pip` compatible `requirements.txt` . 
 
-	docker stack deploy -c ./domjudge/docker-compose.yaml domjudge
+#### Spin-up Support Services
 
-* Similar to the registration platform, the `MARIADB` and `MYSQL` in the Compose file should be updated to secure the service.  
-* The default admin password should be updated from `adminpw` This can be done by navigating to the DOMjudge site, logging in as admin, and nagivating to the Users section.  
-* The Judgehost user's password should also be updated, as this is randomly initialized.
+Using the default configuration, Django and Celery rely on instances of MariaDB, Redis, and RabbitMQ. Server addresses and credentials should be passed to Django and Celery via envronment variables. 
 
-Lastly, deploy the Judgehosts:
+#### Start Django & Celery 
 
-	cd ./judgehosts
+The following assumes `Programming-Contest-Suite/src` is the working directory.
 
-	docker-compose up -d --scale judgehost=<an_integer>
+##### Web Server
 
-* The `JUDGEDAEMON_PASSWORD` environment variable in the Compose file should be updated to what was set in the step above. 
+	gunicorn contestsuite.wsgi:application
 
-#### Teardown  
-Docker stacks:  
+##### Celery Worker
 
-	docker stack rm service_name
+	celery -A contestsuite worker
 
-Judgehosts:  
+##### Celery Beat
 
-	docker-compose down
+	celery -A contestsuite beat --scheduler django_celery_beat.schedulers:DatabaseScheduler
+
+# Documentation
+
+All project documentation is available in `docs/`.
+
+# Contributing
+
+We welcome contributions to the project! Check out `CONTRIBUTING.md` to learn how to get started.
+
+### Authors
+
+- [Marlan McInnes-Taylor](https://github.com/mmcinnestaylor) *Creator/Maintainer*
+- [Daniel Riley](https://github.com/danielmriley) *Contributor*
