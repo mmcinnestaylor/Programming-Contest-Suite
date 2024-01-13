@@ -112,6 +112,10 @@ Ensure the `Pipfile` is in your working directory.
 
     pipenv requirements --dev requirements-dev.txt
 
+## Documentation
+
+All project documentation is located in `docs/`. We utilize the [Just the Docs](https://just-the-docs.github.io/just-the-docs/) Jekyll theme to style our documentation in Github Pages.
+
 ## Versioning
 
 We use something similar to [SemVer](https://semver.org/):
