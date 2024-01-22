@@ -80,13 +80,13 @@ The following assumes `Programming-Contest-Suite/src` is the working directory.
 
 # Documentation
 
-All project documentation is available in `docs/`.
+All project documentation is available in `docs/`, and on our [documentation website](https://mmcinnestaylor.github.io/Programming-Contest-Suite/).
 
 # Contributing
 
 We welcome contributions to the project! Check out `CONTRIBUTING.md` to learn how to get started.
 
-### Authors
+### Our Contributors
 
-- [Marlan McInnes-Taylor](https://github.com/mmcinnestaylor) *Creator/Maintainer*
-- [Daniel Riley](https://github.com/danielmriley) *Contributor*
+- [Marlan McInnes-Taylor](https://github.com/mmcinnestaylor) *Creator*
+- [Daniel Riley](https://github.com/danielmriley)
