@@ -7,7 +7,7 @@ services:
             args:
                 REQUIREMENTS: requirements-dev.txt
         image: contestsuite:dev
-        command: /app/docker/start.sh server debug
+        command: /docker/start.sh server debug
         environment:
             # Django
             DEBUG: 'True'
@@ -23,17 +23,17 @@ services:
             - 8000:8000
         volumes:
             - ../../src:/app
-            - deployment_scripts:/app/docker
         networks:
             - contestsuite
         depends_on:
+            - mariadb
             - redis
             - rabbitmq
-            - mariadb
             - celery_worker
+        restart: unless-stopped
     scrape_bot:
         image: contestsuite:dev
-        command: /app/docker/start.sh bot
+        command: /docker/start.sh bot
         environment:
             # Django
             DEBUG: 'True'
@@ -49,14 +49,14 @@ services:
             SCRAPE_BOT_TOKEN: # Token for the member list scraping bot
         volumes:
             - ../../src:/app
-            - deployment_scripts:/app/docker
         networks:
             - contestsuite
         depends_on:
             - mariadb
+            - django
     celery_worker:
         image: contestsuite:dev
-        command: /app/docker/start.sh worker debug
+        command: /docker/start.sh worker debug
         environment:
             # Django
             DEBUG: 'True'
@@ -71,16 +71,16 @@ services:
             BOT_CHANNEL_WEBHOOK_URL: # Webhook URL of the bot command channel
         volumes:
             - ../../src:/app
-            - deployment_scripts:/app/docker
         networks:
             - contestsuite
         depends_on:
+            - mariadb
             - redis
             - rabbitmq
-            - mariadb
+        restart: unless-stopped
     celery_beat:
         image: contestsuite:dev
-        command: /app/docker/start.sh beat debug
+        command: /docker/start.sh beat debug
         environment:
             # Django
             DEBUG: 'True'
@@ -91,17 +91,17 @@ services:
             SQL_PASSWORD: seminoles1!
         volumes:
             - ../../src:/app
-            - deployment_scripts:/app/docker
         networks:
             - contestsuite
         depends_on:
-            - celery_worker
+            - mariadb
             - redis
             - rabbitmq
-            - mariadb
+            - celery_worker
+        restart: unless-stopped
     celery_flower:
         image: contestsuite:dev
-        command: /app/docker/start.sh flower debug
+        command: /docker/start.sh flower debug
         environment:
             # Django
             DEBUG: 'True'
@@ -114,7 +114,6 @@ services:
             - 5555:5555
         volumes:
             - ../../src:/app
-            - deployment_scripts:/app/docker
         networks:
             - contestsuite
         depends_on:
@@ -122,6 +121,7 @@ services:
             - redis
             - rabbitmq
             - celery_worker
+        restart: unless-stopped
     mariadb:
         image: mariadb:10.6-focal
         environment:
@@ -146,7 +146,6 @@ services:
         networks:
             - contestsuite       
 volumes:
-    deployment_scripts:
     django_db:
     redis:
     rabbitmq:

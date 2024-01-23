@@ -19,7 +19,7 @@ RUN apt-get update \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
 
-# Requirements are installation
+# Install requirements and create static file directories
 RUN pip install --upgrade pip
 COPY $REQUIREMENTS /tmp/requirements.txt
 
@@ -33,17 +33,17 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt \
   && install -d -m 0755 -o app_user -g app_user /app/media/uploads
 
 # Code and User Setup
-WORKDIR /app
-
 USER app_user:app_user
 
-COPY --chown=app_user:app_user src .
 COPY --chown=app_user:app_user scripts/docker/ docker/
-
 RUN chmod +x docker/*.sh
+
+WORKDIR /app
+
+COPY --chown=app_user:app_user src .
 
 # Docker Run Checks and Configurations
 EXPOSE 8000
 
-ENTRYPOINT [ "docker/entrypoint.sh" ]
-CMD [ "docker/start.sh", "server" ]
+ENTRYPOINT [ "../docker/entrypoint.sh" ]
+CMD [ "../docker/start.sh", "server" ]
