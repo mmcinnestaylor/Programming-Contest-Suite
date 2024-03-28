@@ -97,6 +97,10 @@ def teams(request):
 
     context = {}
 
+    # Get contest object or set to None
+    context['contest'] = cache.get_or_set(
+        'contest_model', Contest.objects.first(), CACHE_TIMEOUT)
+
     teams_set = Team.objects.all()
     participants_set = Profile.objects.all()
 
