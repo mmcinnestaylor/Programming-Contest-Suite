@@ -78,4 +78,4 @@ class Contest(models.Model):
         Returns true if contest is complete, false otherwise
         """
         
-        return self.results is not None
+        return self.results != "" and self.results is not None
