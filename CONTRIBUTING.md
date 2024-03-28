@@ -98,19 +98,29 @@ NOTE: In order to monitor the debug logs, as well as view any emails the system 
 
 ### Initialize Virtual Environment
 
-Ensure the `Pipfile` is in your working directory.
+```
+# Programming-Contest-Suite/
 
-    pipenv install  
+pipenv install
+```
 
 ### Update `requirements.txt`
 
 #### Production
 
-    pipenv requirements > requirements.txt
+```
+# Programming-Contest-Suite/
+
+pipenv requirements > requirements.txt
+```
 
 #### Development
 
-    pipenv requirements --dev requirements-dev.txt
+```
+# Programming-Contest-Suite/
+
+pipenv requirements --dev > requirements-dev.txt
+```
 
 ## Documentation
 

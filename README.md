@@ -50,6 +50,16 @@ There are many ways to [deploy Django](https://docs.djangoproject.com/en/4.2/how
 
 Please reference `docs/docker/` for image creation and usage documentation. Pre-built images are available in the project's [Docker Hub repository](https://hub.docker.com/r/acmfsu/contestsuite). Reference `deploy/dev/docker-compose.yml` for an example deployment intended for [Docker Compose](https://docs.docker.com/compose/) and suitable for local development and testing purposes.
 
+#### Default Superuser
+user: `contestadmin`  
+pass: `seminoles1!`
+
+A default superuser account is created when the container connects to an empty database. The default password should be changed to secure the account.
+
+### Production
+
+The default values of `SECRET_KEY` and `HASHID_FIELD_SALT` are not safe for production use and should be changed. Django secret key generators are readily available online.
+
 ### Quick-start
 
 The following steps outline running the PCS outside of a Docker context. This is minimally sufficient for development or internal testing, but not for a production deployment. 
