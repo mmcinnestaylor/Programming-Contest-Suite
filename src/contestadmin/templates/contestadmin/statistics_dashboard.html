@@ -127,34 +127,38 @@
 	<!-- LFG Stats Card deck end -->
 
 	<!-- Course Summary card -->
-	<div class="card mt-4 mb-3 border-secondary">
-		<div class="card-header font-weight-bold bg-secondary text-white">
+	<div id="accordionCourse">
+		<div class="card mt-4 mb-3 border-secondary">
+			<div class="card-header font-weight-bold bg-secondary text-white" data-toggle="collapse" data-target="#collapseCourse" aria-expanded="true" aria-controls="collapseCourse" style="cursor: pointer;">
 			<i class="fa-solid fa-list-ul fa-fw"></i> Courses
-		</div>
-		<div class="card-body overflow-auto">
-			<div class="row justify-content-center">
-				<div class="col-12">
-					<div class="table-responsive">
-						<table class="table table-sm">
-							<thead class="thead-light">
-								<tr>
-									<th scope="col">Code</th>
-									<th scope="col">Name</th>
-									<th scope="col">Instructor</th>
-									<th scope="col" class="text-center">Students</th>
-								</tr>
-							</thead>
-							<tbody>
-								{% for course in courses %}
-								<tr>
-									<td>{{ course.code }}</td>
-									<td>{{ course.name }}</td>
-									<td>{{ course.instructor.last_name }}</td>
-									<td class="text-center">{{ course.num_registered }}</td>
-								</tr>
-								{% endfor %}
-							</tbody>
-						</table>
+			</div>
+			<div id="collapseCourse" class="collapse show" data-parent="#accordionCourse">
+				<div class="card-body overflow-auto">
+					<div class="row justify-content-center">
+						<div class="col-12">
+							<div class="table-responsive">
+								<table class="table table-sm">
+									<thead class="thead-light">
+										<tr>
+											<th scope="col">Code</th>
+											<th scope="col">Name</th>
+											<th scope="col">Instructor</th>
+											<th scope="col" class="text-center">Students</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for course in courses %}
+										<tr>
+											<td>{{ course.code }}</td>
+											<td>{{ course.name }}</td>
+											<td>{{ course.instructor.last_name }}</td>
+											<td class="text-center">{{ course.num_registered }}</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
