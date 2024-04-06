@@ -206,46 +206,50 @@
 	<!-- Discord Control deck end -->
 
 	<!-- Volunteer Summary card -->
-	<div class="card mt-4 mb-3 border-secondary">
-		<div class="card-header font-weight-bold bg-secondary text-white">
-			<i class="fa-solid fa-handshake-simple fa-fw"></i> Volunteers
-		</div>
-		<div class="card-body overflow-auto">
-			<div class="row justify-content-center">
-				<div class="col-12">
-					<div class="table-responsive">
-						<table class="table table-sm">
-							<thead class="thead-light">
-								<tr>
-									<th scope="col">Role</th>
-									<th scope="col">Name</th>
-									<th scope="col" class="text-center">Checked-in</th>
-									<th scope="col" class="text-center">Added Courses</th>
-									
-								</tr>
-							</thead>
-							<tbody>
-								{% for volunteer in volunteers %}
-								<tr>
-									<td>{{ volunteer.get_role }}</td>
-									
-									<td>{{ volunteer.user.get_full_name }}</td>
+	<div id="accordionVolunteer">
+		<div class="card mt-4 mb-3 border-secondary">
+			<div class="card-header font-weight-bold bg-secondary text-white" data-toggle="collapse" data-target="#collapseVolunteer" aria-expanded="true" aria-controls="collapseVolunteer" style="cursor: pointer;">
+				<i class="fa-solid fa-handshake-simple fa-fw"></i> Volunteers
+			</div>
+			<div id="collapseVolunteer" class="collapse show" data-parent="#accordionVolunteer">
+				<div class="card-body overflow-auto">
+					<div class="row justify-content-center">
+						<div class="col-12">
+							<div class="table-responsive">
+								<table class="table table-sm">
+									<thead class="thead-light">
+										<tr>
+											<th scope="col">Role</th>
+											<th scope="col">Name</th>
+											<th scope="col" class="text-center">Checked-in</th>
+											<th scope="col" class="text-center">Added Courses</th>
+											
+										</tr>
+									</thead>
+									<tbody>
+										{% for volunteer in volunteers %}
+										<tr>
+											<td>{{ volunteer.get_role }}</td>
+											
+											<td>{{ volunteer.user.get_full_name }}</td>
 
-									{% if volunteer.checked_in %}
-										<td class="text-center">Yes</td>
-									{% else %}
-										<td class="text-center">No</td>
-									{% endif %}
+											{% if volunteer.checked_in %}
+												<td class="text-center">Yes</td>
+											{% else %}
+												<td class="text-center">No</td>
+											{% endif %}
 
-									{% if volunteer.has_courses %}
-										<td class="text-center">Yes</td>
-									{% else %}
-										<td class="text-center">No</td>
-									{% endif %}
-								</tr>
-								{% endfor %}
-							</tbody>
-						</table>
+											{% if volunteer.has_courses %}
+												<td class="text-center">Yes</td>
+											{% else %}
+												<td class="text-center">No</td>
+											{% endif %}
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
