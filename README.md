@@ -48,7 +48,7 @@ There are many ways to [deploy Django](https://docs.djangoproject.com/en/4.2/how
 
 ### Docker
 
-Please reference `docs/docker/` for image creation and usage documentation. Pre-built images are available in the project's [Docker Hub repository](https://hub.docker.com/r/acmfsu/contestsuite). Reference `deploy/dev/docker-compose.yml` for an example deployment intended for [Docker Compose](https://docs.docker.com/compose/) and suitable for local development and testing purposes.
+Please reference `docs/docker/` for image creation and usage documentation. Pre-built images are available in the project's [Docker Hub repository](https://hub.docker.com/r/acmfsu/contestsuite). Reference `deploy/docker-compose.yml` for an example deployment intended for [Docker Compose](https://docs.docker.com/compose/) and suitable for local development and testing purposes.
 
 #### Default Superuser
 user: `contestadmin`  

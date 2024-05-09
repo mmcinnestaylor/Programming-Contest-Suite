@@ -82,7 +82,7 @@ Programming-Contest-Suite/
 
 ## Testing & Development Server 
 
-`deploy/dev/docker-compose.yml` contains an example deployment intended for [Docker Compose](https://docs.docker.com/compose/) and suitable for local testing and development. 
+`deploy/docker-compose.yml` contains an example deployment intended for [Docker Compose](https://docs.docker.com/compose/) and suitable for local testing and development. 
 
 If you are running the development deployment for the first time, or have made any changes to the project's Celery tasks, run:  
 
