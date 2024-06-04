@@ -3,7 +3,7 @@ version: '3.8'
 services:
     django:
         build:
-            context: ../..
+            context: ../
             args:
                 REQUIREMENTS: requirements-dev.txt
         image: contestsuite:dev
