@@ -1,8 +1,9 @@
 import os
 
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.db import transaction
 from django.http import HttpResponse
 from django.utils.encoding import force_str
@@ -15,7 +16,7 @@ from zipfile import ZipFile
 
 from . import forms
 from . import tasks
-from .utils import contestadmin_auth
+from .utils import contestadmin_auth, ContestAdminAuthMixin
 from contestadmin.models import Contest
 from contestsuite.settings import MEDIA_ROOT
 from lfg.models import LFGProfile
@@ -192,6 +193,53 @@ class GenerateExtraCreditReports(View):
         return redirect('admin_dashboard')
 
 
+class ExportTeamData(LoginRequiredMixin, ContestAdminAuthMixin, View):
+    """
+    View which creates and serves a zip file containing contest team data per division.
+    """
+
+    def get(self, request):
+        """
+        Schedules generation of CSV files.
+        """
+
+        tasks.generate_team_csvs.delay()
+        messages.info(request, 'Team data CSVs generation scheduled.', fail_silently=True)
+
+        return redirect('admin_dashboard')
+
+    def download(self):
+        """
+        Serves a ZIP file containing all team data CSV files. 
+        """
+        
+        fpath = f"{MEDIA_ROOT}/team_files/"
+
+        # Initialize zip file
+        in_memory = BytesIO()
+        zip = ZipFile(in_memory, 'a')
+
+        # Add team csvs to zip file
+        for fname in os.listdir(fpath):
+            zip.write(fpath+fname, fname)
+
+        # fix for Linux zip files read in Windows
+        for file in zip.filelist:
+            file.create_system = 0 
+
+        zip.close()
+
+        # Initialize response
+        response = HttpResponse(content_type='application/zip')
+        response['Content-Disposition'] = 'attachment; filename=team_data_csvs.zip'
+        
+        # Write zip file to response
+        in_memory.seek(0)    
+        response.write(in_memory.read())
+        
+        return response
+    
+
 @login_required
 @user_passes_test(contestadmin_auth, login_url='/', redirect_field_name=None)
 @transaction.atomic
@@ -324,6 +372,9 @@ def dashboard(request):
         context['dj_files_available'] = True
     else:
         context['dj_files_available'] = False
+
+    # Determine if team CSVs have been generated
+    context['team_csvs_available'] = True if len(os.listdir(f"{MEDIA_ROOT}/team_files/")) > 0 else False
     
     # Volunteer card data
     context['volunteers'] = [user for user in Profile.objects.order_by('role').all() if user.is_volunteer()]
