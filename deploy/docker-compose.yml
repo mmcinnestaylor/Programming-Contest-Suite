@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
     django:
         build:
@@ -22,7 +20,7 @@ services:
         ports:
             - 8000:8000
         volumes:
-            - ../../src:/app
+            - ../src:/app
         networks:
             - contestsuite
         depends_on:
@@ -48,7 +46,7 @@ services:
             GUILD_ID: # Discord Server ID
             SCRAPE_BOT_TOKEN: # Token for the member list scraping bot
         volumes:
-            - ../../src:/app
+            - ../src:/app
         networks:
             - contestsuite
         depends_on:
@@ -70,7 +68,7 @@ services:
             ANNOUNCEMENT_WEBHOOK_URL: # Webhook URL of the contest announcements channel
             BOT_CHANNEL_WEBHOOK_URL: # Webhook URL of the bot command channel
         volumes:
-            - ../../src:/app
+            - ../src:/app
         networks:
             - contestsuite
         depends_on:
@@ -90,7 +88,7 @@ services:
             SQL_USER: contestadmin
             SQL_PASSWORD: seminoles1!
         volumes:
-            - ../../src:/app
+            - ../src:/app
         networks:
             - contestsuite
         depends_on:
@@ -113,7 +111,7 @@ services:
         ports:
             - 5555:5555
         volumes:
-            - ../../src:/app
+            - ../src:/app
         networks:
             - contestsuite
         depends_on:
