@@ -105,6 +105,14 @@
 			</div>
 			<div class="card-body overflow-auto">
 				<div class="row justify-content-center">
+					<a class="btn btn-primary btn-sm my-1" href="{% url 'generate_team_csvs' %}" onclick="return confirm('Are you certain you want to generate the team data CSVs?');"><i class="fa-solid fa-file-circle-plus fa-fw"></i> Generate Team CSVs</a>
+					{% if team_csvs_available %}					
+						<a class="btn text-dark" href="{% url 'download_team_csvs' %}" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
+					{% else %}
+						<a class="btn text-secondary disabled" href="#" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
+					{% endif %}
+				</div>
+				<div class="row justify-content-center">
 					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#walkinModal"> <i class="fa-solid fa-person-walking fa-fw"></i> Create Walk-in teams</button>
 				</div>
 				<div class="row justify-content-center">
