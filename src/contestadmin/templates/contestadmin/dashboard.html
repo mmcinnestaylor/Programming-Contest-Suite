@@ -101,23 +101,37 @@
 		<!-- Contest tools card -->
 		<div class="card mt-4 border-secondary">
 			<div class="card-header font-weight-bold bg-secondary text-white">
-				<i class="fa-solid fa-wrench fa-fw"></i> Contest Tools 
+				<i class="fa-solid fa-wrench fa-fw"></i> Tools 
 			</div>
 			<div class="card-body overflow-auto">
-				<div class="row justify-content-center">
-					<a class="btn btn-primary btn-sm my-1" href="{% url 'generate_team_csvs' %}" onclick="return confirm('Are you certain you want to generate the team data CSVs?');"><i class="fa-solid fa-file-circle-plus fa-fw"></i> Generate Team CSVs</a>
-					{% if team_csvs_available %}					
-						<a class="btn text-dark" href="{% url 'download_team_csvs' %}" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
-					{% else %}
-						<a class="btn text-secondary disabled" href="#" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
-					{% endif %}
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="row justify-content-center">
+							<a class="btn btn-primary btn-sm my-1" href="{% url 'generate_team_csvs' %}" onclick="return confirm('Are you certain you want to generate the team data CSVs?');"><i class="fa-solid fa-file-circle-plus fa-fw"></i> Generate Team CSVs</a>
+							{% if team_csvs_available %}					
+								<a class="btn text-dark" href="{% url 'download_team_csvs' %}" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
+							{% else %}
+								<a class="btn text-secondary disabled" href="#" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
+							{% endif %}
+						</div>
+						<div class="row justify-content-center">
+							<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#walkinModal"> <i class="fa-solid fa-person-walking fa-fw"></i> Create Walk-in teams</button>
+						</div>
+						<div class="row justify-content-center">
+							<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#facultyTeamModal"><i
+									class="fa-solid fa-chalkboard-user fa-fw"></i> Designate Faculty Team</button>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="row justify-content-center">
+							<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#activateAccountModal"><i class="fa-solid fa-user-check fa-fw"></i> Activate User Account</button>
+						</div>
+						<div class="row justify-content-center">
+							<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#checkinModal"><i class="fa-solid fa-robot fa-fw"></i> Check in/out Users</button>
+						</div>
+					</div>
 				</div>
-				<div class="row justify-content-center">
-					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#walkinModal"> <i class="fa-solid fa-person-walking fa-fw"></i> Create Walk-in teams</button>
-				</div>
-				<div class="row justify-content-center">
-					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#checkinModal"><i class="fa-solid fa-robot fa-fw"></i> Check in/out Users</button>
-				</div>							
+											
 			</div>
 		</div>
 		<!-- Contest tools card end -->
@@ -150,17 +164,22 @@
 		<!-- Account tools card -->
 		<div class="card mt-4 border-secondary">
 			<div class="card-header font-weight-bold bg-secondary text-white">
-				<i class="fa-solid fa-wrench fa-fw"></i> Account Tools
+				<i class="fa-solid fa-user-shield fa-fw"></i> Change User Password
 			</div>
-			<div class="card-body overflow-auto">
-				<div class="row justify-content-center">
-					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#activateAccountModal"><i class="fa-solid fa-user-check fa-fw"></i> Activate User Account</button>
+			<form method="post" onSubmit="return confirm('Are you certain you want to update this user password?');">
+				<div class="card-body overflow-auto">
+					{% csrf_token %}
+					<div class="form-group">
+						{{ update_password_form.username | placeholder:"Username" }}
+					</div>
+					<div class="form-group">
+						{{ update_password_form.password | placeholder:"New password" }}
+					</div>
 				</div>
-				<div class="row justify-content-center">
-					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#facultyTeamModal"><i
-							class="fa-solid fa-chalkboard-user fa-fw"></i> Designate Faculty Team</button>
+				<div class="card-footer">
+					<button class="btn btn-primary btn-sm" type="submit">Save</button>
 				</div>
-			</div>
+			</form>
 		</div>
 		<!-- Account tools card end -->
 	</div>
@@ -351,7 +370,7 @@
 					<div class="modal-body overflow-auto">
 						{% csrf_token %}
 						<div class="form-group">
-							{{ activate_account_form.username | placeholder:"Username"}}
+							{{ activate_account_form.username | placeholder:"Username" }}
 						</div>
 					</div>
 					<div class="card-footer">
