@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
 from django.db import transaction
 from django.http import HttpResponse
 from django.utils.encoding import force_str
@@ -256,10 +257,10 @@ def dashboard(request):
         file_form = forms.ResultsForm(request.POST, request.FILES)
         checkin_form = forms.CheckinUsersForm(request.POST)
         channel_form = forms.ClearChannelForm(request.POST)
+        update_password_form = forms.UpdatePasswordForm(request.POST)
         profile_role_form = forms.UpdateProfileRoleForm(request.POST)
         activate_account_form = forms.ActivateAccountForm(request.POST)
-        faculty_team_form = forms.DesignateFacultyTeamForm(
-            request.POST)
+        faculty_team_form = forms.DesignateFacultyTeamForm(request.POST)
 
         # Process walk-in team creation form
         if walkin_form.is_valid():
@@ -277,6 +278,25 @@ def dashboard(request):
                 channel_form.cleaned_data['channel_id'])
             messages.info(request, 'Clear channel task scheduled.',
                           fail_silently=True)
+        # Process password update form
+        elif update_password_form.is_valid():
+            try:
+                user = User.objects.get(username=update_password_form.cleaned_data['username'])
+            except:
+                messages.error(request, 'User not found.', fail_silently=True)
+            else:
+                try:
+                    validate_password(update_password_form.cleaned_data['password'], user)
+                except:
+                    messages.error(request, 'Please try a different password.', fail_silently=True)
+                else:
+                    try:
+                        user.set_password(update_password_form.cleaned_data['password'])
+                        user.save()
+                    except:
+                        messages.error(request, 'Password save failed.', fail_silently=True)
+                    else:
+                        messages.success(request, 'Password updated.', fail_silently=True)
         # Process profile role change form
         elif profile_role_form.is_valid():
             try:
@@ -350,6 +370,7 @@ def dashboard(request):
         file_form = forms.ResultsForm()
         checkin_form = forms.CheckinUsersForm()
         channel_form = forms.ClearChannelForm()
+        update_password_form = forms.UpdatePasswordForm()
         profile_role_form = forms.UpdateProfileRoleForm()
         activate_account_form = forms.ActivateAccountForm()
         faculty_team_form = forms.DesignateFacultyTeamForm()
@@ -384,6 +405,7 @@ def dashboard(request):
     context['file_form'] = file_form
     context['gen_walkin_form'] = walkin_form
     context['channel_form'] = channel_form
+    context['update_password_form'] = update_password_form
     context['profile_role_form'] = profile_role_form
     context['activate_account_form'] = activate_account_form
     context["faculty_team_form"] = faculty_team_form
