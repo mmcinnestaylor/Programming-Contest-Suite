@@ -72,3 +72,5 @@ plugins:
   - jekyll-seo-tag
   - jekyll-github-metadata
   - jekyll-include-cache
+
+exclude: [.gitignore, docker-compose.yml, Dockerfile, Gemfile, Gemfile.lock]
