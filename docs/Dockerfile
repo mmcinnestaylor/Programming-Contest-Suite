@@ -11,4 +11,4 @@ RUN bundle install
 EXPOSE 4000
 
 ENTRYPOINT [ "bundle", "exec", "jekyll" ]
-CMD [ "serve", "--incremental", "--host=0.0.0.0" ]
+CMD [ "serve", "--host=0.0.0.0" ]
