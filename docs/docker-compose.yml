@@ -1,0 +1,9 @@
+name: docs-website
+services:
+    jekyll:
+        build:
+            context: ./
+        volumes:
+            - ./:/usr/src/app
+        ports:
+            - 4000:4000
