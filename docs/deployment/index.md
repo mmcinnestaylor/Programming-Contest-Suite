@@ -16,10 +16,10 @@ There are many ways to [deploy Django](https://docs.djangoproject.com/en/4.2/how
 
 ## Support Services
 
-The project settings file[^1] specifies the use of several support services which run alongside the Django application server.
+The project settings file[^1] and Flower settings file[^2] specify the use of several support services which run alongside the Django application server. Links to relevant documentation are available in the navigation menu.
 
-- **Celery**  
-    Performs asynchronous task execution requested by Django
+- **Celery** <small>(Beat | Flower | Worker)</small>  
+    Schedules, monitors, and performs asynchronous task execution
 - **MariaDB**  
     Django's application database
 - **Redis**  
@@ -27,23 +27,5 @@ The project settings file[^1] specifies the use of several support services whic
 - **RabbitMQ**  
     Message broker which brokers Celery tasks
 
-```mermaid
----
-title: PCS System Design
----
-graph TD
-    A((Django))
-    A-->|Appliction<br>Database| C[(MariaDB)]
-    A-->|Caching, Sessions, Messages| D[(Redis)]
-    A--> |Queues Async<br>Task Requests|E[\RabbitMQ/]
-
-    B[/Celery<br>Worker\]-->|Access to<br>Application DB| C
-    B-->|Results Backend| D
-    E-->|Brokers<br>Async Tasks| B
-
-    F>Celery Flower]-->|Monitors Task Execution| E
-
-    G>Celery Beat]-->|Schedules Async Tasks| C
-```
-
 [^1]: `Programming-Contest-Suite/src/contestsuite/settings.py`
+[^2]: `Programming-Contest-Suite/src/contestsuite/flowerconfig.py`
