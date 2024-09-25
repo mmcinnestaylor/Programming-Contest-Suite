@@ -92,6 +92,10 @@ nav_external_links:
     url: https://docs.celeryq.dev/en/v5.3.1/
     hide_icon: false # set to true to hide the external link icon - defaults to false
     opens_in_new_tab: true # set to true to open this link in a new tab - defaults to false
+  - title: Flower Documentation
+    url: https://flower.readthedocs.io/en/latest/
+    hide_icon: false # set to true to hide the external link icon - defaults to false
+    opens_in_new_tab: true # set to true to open this link in a new tab - defaults to false
   - title: MariaDB Documentation
     url: https://mariadb.com/kb/en/documentation/
     hide_icon: false # set to true to hide the external link icon - defaults to false
@@ -104,6 +108,11 @@ nav_external_links:
     url: https://www.rabbitmq.com/docs
     hide_icon: false # set to true to hide the external link icon - defaults to false
     opens_in_new_tab: true # set to true to open this link in a new tab - defaults to false
+  - title: Docker Documentation
+    url: https://docs.docker.com/
+    hide_icon: false # set to true to hide the external link icon - defaults to false
+    opens_in_new_tab: true # set to true to open this link in a new tab - defaults to false
+    
 
 plugins:
   - jekyll-seo-tag
