@@ -1,4 +1,4 @@
-from contestsuite import settings
+from .settings import CACHE_TIMEOUT, DEBUG, GTAG
 
 
 def app_settings(request):
@@ -8,7 +8,7 @@ def app_settings(request):
     """
 
     return {
-        'CACHE_TIMEOUT': settings.CACHE_TIMEOUT,
-        'DEBUG': settings.DEBUG,
-        'GTAG': settings.GTAG,
+        'CACHE_TIMEOUT': CACHE_TIMEOUT,
+        'DEBUG': DEBUG,
+        'GTAG': GTAG,
         }
