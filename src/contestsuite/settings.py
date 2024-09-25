@@ -305,3 +305,8 @@ HASHID_FIELD_SALT = get_secret(
 # Google Analytics
 
 GTAG = get_secret('GTAG')
+
+
+# Documentation website base URL
+
+PCS_DOCS_URL = get_secret('PCS_DOCS_URL', 'https://mmcinnestaylor.github.io/Programming-Contest-Suite')
