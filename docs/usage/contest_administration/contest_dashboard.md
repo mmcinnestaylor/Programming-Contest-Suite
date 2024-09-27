@@ -1,10 +1,12 @@
 ---
 layout: default
 title: Contest Dashboard
-parent: Usage
+grand_parent: User Manuals
+parent: Contest Administration Manual
+nav_order: 1
 ---
 
-# Contest Administration
+# Contest Dashboard
 
 
 ![Contest Dashboard](https://github.com/mmcinnestaylor/Programming-Contest-Suite/blob/14a068074f95fcf0c85f0edc7171f88f5cb64f4b/docs/assets/images/admin_dashboard.png?raw=true)
