@@ -38,7 +38,7 @@ def dashboard(request):
     context['team_members'] = User.objects.filter(profile__team=request.user.profile.team).exclude(username=request.user.username)
 
     # Generate account some useful account notifications
-    if not request.user.profile.has_team():
+    if not request.user.profile.has_team() and not request.user.profile.is_volunteer():
         messages.warning(
             request, 'You are not a member of a registered team. You must be a team member in order to compete. Check out the FAQ for more information.')
     if not request.user.profile.has_courses() and context['total_num_courses'] > 0:
@@ -47,7 +47,7 @@ def dashboard(request):
     if request.user.profile.fsu_id is None or request.user.profile.fsu_id == '':
         messages.info(
             request, 'Your FSU ID is blank. You must add it to your profile in order to receive extra credit. Check out the FAQ for more information.')
-    if request.user.profile.fsu_num is None or request.user.profile.fsu_num == '':
+    if (request.user.profile.fsu_num is None or request.user.profile.fsu_num == '') and not request.user.profile.is_volunteer():
         messages.info(
             request, 'Your FSU number is blank. You must add it to your profile in order to swipe check in using your FSUCard on contest day. Check out the FAQ for more information.')
 
