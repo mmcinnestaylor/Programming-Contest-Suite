@@ -267,6 +267,38 @@ def generate_ec_reports():
 
 
 @shared_task
+def generate_team_csvs():
+    """
+    Celery task which creates CSV files containing team data per division.
+    """
+    
+    for division in Team.DIVISION:
+        if division[0] == 1:  # Upper
+            team_file = f"{MEDIA_ROOT}/team_files/upper.csv"
+        else:  # Lower
+            team_file = f"{MEDIA_ROOT}/team_files/lower.csv"
+
+        with open(team_file, 'w', newline='') as team_csv:        
+            writer = csv.writer(
+                team_csv, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+            
+            # File header
+            writer.writerow(['team_division', 'team_name', 'questions_answered', 'domjudge_id', 'team_active', 'team_members'])
+            
+            # Team data
+            teams = Team.objects.filter(division=division[0])
+            for team in teams:
+                writer.writerow([
+                    team.get_division_code(),
+                    team.name,
+                    team.questions_answered,
+                    team.contest_id,
+                    'T' if team.is_active() else 'F',
+                    '_'.join(team.get_members())
+                ])
+
+
+@shared_task
 def email_faculty(domain):
     """
     Celery task to notify faculty members of available participation reports.

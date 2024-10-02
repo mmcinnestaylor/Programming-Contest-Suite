@@ -1,8 +1,8 @@
 FROM python:3.10-slim
 LABEL maintainer="ACM at FSU <contact@fsu.acm.org>"
 
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 
 ARG REQUIREMENTS=requirements.txt
 
@@ -30,6 +30,7 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt \
   && install -d -m 0755 -o app_user -g app_user /app/media \
   && install -d -m 0755 -o app_user -g app_user /app/media/contest_files \
   && install -d -m 0755 -o app_user -g app_user /app/media/ec_files \
+  && install -d -m 0755 -o app_user -g app_user /app/media/team_files \
   && install -d -m 0755 -o app_user -g app_user /app/media/uploads
 
 # Code and User Setup
