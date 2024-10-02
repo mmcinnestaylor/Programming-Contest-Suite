@@ -259,7 +259,7 @@ def dashboard(request):
         channel_form = forms.ClearChannelForm(request.POST)
         update_password_form = forms.UpdatePasswordForm(request.POST)
         profile_role_form = forms.UpdateProfileRoleForm(request.POST)
-        activate_account_form = forms.ActivateAccountForm(request.POST)
+        account_status_form = forms.AccountStatusForm(request.POST)
         faculty_team_form = forms.DesignateFacultyTeamForm(request.POST)
 
         # Process walk-in team creation form
@@ -311,21 +311,35 @@ def dashboard(request):
             else:
                 messages.success(request, 'Updated user role.',
                                  fail_silently=True)
-        # Process admin account activation form
-        elif activate_account_form.is_valid():
+        # Process account status update form
+        elif account_status_form.is_valid():
             try:
                 account = User.objects.get(
-                    username=activate_account_form.cleaned_data['username'])
-                # Activate account
-                account.is_active = True
-                account.profile.email_confirmed = True
-                account.save()
+                    username=account_status_form.cleaned_data['username'])
             except:
                 messages.error(
-                    request, 'Account activation failed.', fail_silently=True)
+                    request, 'Unable to locate username in database.', fail_silently=True)
             else:
-                messages.success(
-                    request, 'Activated user account.', fail_silently=True)
+                if account_status_form.cleaned_data['status'] == '0':
+                    # Activate account
+                    account.is_active = True
+                    account.profile.email_confirmed = True
+                elif account_status_form.cleaned_data['status'] == '1':
+                    # Deactivate account
+                    account.is_active = False
+                
+                try:
+                    account.save()
+                except:
+                    messages.error(
+                        request, 'Account status update failed.', fail_silently=True)
+                else:
+                    if account_status_form.cleaned_data['status'] == '0':
+                        messages.success(
+                            request, 'Activated user account.', fail_silently=True)
+                    elif account_status_form.cleaned_data['status'] == '1':
+                        messages.success(
+                            request, 'Deactivated user account.', fail_silently=True)   
         # Process faculty team designation form
         elif faculty_team_form.is_valid():
             try:
@@ -372,7 +386,7 @@ def dashboard(request):
         channel_form = forms.ClearChannelForm()
         update_password_form = forms.UpdatePasswordForm()
         profile_role_form = forms.UpdateProfileRoleForm()
-        activate_account_form = forms.ActivateAccountForm()
+        account_status_form = forms.AccountStatusForm()
         faculty_team_form = forms.DesignateFacultyTeamForm()
         
     
@@ -407,7 +421,7 @@ def dashboard(request):
     context['channel_form'] = channel_form
     context['update_password_form'] = update_password_form
     context['profile_role_form'] = profile_role_form
-    context['activate_account_form'] = activate_account_form
+    context['account_status_form'] = account_status_form
     context["faculty_team_form"] = faculty_team_form
 
     return render(request, 'contestadmin/dashboard.html', context)
