@@ -103,11 +103,11 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                #'django.template.context_processors.debug',
+                #'django.template.context_processors.debug', # replaced by contestsuite.context_processors.app_settings
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'core.context_processors.app_settings',
+                'contestsuite.context_processors.app_settings',
             ],
         },
     },
@@ -138,36 +138,6 @@ DATABASES = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
-
-
-# Celery
-# https://docs.celeryproject.org/en/stable/getting-started/first-steps-with-celery.html#configuration
- 
-CELERY_BROKER_URL = get_secret('CELERY_BROKER', 'amqp://rabbitmq:5672')
-CELERY_RESULT_BACKEND = get_secret('CELERY_BACKEND', 'redis://redis:6379/1')
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TIMEZONE = get_secret('CELERY_TIMEZONE', 'America/New_York')
-CELERY_ENABLE_UTC = True
-
-# Celery Beat
-# https://celery-safwan.readthedocs.io/en/latest/reference/celery.beat.html
-
-CELERY_BEAT_SCHEDULE = {
-    'cleanup-lfg-rosters': { 
-         'task': 'lfg.tasks.cleanup_lfg_rosters', 
-         'schedule': 600.0,
-        },
-    'scrape-discord-members': { 
-         'task': 'lfg.tasks.scrape_discord_members', 
-         'schedule': 1800.0,
-        },
-    'verify-lfg-profiles': { 
-        'task': 'lfg.tasks.verify_lfg_profiles', 
-        'schedule': 600.0,
-    },          
-}
 
 
 # Cache
@@ -222,16 +192,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "assets"),
+    os.path.join(BASE_DIR, 'assets'),
 ]
 
 
-# Uploaded files (TSV)
+# Non-static files
+# https://docs.djangoproject.com/en/4.2/topics/files/
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
@@ -281,6 +252,37 @@ DEFAULT_FROM_EMAIL = get_secret(
     'DEFAULT_FROM_EMAIL', 'ACM at FSU Programming Contest<acm@cs.fsu.edu>')
 
 
+# Celery
+# https://docs.celeryproject.org/en/stable/getting-started/first-steps-with-celery.html#configuration
+ 
+CELERY_BROKER_URL = get_secret('CELERY_BROKER', 'amqp://rabbitmq:5672')
+CELERY_RESULT_BACKEND = get_secret('CELERY_BACKEND', 'redis://redis:6379/1')
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TIMEZONE = get_secret('CELERY_TIMEZONE', 'America/New_York')
+CELERY_ENABLE_UTC = True
+
+
+# Celery Beat
+# https://celery-safwan.readthedocs.io/en/latest/reference/celery.beat.html
+
+CELERY_BEAT_SCHEDULE = {
+    'cleanup-lfg-rosters': { 
+         'task': 'lfg.tasks.cleanup_lfg_rosters', 
+         'schedule': 600.0,
+        },
+    'scrape-discord-members': { 
+         'task': 'lfg.tasks.scrape_discord_members', 
+         'schedule': 1800.0,
+        },
+    'verify-lfg-profiles': { 
+        'task': 'lfg.tasks.verify_lfg_profiles', 
+        'schedule': 600.0,
+    },          
+}
+
+
 # Discord
 # https://discordpy.readthedocs.io/en/stable/
 
@@ -288,11 +290,6 @@ ANNOUNCEMENT_WEBHOOK_URL = get_secret('ANNOUNCEMENT_WEBHOOK_URL', None)
 BOT_CHANNEL_WEBHOOK_URL = get_secret('BOT_CHANNEL_WEBHOOK_URL', None)
 GUILD_ID = int(get_secret('GUILD_ID', 0))
 SCRAPE_BOT_TOKEN = get_secret('SCRAPE_BOT_TOKEN', None)
-
-
-# DOMjudge Status Button
-
-DOMJUDGE_URL = get_secret('DOMJUDGE_URL', 'https://domjudge.cs.fsu.edu/public')
 
 
 # Hashid Fields
@@ -303,6 +300,16 @@ HASHID_FIELD_SALT = get_secret(
 
 
 # Google Analytics
+# https://support.google.com/analytics/answer/12002338?hl=en
 
 GTAG = get_secret('GTAG')
 
+
+# DOMjudge status button on homepage
+
+DOMJUDGE_URL = get_secret('DOMJUDGE_URL', 'https://domjudge.cs.fsu.edu/public')
+
+
+# Documentation website base URL for navbar and homepage documentation links
+
+PCS_DOCS_URL = get_secret('PCS_DOCS_URL', 'https://mmcinnestaylor.github.io/Programming-Contest-Suite')
