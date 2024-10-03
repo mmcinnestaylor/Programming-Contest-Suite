@@ -10,5 +10,6 @@ class Command(BaseCommand):
         if User.objects.count() == 0:
             admin = User.objects.create_superuser(username='contestadmin', email='contest@fsu.acm.org', password='seminoles1!', first_name='Administrator')
             admin.save()
+            print('INIT: Default admin account created')
         else:
-            print('Admin accounts can only be initialized if no Accounts exist')
+            print('INIT: Admin accounts can only be initialized if no Accounts exist')
