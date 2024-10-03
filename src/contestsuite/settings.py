@@ -109,6 +109,9 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'contestsuite.context_processors.app_settings',
             ],
+            'libraries': {
+                'custom_filters': 'templatetags.custom_filters',
+            },
         },
     },
 ]
