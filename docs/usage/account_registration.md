@@ -2,7 +2,7 @@
 layout: default
 title: Account Registration Guide
 parent: User Manuals
-nav_order: 1
+nav_order: 2
 ---
 
 # Account Registration Guide
@@ -16,24 +16,30 @@ nav_order: 1
 
 ---
 
-Registering an account is the first step toward participating in a semester's programming contest either as a contestant or volunteer. Account registration only requires a person's first and last name, a valid email address, a username, and a suitably strong password. 
+## Introduction
+
+Registering an account is the first step toward participating in a semester's programming contest either as a contestant or volunteer. Account registration only requires your first and last name, a valid email address, a username, and a suitably strong password. 
 
 {: .important-title }
 > Registration Deadline
 >
-> A Registration Deadline will appear on the site'e homepage once it is confirmed by the contest's organizers. This date and time specifies the *Team Registration Deadline* after which point contest team creation is frozen. Users may still register an account, and join/leave existing teams after this deadline.
+> A Registration Deadline will appear on the site'e homepage once it is confirmed by the contest's organizers. This date and time specifies the *Team Registration Deadline* after which point contest team creation is frozen. You may still register an account, and join/leave registered teams after this deadline.
 
 ## Registration Form
 
-A link to the account registration form is accessible from the site's navbar when the user is not logged in. The form may be accessed directly by navigating to `<site_url>/register/`.
+A link to the account registration interface is accessible from the site's navbar when you access the site while not logged in. The interface may be accessed directly by navigating to `<site_url>/register/`.
 
-![Account Registration Form]({{ site.url }}/assets/images/account_registration.png?raw=true)
+![Navbar Registration]({{ site.url }}/assets/images/account/register/navbar_register.png?raw=true)
 
-1. The email address you use during registration should be:  
+Read through the information on the preregistration page then click the *Proceed* button at the bottom of the page, at which point you will be directed to the registration form.
+
+![Account Registration Form]({{ site.url }}/assets/images/account/register/account_registration.png?raw=true)
+
+- The email address you use during registration should be:  
     - A valid and working address 
     - Reachable by you  
     - Not attached to an existing account
-2. The username you provide must be unique within the account database. 
+- The username you provide must be unique within the account database. 
 
 ## Account Activation
 
@@ -42,8 +48,8 @@ Upon submitting the registration form, check the email address you provded for a
 {: .highlight-title }
 > Didn't receive an email?
 >
->  Check your spam/junk folder if you do not receive an email within a few minutes after signup. If the message is still missing, head over to the site's contact page for links to receive assistance from the contest organizers.
+>  If you do not receive an email within a few minutes after signup, first check your spam/junk folder. If the message is still missing, head over to the site's contact page for links to receive assistance from the contest organizers.
 
 ## Next Steps
 
-Once your account is activated, check out the [Profile Management Guide]({{ site.url }}/usage/profile_management.html) for information pertaining to completing your account setup!
+Once your account is activated, check out the [Account Management Guide]({{ site.url }}/usage/account_management.html) for information pertaining to completing your account setup!
