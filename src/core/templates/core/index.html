@@ -62,7 +62,7 @@
                   <a href="{% url 'register_base' %}" class="btn btn-outline-light w-100 mb-2"><i class="fa-solid fa-user-plus fa-fw"></i> Register</a>
                   <br>
                   <!-- Registration Guide button -->
-                  <a href="https://drive.google.com/drive/folders/1uCylEYyFdXdxD_BxplYZIioW6_ragXTq?usp=sharing" class="btn btn-outline-light w-100 my-2" target="_blank"><i class="fa-solid fa-book fa-fw"></i> Registration Guide</a>
+                  <a href="{{ PCS_DOCS_URL }}/usage/account_registration.html" class="btn btn-outline-light w-100 my-2" target="_blank" rel="external noopener"><i class="fa-solid fa-book fa-fw"></i> Registration Guide</a>
                   <br>
                   <!-- Contest Schedule button -->
                   <button type="button" class="btn btn-outline-light w-100 my-2" data-toggle="modal" data-target="#displayScheduleModal"><i class="fa-solid fa-clock fa-fw"></i> Contest Schedule
@@ -79,8 +79,8 @@
                     class="fa-solid fa-user-plus fa-fw"></i> Register</a>
                 <br>
                 <!-- Registration Guide button -->
-                <a href="https://drive.google.com/drive/folders/1uCylEYyFdXdxD_BxplYZIioW6_ragXTq?usp=sharing"
-                  class="btn btn-lg btn-outline-light w-100 my-2" target="_blank"><i class="fa-solid fa-book fa-fw"></i> Registration
+                <a href="{{ PCS_DOCS_URL }}/usage/account_registration.html"
+                  class="btn btn-lg btn-outline-light w-100 my-2" target="_blank" rel="external noopener"><i class="fa-solid fa-book fa-fw"></i> Registration
                   Guide</a>
                 <br>
                 <!-- Contest Schedule button -->
@@ -289,7 +289,7 @@
       <!-- Extra Credit card -->
       <div class="card border-secondary mt-3">
         <div class="card-header font-weight-bold bg-secondary text-white">
-          <i class="fa-solid fa-list-ul fa-fw"></i> Extra Credit Courses
+          <i class="fa-solid fa-list-ul fa-fw"></i> Registered Courses
         </div>
         <div class="card-body">
           {% for course in courses|slice:"5" %}

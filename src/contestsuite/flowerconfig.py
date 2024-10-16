@@ -1,6 +1,4 @@
-import os
 from contestsuite.settings import get_secret
-
 
 
 # Celery Flower configuration

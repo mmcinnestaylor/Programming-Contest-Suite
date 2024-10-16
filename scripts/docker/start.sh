@@ -9,6 +9,11 @@ PROCESS_TYPE=$1
 MODE=${2:-production}
 
 if [ "$PROCESS_TYPE" = "server" ]; then
+    # Idempotent Django commands
+    python manage.py collectstatic --noinput
+    # Default superuser creation
+    python manage.py initadmin
+
     if [ "$MODE" = "debug" ]; then
         python \
             manage.py \
@@ -38,7 +43,7 @@ elif [ "$PROCESS_TYPE" = "worker" ]; then
         -A contestsuite \
         worker \
             --autoscale=10,3 \
-            -n worker@%n \
+            -n worker@pcs_django \
             --loglevel INFO
     fi
 elif [ "$PROCESS_TYPE" = "beat" ]; then

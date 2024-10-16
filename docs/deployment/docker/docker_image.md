@@ -1,7 +1,9 @@
 ---
-title: Docker Image
 layout: default
-nav_order: 3
+title: Docker Image
+grand_parent: Deployment
+parent: Docker
+nav_order: 1
 ---
 
 # Docker Image
@@ -10,7 +12,7 @@ The project's `Dockerfile` is designed to build both the development and product
 
 ## Build Image
 
-```
+```bash
 # Programming-Contet-Suite/
 
 docker build . -t <image_name> --build-arg="REQUIREMENTS=requirements.txt"
@@ -24,11 +26,13 @@ REQUIREMENTS | requirements.txt | Path to the manifest file to use during image 
 
 The `Dockerfile` specifies an image capable of running the Django web app, Celery, or a helper Discord bot. The parameters passed to the image's start script `start.sh` determine the container's behavior.
 
-    docker run <image_name> /docker/start.sh <PROCESS_TYPE> <MODE>
+```bash
+docker run <image_name> /docker/start.sh <PROCESS_TYPE> <MODE>
+```
 
 `PROCESS_TYPE` | Default | Usage
 ---|---|---
-server | Yes | WSGI server bound to the Django web app
+server | Yes | Gunicorn server bound to the Django app
 worker | No | Celery Worker
 beat | No | Celery Beat
 flower | No | Celery Flower
@@ -38,3 +42,9 @@ bot | No | Discord bot
 ---|---|---
 production | Yes | Option specified by `PROCESS_TYPE` uses production ready settings/flags.
 debug | No | Option specified by `PROCESS_TYPE` uses debug/development settings/flags.
+
+### Default Superuser Account
+user: `contestadmin`  
+pass: `seminoles1!`
+
+A default Django superuser account is created when the container connects to an empty database. The default password can be replaced using Django administration. A link to the Django administration interface is located in the user's navigation menu, when logged in using this account.
