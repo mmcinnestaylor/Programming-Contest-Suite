@@ -102,16 +102,38 @@
                 Resources
               </a>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="https://domjudge.cs.fsu.edu" target="_blank" rel="external noopener"><i class="fa-solid fa-server fa-fw"></i> Contest Server</a>
-                <a class="dropdown-item" href="https://drive.google.com/drive/folders/1pjZk22HGTOjvedz932kHox6-rTz5JqoE?usp=sharing"
-                  target="_blank" rel="external noopener"><i class="fa-solid fa-file-circle-question fa-fw"></i> Example Questions</a>
-                <a class="dropdown-item" href="https://drive.google.com/drive/folders/1uCylEYyFdXdxD_BxplYZIioW6_ragXTq?usp=sharing"
-                  target="_blank" rel="external noopener"><i class="fa-solid fa-book fa-fw"></i> Registration Guide</a>
+                <h5 class="dropdown-header">Account & Registration</h5>
+                <a class="dropdown-item" href="{{ PCS_DOCS_URL }}/usage/account_registration.html"
+                  target="_blank" rel="external noopener"><i class="fa-solid fa-book fa-fw"></i> Account Registration Guide</a>
+                <a class="dropdown-item" href="{{ PCS_DOCS_URL }}/usage/account_management.html"
+                  target="_blank" rel="external noopener"><i class="fa-solid fa-book fa-fw"></i> Account Management Guide</a>
+                <a class="dropdown-item" href="{{ PCS_DOCS_URL }}/usage/contestants.html"
+                  target="_blank" rel="external noopener"><i class="fa-solid fa-book fa-fw"></i> Contestant Manual</a>
+                <a class="dropdown-item" href="{{ PCS_DOCS_URL }}/usage/volunteers.html"
+                  target="_blank" rel="external noopener"><i class="fa-solid fa-book fa-fw"></i> Volunteer Manual</a>
+                <div class="dropdown-divider"></div>
+                <h5 class="dropdown-header">DOMjudge</h5>
+                <a class="dropdown-item" href="https://domjudge.cs.fsu.edu"
+                  target="_blank" rel="external noopener"><i class="fa-solid fa-server fa-fw"></i> Contest Server</a>
                 <a class="dropdown-item" href="{% static 'docs/domjudge_guide.pdf' %}"
-                  target="_blank"><i class="fa-solid fa-book fa-fw"></i> Contest Server Guide</a>
+                  target="_blank"><i class="fa-solid fa-file-pdf fa-fw"></i> Contest Server Guide</a>
                 <a class="dropdown-item" href="https://www.domjudge.org/docs/team-manual.pdf"
-                  target="_blank" rel="external noopener"><i class="fa-solid fa-book fa-fw"></i> Team Manual</a>
-                <a class="dropdown-item" href="https://bit.ly/JoinProgClub" target="_blank" rel="external noopener"><i class="fa-solid fa-people-group fa-fw"></i> Programming Club</a>
+                  target="_blank" rel="external noopener"><i class="fa-solid fa-file-pdf fa-fw"></i> DOMjudge's Team Manual</a>
+                <div class="dropdown-divider"></div>
+                <h5 class="dropdown-header">Example Problems</h5>
+                <h6 class="dropdown-header">Upper Division</h6>
+                <a class="dropdown-item" href="{% static 'docs/u2_spc_2017.pdf' %}"
+                  target="_blank"><i class="fa-solid fa-file-pdf fa-fw"></i> Shapes within Shapes within Shapes (2017)</a>
+                <a class="dropdown-item" href="{% static 'docs/u7_spc_2017.pdf' %}"
+                  target="_blank"><i class="fa-solid fa-file-pdf fa-fw"></i> I got it from Preston (2017)</a>
+                <h6 class="dropdown-header">Lower Division</h6>
+                <a class="dropdown-item" href="{% static 'docs/l2_spc_2017.pdf' %}"
+                  target="_blank"><i class="fa-solid fa-file-pdf fa-fw"></i> Line Drawing Algorithms (2017)</a>
+                <a class="dropdown-item" href="{% static 'docs/l6_spc_2017.pdf' %}"
+                  target="_blank"><i class="fa-solid fa-file-pdf fa-fw"></i> The Missing Z-95 Headhunter (2017)</a>
+                <h5 class="dropdown-header">Misc</h5>
+                <a class="dropdown-item" href="https://bit.ly/JoinProgClub"
+                  target="_blank" rel="external noopener"><i class="fa-solid fa-people-group fa-fw"></i> Programming Club</a>
               </div>
             </li>
             <li class="nav-item">
