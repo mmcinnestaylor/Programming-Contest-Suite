@@ -100,3 +100,4 @@ We welcome contributions to the project! Check out `CONTRIBUTING.md` to learn ho
 
 - [Marlan McInnes-Taylor](https://github.com/mmcinnestaylor) *Creator*
 - [Daniel Riley](https://github.com/danielmriley)
+- [Preston Horne](https://github.com/prestonmhorne)

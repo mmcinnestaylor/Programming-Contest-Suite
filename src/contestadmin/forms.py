@@ -43,12 +43,18 @@ class UpdateProfileRoleForm(forms.ModelForm):
         model = Profile
         fields = ["role"]
 
+    
+class AccountStatusForm(forms.Form):
+    STATUS = (
+        (0, 'Activate'),
+        (1, 'Deactivate')
+    )
 
-class ActivateAccountForm(forms.Form):
     username = forms.CharField(
         max_length=150,
         label='Username',
         help_text="Person's account username.")
+    status = forms.ChoiceField(choices=STATUS)
     
 
 class DesignateFacultyTeamForm(forms.Form):
@@ -56,3 +62,11 @@ class DesignateFacultyTeamForm(forms.Form):
         max_length=30,
         label='Team name',
         help_text="Name of faculty team.")
+
+
+class UpdatePasswordForm(forms.Form):
+    username = forms.CharField(
+        max_length=150,
+        label='Username',
+        help_text="Person's account username.")
+    password = forms.CharField()

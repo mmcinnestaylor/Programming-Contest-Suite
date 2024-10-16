@@ -26,6 +26,9 @@
 			</div>
 			<div class="card-body overflow-auto">
 				<div class="row justify-content-center">
+					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#walkinModal"> <i class="fa-solid fa-person-walking fa-fw"></i> Create Walk-in teams</button>
+				</div>
+				<div class="row justify-content-center">
 					<a class="btn btn-primary btn-sm my-1" href="{% url 'gen_dj_files' %}" onclick="return confirm('Are you certain you want to generate the DOMjudge files?');"><i class="fa-solid fa-file-circle-plus fa-fw"></i> Generate DOMjudge TSVs</a>
 					{% if dj_files_available %}					
 						<a class="btn text-dark" href="{% url 'download_dj_files' %}" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
@@ -73,7 +76,6 @@
 			</div>
 			<div class="card-body overflow-auto">
 				<div class="row justify-content-center">
-					
 					{% if dj_results_processed %}					
 						<!--<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#generateEcReportsModal">Generate Reports</button>-->
 						<a class="btn btn-primary btn-sm my-1" href="{% url 'gen_ec_reports' %}" onclick="return confirm('Are you certain you want to generate the extra credit files?');"><i class="fa-solid fa-file-circle-plus fa-fw"></i> Generate Reports</a>
@@ -101,15 +103,34 @@
 		<!-- Contest tools card -->
 		<div class="card mt-4 border-secondary">
 			<div class="card-header font-weight-bold bg-secondary text-white">
-				<i class="fa-solid fa-wrench fa-fw"></i> Contest Tools 
+				<i class="fa-solid fa-wrench fa-fw"></i> Tools 
 			</div>
 			<div class="card-body overflow-auto">
-				<div class="row justify-content-center">
-					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#walkinModal"> <i class="fa-solid fa-person-walking fa-fw"></i> Create Walk-in teams</button>
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="row justify-content-center">
+							<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#accountStatusModal"><i class="fa-solid fa-user-gear fa-fw"></i> Update Account Status</button>
+						</div>
+						<div class="row justify-content-center">
+							<a class="btn btn-primary btn-sm my-1" href="{% url 'generate_team_csvs' %}" onclick="return confirm('Are you certain you want to generate the team data CSVs?');"><i class="fa-solid fa-file-circle-plus fa-fw"></i> Generate Team CSVs</a>
+							{% if team_csvs_available %}					
+								<a class="btn text-dark" href="{% url 'download_team_csvs' %}" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
+							{% else %}
+								<a class="btn text-secondary disabled" href="#" role="button"><i class="fa fa-download fa-md" aria-hidden="true"></i></a>
+							{% endif %}
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="row justify-content-center">
+							<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#facultyTeamModal"><i
+									class="fa-solid fa-chalkboard-user fa-fw"></i> Designate Faculty Team</button>
+						</div>
+						<div class="row justify-content-center">
+							<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#checkinModal"><i class="fa-solid fa-robot fa-fw"></i> Check in/out Users</button>
+						</div>
+					</div>
 				</div>
-				<div class="row justify-content-center">
-					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#checkinModal"><i class="fa-solid fa-robot fa-fw"></i> Check in/out Users</button>
-				</div>							
+											
 			</div>
 		</div>
 		<!-- Contest tools card end -->
@@ -142,17 +163,22 @@
 		<!-- Account tools card -->
 		<div class="card mt-4 border-secondary">
 			<div class="card-header font-weight-bold bg-secondary text-white">
-				<i class="fa-solid fa-wrench fa-fw"></i> Account Tools
+				<i class="fa-solid fa-user-shield fa-fw"></i> Change User Password
 			</div>
-			<div class="card-body overflow-auto">
-				<div class="row justify-content-center">
-					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#activateAccountModal"><i class="fa-solid fa-user-check fa-fw"></i> Activate User Account</button>
+			<form method="post" onSubmit="return confirm('Are you certain you want to update this user password?');">
+				<div class="card-body overflow-auto">
+					{% csrf_token %}
+					<div class="form-group">
+						{{ update_password_form.username | placeholder:"Username" }}
+					</div>
+					<div class="form-group">
+						{{ update_password_form.password | placeholder:"New password" }}
+					</div>
 				</div>
-				<div class="row justify-content-center">
-					<button type="button" class="btn btn-primary btn-sm my-1" data-toggle="modal" data-target="#facultyTeamModal"><i
-							class="fa-solid fa-chalkboard-user fa-fw"></i> Designate Faculty Team</button>
+				<div class="card-footer">
+					<button class="btn btn-primary btn-sm" type="submit">Save</button>
 				</div>
-			</div>
+			</form>
 		</div>
 		<!-- Account tools card end -->
 	</div>
@@ -206,53 +232,56 @@
 	<!-- Discord Control deck end -->
 
 	<!-- Volunteer Summary card -->
-	<div class="card mt-4 mb-3 border-secondary">
-		<div class="card-header font-weight-bold bg-secondary text-white">
-			<i class="fa-solid fa-handshake-simple fa-fw"></i> Volunteers
-		</div>
-		<div class="card-body overflow-auto">
-			<div class="row justify-content-center">
-				<div class="col-12">
-					<div class="table-responsive">
-						<table class="table table-sm">
-							<thead class="thead-light">
-								<tr>
-									<th scope="col">Role</th>
-									<th scope="col">Name</th>
-									<th scope="col" class="text-center">Checked-in</th>
-									<th scope="col" class="text-center">Added Courses</th>
-									
-								</tr>
-							</thead>
-							<tbody>
-								{% for volunteer in volunteers %}
-								<tr>
-									<td>{{ volunteer.get_role }}</td>
-									
-									<td>{{ volunteer.user.get_full_name }}</td>
+	<div id="accordionVolunteer">
+		<div class="card mt-4 mb-3 border-secondary">
+			<div class="card-header font-weight-bold bg-secondary text-white" data-toggle="collapse" data-target="#collapseVolunteer" aria-expanded="true" aria-controls="collapseVolunteer" style="cursor: pointer;">
+				<i class="fa-solid fa-handshake-simple fa-fw"></i> Volunteers
+			</div>
+			<div id="collapseVolunteer" class="collapse" data-parent="#accordionVolunteer">
+				<div class="card-body overflow-auto">
+					<div class="row justify-content-center">
+						<div class="col-12">
+							<div class="table-responsive">
+								<table class="table table-sm">
+									<thead class="thead-light">
+										<tr>
+											<th scope="col">Role</th>
+											<th scope="col">Name</th>
+											<th scope="col" class="text-center">Checked-in</th>
+											<th scope="col" class="text-center">Added Courses</th>
+											
+										</tr>
+									</thead>
+									<tbody>
+										{% for volunteer in volunteers %}
+										<tr>
+											<td>{{ volunteer.get_role }}</td>
+											
+											<td>{{ volunteer.user.get_full_name }}</td>
 
-									{% if volunteer.checked_in %}
-										<td class="text-center">Yes</td>
-									{% else %}
-										<td class="text-center">No</td>
-									{% endif %}
+											{% if volunteer.checked_in %}
+												<td class="text-center">Yes</td>
+											{% else %}
+												<td class="text-center">No</td>
+											{% endif %}
 
-									{% if volunteer.has_courses %}
-										<td class="text-center">Yes</td>
-									{% else %}
-										<td class="text-center">No</td>
-									{% endif %}
-								</tr>
-								{% endfor %}
-							</tbody>
-						</table>
+											{% if volunteer.has_courses %}
+												<td class="text-center">Yes</td>
+											{% else %}
+												<td class="text-center">No</td>
+											{% endif %}
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<!-- Volunteer Summary card end -->
-
 
 	<!-- Create Walk-in Teams Modal -->
 	<div class="modal fade" id="walkinModal" tabindex="-1" role="dialog"
@@ -290,7 +319,6 @@
 	</div>
 	<!-- End Create Walk-in Teams Modal -->
 
-
 	<!-- Checkin/Checkout Users Modal -->
 	<div class="modal fade" id="checkinModal" tabindex="-1" role="dialog" aria-labelledby="confirmClearModalCenterTitle"
 		aria-hidden="true">
@@ -326,20 +354,22 @@
 	</div>
 	<!-- End Create Walk-in Teams Modal -->
 
-
-	<!-- Activate Account Modal -->
-	<div class="modal fade" id="activateAccountModal" tabindex="-1" role="dialog"
+	<!-- Account Status Modal -->
+	<div class="modal fade" id="accountStatusModal" tabindex="-1" role="dialog"
 		aria-labelledby="confirmClearModalCenterTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="confirmClearModalLongTitle">Activate User Account</h5>
+					<h5 class="modal-title" id="confirmClearModalLongTitle">Update Account Status</h5>
 				</div>
-				<form method="post" onSubmit="return confirm('Are you certain you want to activate this account?');">
+				<form method="post" onSubmit="return confirm('Are you certain you want to update this account?');">
 					<div class="modal-body overflow-auto">
 						{% csrf_token %}
 						<div class="form-group">
-							{{ activate_account_form.username | placeholder:"Username"}}
+							{{ account_status_form.username | placeholder:"Username" }}
+						</div>
+						<div class="form-group">
+							{{ account_status_form.status }}
 						</div>
 					</div>
 					<div class="card-footer">
@@ -350,8 +380,7 @@
 			</div>
 		</div>
 	</div>
-	<!-- End Activate Account Modal -->
-
+	<!-- End Account Status Modal -->
 
 	<!-- Designate Faculty Team Modal -->
 	<div class="modal fade" id="facultyTeamModal" tabindex="-1" role="dialog"

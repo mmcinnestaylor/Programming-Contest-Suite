@@ -1,8 +1,10 @@
 import os
 
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
 from django.db import transaction
 from django.http import HttpResponse
 from django.utils.encoding import force_str
@@ -15,7 +17,7 @@ from zipfile import ZipFile
 
 from . import forms
 from . import tasks
-from .utils import contestadmin_auth
+from .utils import contestadmin_auth, ContestAdminAuthMixin
 from contestadmin.models import Contest
 from contestsuite.settings import MEDIA_ROOT
 from lfg.models import LFGProfile
@@ -192,6 +194,53 @@ class GenerateExtraCreditReports(View):
         return redirect('admin_dashboard')
 
 
+class ExportTeamData(LoginRequiredMixin, ContestAdminAuthMixin, View):
+    """
+    View which creates and serves a zip file containing contest team data per division.
+    """
+
+    def get(self, request):
+        """
+        Schedules generation of CSV files.
+        """
+
+        tasks.generate_team_csvs.delay()
+        messages.info(request, 'Team data CSVs generation scheduled.', fail_silently=True)
+
+        return redirect('admin_dashboard')
+
+    def download(self):
+        """
+        Serves a ZIP file containing all team data CSV files. 
+        """
+        
+        fpath = f"{MEDIA_ROOT}/team_files/"
+
+        # Initialize zip file
+        in_memory = BytesIO()
+        zip = ZipFile(in_memory, 'a')
+
+        # Add team csvs to zip file
+        for fname in os.listdir(fpath):
+            zip.write(fpath+fname, fname)
+
+        # fix for Linux zip files read in Windows
+        for file in zip.filelist:
+            file.create_system = 0 
+
+        zip.close()
+
+        # Initialize response
+        response = HttpResponse(content_type='application/zip')
+        response['Content-Disposition'] = 'attachment; filename=team_data_csvs.zip'
+        
+        # Write zip file to response
+        in_memory.seek(0)    
+        response.write(in_memory.read())
+        
+        return response
+    
+
 @login_required
 @user_passes_test(contestadmin_auth, login_url='/', redirect_field_name=None)
 @transaction.atomic
@@ -208,10 +257,10 @@ def dashboard(request):
         file_form = forms.ResultsForm(request.POST, request.FILES)
         checkin_form = forms.CheckinUsersForm(request.POST)
         channel_form = forms.ClearChannelForm(request.POST)
+        update_password_form = forms.UpdatePasswordForm(request.POST)
         profile_role_form = forms.UpdateProfileRoleForm(request.POST)
-        activate_account_form = forms.ActivateAccountForm(request.POST)
-        faculty_team_form = forms.DesignateFacultyTeamForm(
-            request.POST)
+        account_status_form = forms.AccountStatusForm(request.POST)
+        faculty_team_form = forms.DesignateFacultyTeamForm(request.POST)
 
         # Process walk-in team creation form
         if walkin_form.is_valid():
@@ -229,6 +278,25 @@ def dashboard(request):
                 channel_form.cleaned_data['channel_id'])
             messages.info(request, 'Clear channel task scheduled.',
                           fail_silently=True)
+        # Process password update form
+        elif update_password_form.is_valid():
+            try:
+                user = User.objects.get(username=update_password_form.cleaned_data['username'])
+            except:
+                messages.error(request, 'User not found.', fail_silently=True)
+            else:
+                try:
+                    validate_password(update_password_form.cleaned_data['password'], user)
+                except:
+                    messages.error(request, 'Please try a different password.', fail_silently=True)
+                else:
+                    try:
+                        user.set_password(update_password_form.cleaned_data['password'])
+                        user.save()
+                    except:
+                        messages.error(request, 'Password save failed.', fail_silently=True)
+                    else:
+                        messages.success(request, 'Password updated.', fail_silently=True)
         # Process profile role change form
         elif profile_role_form.is_valid():
             try:
@@ -243,21 +311,35 @@ def dashboard(request):
             else:
                 messages.success(request, 'Updated user role.',
                                  fail_silently=True)
-        # Process admin account activation form
-        elif activate_account_form.is_valid():
+        # Process account status update form
+        elif account_status_form.is_valid():
             try:
                 account = User.objects.get(
-                    username=activate_account_form.cleaned_data['username'])
-                # Activate account
-                account.is_active = True
-                account.profile.email_confirmed = True
-                account.save()
+                    username=account_status_form.cleaned_data['username'])
             except:
                 messages.error(
-                    request, 'Account activation failed.', fail_silently=True)
+                    request, 'Unable to locate username in database.', fail_silently=True)
             else:
-                messages.success(
-                    request, 'Activated user account.', fail_silently=True)
+                if account_status_form.cleaned_data['status'] == '0':
+                    # Activate account
+                    account.is_active = True
+                    account.profile.email_confirmed = True
+                elif account_status_form.cleaned_data['status'] == '1':
+                    # Deactivate account
+                    account.is_active = False
+                
+                try:
+                    account.save()
+                except:
+                    messages.error(
+                        request, 'Account status update failed.', fail_silently=True)
+                else:
+                    if account_status_form.cleaned_data['status'] == '0':
+                        messages.success(
+                            request, 'Activated user account.', fail_silently=True)
+                    elif account_status_form.cleaned_data['status'] == '1':
+                        messages.success(
+                            request, 'Deactivated user account.', fail_silently=True)   
         # Process faculty team designation form
         elif faculty_team_form.is_valid():
             try:
@@ -302,8 +384,9 @@ def dashboard(request):
         file_form = forms.ResultsForm()
         checkin_form = forms.CheckinUsersForm()
         channel_form = forms.ClearChannelForm()
+        update_password_form = forms.UpdatePasswordForm()
         profile_role_form = forms.UpdateProfileRoleForm()
-        activate_account_form = forms.ActivateAccountForm()
+        account_status_form = forms.AccountStatusForm()
         faculty_team_form = forms.DesignateFacultyTeamForm()
         
     
@@ -324,6 +407,9 @@ def dashboard(request):
         context['dj_files_available'] = True
     else:
         context['dj_files_available'] = False
+
+    # Determine if team CSVs have been generated
+    context['team_csvs_available'] = True if len(os.listdir(f"{MEDIA_ROOT}/team_files/")) > 0 else False
     
     # Volunteer card data
     context['volunteers'] = [user for user in Profile.objects.order_by('role').all() if user.is_volunteer()]
@@ -333,8 +419,9 @@ def dashboard(request):
     context['file_form'] = file_form
     context['gen_walkin_form'] = walkin_form
     context['channel_form'] = channel_form
+    context['update_password_form'] = update_password_form
     context['profile_role_form'] = profile_role_form
-    context['activate_account_form'] = activate_account_form
+    context['account_status_form'] = account_status_form
     context["faculty_team_form"] = faculty_team_form
 
     return render(request, 'contestadmin/dashboard.html', context)
