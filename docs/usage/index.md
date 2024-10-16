@@ -7,13 +7,21 @@ has_children: true
 
 # User Manuals
 
-The articles in this section are organized by the typical user groups which interact with the PCS:  
+{: .important-title }
+> TLDR;
+>
+> All contestants and volunteers should review the [Account Registration]({{ site.url  }}/usage/account_registration.html) and [Account Management]({{ site.url  }}/usage/account_management.html) guides, which cover the steps required to complete your registration for a given semester's contest.
+
+Welcome, and thanks for checking out the Programming Contest Suite (PCS)! The articles in this section comprise usage manuals for the various users of the PCS:
+
 - **Contestants**  
     Users who register an account and intend to compete in a semester's programming contest
 - **Volunteers**  
     Users who register an account and intend to serve as a Docent, Proctor, Question Writer, or Contest Organizer
 - **Faculty**  
-    Course instructors who have registered one or more of their courses with the semester's contest
+    Course instructors who have registered one or more of their courses with a semester's contest
+
+The following diagram sketches the user groups of the PCS, and the actions performed by their members each semester.
 
 ``` mermaid
 mindmap
