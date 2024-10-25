@@ -21,7 +21,7 @@
             <small class="card-text text-muted">Updated on: {{ announcement.updated_on}}</small>
           {% endif %}
           <p class="card-text mt-2">{{ object.content | linebreaks }}</p>
-          <a href="{% url 'announcements' %}" class="btn btn-primary btn-sm">&larr; Back</a>
+          <input class="btn btn-primary btn-sm" type="button" value="&larr; Back" onClick="javascript:history.go(-1);">
         </div> 
       </div>
     </div>
