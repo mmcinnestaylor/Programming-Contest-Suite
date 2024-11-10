@@ -21,9 +21,12 @@ class Faculty(models.Model):
     email = models.EmailField(max_length=50, primary_key=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-        
+
     def __str__(self):
         return (str(self.first_name) + ' ' + str(self.last_name))
+    
+    def get_first_initial(self):
+        return(self.first_name[0])
 
 
 class Course(models.Model):
