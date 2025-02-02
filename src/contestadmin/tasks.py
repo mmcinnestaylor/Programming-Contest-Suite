@@ -378,6 +378,7 @@ def process_contest_results():
                         team = Team.objects.get(contest_id=id)
                         team.questions_answered = row[3]
                         team.score = row[4]
+                        team.last_submission = row[5]
                         team.save()
                     except:
                         logger.error(
