@@ -48,7 +48,7 @@ class Course(models.Model):
         ordering = ['code']
 
     def __str__(self):
-        return (str(self.code) + ' : ' + str(self.name) + ' - ' + str(self.instructor.last_name) + ', ' + str(self.instructor.first_name)[0])
+        return (str(self.code) + ' : ' + str(self.name) + ' - ' + str(self.instructor.last_name) + ', ' + str(self.instructor.get_first_initial()))
 
     def num_checkedin(self):
         """
