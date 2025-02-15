@@ -16,7 +16,6 @@ six = "*"
 requests = "*"
 django-hashid-field = "*"
 django-celery-beat = "*"
-channels = "*"
 flower = "*"
 
 [dev-packages]
