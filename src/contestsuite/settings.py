@@ -270,20 +270,7 @@ CELERY_ENABLE_UTC = True
 # Celery Beat
 # https://celery-safwan.readthedocs.io/en/latest/reference/celery.beat.html
 
-CELERY_BEAT_SCHEDULE = {
-    'cleanup-lfg-rosters': { 
-         'task': 'lfg.tasks.cleanup_lfg_rosters', 
-         'schedule': 600.0,
-        },
-    'scrape-discord-members': { 
-         'task': 'lfg.tasks.scrape_discord_members', 
-         'schedule': 1800.0,
-        },
-    'verify-lfg-profiles': { 
-        'task': 'lfg.tasks.verify_lfg_profiles', 
-        'schedule': 600.0,
-    },          
-}
+CELERY_BEAT_SCHEDULE = {}
 
 
 # Discord

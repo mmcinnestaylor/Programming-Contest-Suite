@@ -85,7 +85,7 @@ The following variables, located in the main settings file[^1], map to various C
 
 Variable | Default | Description
 ---|---|---
-CELERY_BEAT_SCHEDULE | `{'cleanup-lfg-rosters': {'task': 'lfg.tasks.cleanup_lfg_rosters', 'schedule': 600.0,}, 'scrape-discord-members': {'task': 'lfg.tasks.scrape_discord_members', 'schedule': 1800.0,}, 'verify-lfg-profiles': { 'task': 'lfg.tasks.verify_lfg_profiles', 'schedule': 600.0,},}` | [Docs](https://docs.celeryq.dev/en/stable/userguide/configuration.html#std-setting-beat_schedule)
+CELERY_BEAT_SCHEDULE | `{}` | [Docs](https://docs.celeryq.dev/en/stable/userguide/configuration.html#std-setting-beat_schedule)
 
 ## Flower
 
