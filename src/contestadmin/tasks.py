@@ -15,7 +15,7 @@ from django.utils.http import urlsafe_base64_encode
 from celery import shared_task
 from celery.utils.log import get_task_logger
 
-from contestsuite.settings import MEDIA_ROOT, DEFAULT_FROM_EMAIL, BOT_CHANNEL_WEBHOOK_URL
+from contestsuite.settings import MEDIA_ROOT, DEFAULT_FROM_EMAIL
 from contestadmin.models import Contest
 from core.utils import make_random_password
 from manager.models import Course, Faculty, Profile

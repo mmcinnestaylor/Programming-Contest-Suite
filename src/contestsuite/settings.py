@@ -272,6 +272,11 @@ CELERY_ENABLE_UTC = True
 
 CELERY_BEAT_SCHEDULE = {}
 
+# Discord
+# https://discordpy.readthedocs.io/en/stable/
+
+ANNOUNCEMENT_WEBHOOK_URL = get_secret('ANNOUNCEMENT_WEBHOOK_URL', None)
+
 
 # Hashid Fields
 # https://pypi.org/project/django-hashid-field/
