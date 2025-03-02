@@ -3,8 +3,6 @@ import os
 from itertools import islice
 from math import ceil, log10
 
-from discord import Webhook, RequestsWebhookAdapter, InvalidArgument
-
 from django.contrib.auth.models import User
 from django.core.mail import send_mass_mail
 from django.db import transaction
