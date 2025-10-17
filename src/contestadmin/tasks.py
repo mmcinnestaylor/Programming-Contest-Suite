@@ -83,7 +83,7 @@ def generate_contest_files(file_format='json'):
         - Generator creates necessary files (teams, accounts, groups) to set up a contest for each division
         - Supports TSV, JSON, and YAML formats (file_format parameter); defaults to json if not specified
 
-    https://www.domjudge.org/docs/manual/8.3/import.html
+    https://www.domjudge.org/docs/manual/9.0/import.html
     """
 
     logger.info(f"generate_contest_files called with file_format='{file_format}'")
