@@ -114,7 +114,7 @@ class Profile(models.Model):
     checked_in = models.BooleanField(default=False)
     email_confirmed = models.BooleanField(default=False)
     announcement_email_opt_out = models.BooleanField(default=False)
-    passed_cop3330 = models.BooleanField(default=True)
+    passed_cop3330 = models.BooleanField(default=False)
     
     def __str__(self):
         return (str(self.user.first_name) + ' ' + str(self.user.last_name))
