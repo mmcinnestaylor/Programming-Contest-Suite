@@ -68,6 +68,10 @@ def account(request):
             user = form.save(commit=False)
             user.is_active = False # Deactivate account until it is validated
             user.save()
+            # since passed_cop3330 is in the profile model and not the base user model, 
+            # we save the cop3330 data separately to the profile after saving the user
+            user.profile.passed_cop3330 = form.cleaned_data.get('passed_cop3330')
+            user.profile.save()
 
             current_site = get_current_site(request)
             tasks.send_validation_email.delay(current_site.domain, user.username)
