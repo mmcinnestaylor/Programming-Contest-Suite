@@ -60,6 +60,10 @@ class ProfileForm(forms.ModelForm):
             (False, 'Opt-in'),
             (True, 'Opt-out'),
         )   
+        PASSED_COP3330_CHOICES = (
+            (True, 'Yes'), 
+            (False, 'No')
+        )
         model = Profile
         fields = ('fsu_id', 'fsu_num', 'announcement_email_opt_out')
         labels = {
