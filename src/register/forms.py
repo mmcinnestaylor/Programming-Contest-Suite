@@ -43,10 +43,9 @@ class TeamForm(forms.ModelForm):
     
     class Meta:
         model = Team
-        fields = ['name', 'division']
+        fields = ['name']
         help_texts = {
             'name': '30 characters max. Keep it PG-13 please!',
-            'division': 'The division in which your team will compete.',
         }
         error_messages = {
             'name': {
