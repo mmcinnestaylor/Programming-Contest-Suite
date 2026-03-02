@@ -317,11 +317,15 @@ def remove_member(request, username):
         # Update team    
         member.profile.team.num_members -= 1
         member.profile.team.save()
-        member.profile.team.update_division()
+        team = member.profile.team
+
+    
 
         #Update user being removed
         member.profile.team = None
         member.profile.save()
+
+        team.update_division()
     except:
         messages.error(request, 'Unable to remove member from the team. Please try again later.', fail_silently=True)
     else:
