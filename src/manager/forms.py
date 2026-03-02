@@ -124,7 +124,7 @@ class TeamForm(forms.ModelForm):
     
     class Meta:
         model = Team
-        fields = ('name')
+        fields = ['name']
         help_texts = {
             'name': '30 characters max. Keep it PG-13 please!',
         }
