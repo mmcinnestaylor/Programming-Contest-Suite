@@ -250,6 +250,7 @@ def leave_team(request):
             team.update_division()
     # If user only a team member, then simply leave the team
     else:
+        team = request.user.profile.team
         request.user.profile.team.num_members = max(request.user.profile.team.num_members - 1, 0)
         request.user.profile.team.save()
 
@@ -257,7 +258,7 @@ def leave_team(request):
         request.user.profile.checked_in = False
         request.user.save()
 
-        request.user.profile.team.update_division()
+        team.update_division()
 
     messages.success(
         request, 'You have left the team.', fail_silently=True)
