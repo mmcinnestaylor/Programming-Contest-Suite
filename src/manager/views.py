@@ -227,6 +227,7 @@ def leave_team(request):
             request.user.save()
         # If admin leaves a team with 2 or more people, then reassign admin credential first
         else:
+            team = request.user.profile.team
             members = Profile.objects.filter(team=request.user.profile.team)
 
             # Find first non admin and assign them admin credential
@@ -240,15 +241,13 @@ def leave_team(request):
             request.user.profile.team.num_members = max(
                 request.user.profile.team.num_members - 1, 0)
             request.user.profile.team.save()
-            # Auto-update team division status before user profile removal
-            request.user.profile.team.update_division()
-
 
             # Update user
             request.user.profile.team_admin = False
             request.user.profile.team = None
             request.user.profile.checked_in = False
             request.user.profile.save()
+            team.update_division()
     # If user only a team member, then simply leave the team
     else:
         request.user.profile.team.num_members = max(request.user.profile.team.num_members - 1, 0)
@@ -257,6 +256,8 @@ def leave_team(request):
         request.user.profile.team = None
         request.user.profile.checked_in = False
         request.user.save()
+
+        request.user.profile.team.update_division()
 
     messages.success(
         request, 'You have left the team.', fail_silently=True)
