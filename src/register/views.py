@@ -152,6 +152,7 @@ def team(request):
             # Create a temporary object, add additional attribute data, then save to DB
             newTeam = form.save(commit=False)
             newTeam.pin = make_random_password(length=6)
+            newTeam.division = 2 # Default value of 2, will be overwritten
             newTeam.num_members += 1
             newTeam.save()
 
@@ -159,6 +160,9 @@ def team(request):
             request.user.profile.team = newTeam
             request.user.profile.team_admin = True
             request.user.profile.save()
+
+            # Auto-set division
+            newTeam.update_division()
             
             messages.success(
                 request, 'Team registered!', fail_silently=True)

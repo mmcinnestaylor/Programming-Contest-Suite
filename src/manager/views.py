@@ -70,7 +70,9 @@ def manage_profile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            
+            # Incase user updates division
+            if request.user.profile.team:
+                request.user.profile.team.update_division()
             messages.success(request, 'Your profile was successfully updated!', fail_silently=True)
             return redirect('manage_dashboard')
         else:
@@ -187,6 +189,8 @@ def join_team(request):
                     # Update team
                     request.user.profile.team.num_members += 1
                     request.user.profile.team.save()
+                    # Auto-Update division
+                    request.user.profile.team.update_division()
 
                     messages.success(
                         request, 'You have joined the team!', fail_silently=True)
@@ -236,6 +240,9 @@ def leave_team(request):
             request.user.profile.team.num_members = max(
                 request.user.profile.team.num_members - 1, 0)
             request.user.profile.team.save()
+            # Auto-update team division status before user profile removal
+            request.user.profile.team.update_division()
+
 
             # Update user
             request.user.profile.team_admin = False
@@ -308,6 +315,7 @@ def remove_member(request, username):
         # Update team    
         member.profile.team.num_members -= 1
         member.profile.team.save()
+        member.profile.team.update_division()
 
         #Update user being removed
         member.profile.team = None
