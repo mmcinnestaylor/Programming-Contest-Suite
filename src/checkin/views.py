@@ -86,6 +86,7 @@ def checkin(request):
 									#update team
 									walk_in_team.num_members += 1
 									walk_in_team.save()
+									walk_in_team.update_division()
 
 							user.save()
 
@@ -130,6 +131,7 @@ def checkin(request):
 								#update team
 								walk_in_team.num_members += 1
 								walk_in_team.save()
+								walk_in_team.update_division()
 
 						user.save()
 
