@@ -103,3 +103,16 @@ class Team(models.Model):
                 return True
         
         return False
+    
+    def update_division(self):
+        """
+        Auto-sets team division based on based on member profile
+        Div1 - If at least 1 member has passed_cop3330=True
+        Div2 - If no members have passed_cop3330=True
+        """
+        members = User.objects.filter(profile__team=self)
+        if members.filter(profile__passed_cop3330=True).exists():
+            self.division = 1
+        else:
+            self.division = 2
+        self.save()
