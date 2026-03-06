@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.cache import cache
 from django.db import transaction
-# from django.forms import formset_factory
+from django.forms import formset_factory
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.encoding import force_str
@@ -93,30 +93,33 @@ def account(request):
     return render(request, 'register/register_form.html', context)
 
 
-# key error on password1, more research required
-'''def group(request):
+@user_passes_test(not_registered, login_url='/manage/')
+@transaction.atomic
+def group(request):
+    """
+    Group registration for contest day
+    Each account is registered and validated separately
+    Redirect to back to group page after successful signup
+    """
     context = {}
-    UserFormSet = formset_factory(forms.ExtendedUserCreationForm, extra=3)
-    
+    UserFormSet = formset_factory(forms.ExtendedUserCreationForm, extra=3, min_num=1, validate_min=True)
+
     if request.method == 'POST':
         formset = UserFormSet(request.POST)
         if formset.is_valid():
+            current_site = get_current_site(request)
+
             for form in formset:
-                if form.is_valid():
-                    new_user = User(
-                        first_name=form.cleaned_data['first_name'], 
-                        last_name=form.cleaned_data['last_name'],
-                        username=form.cleaned_data['username'],
-                        email=form.cleaned_data['email'],
-                        password=form.cleaned_data['password1']
-                    )
-                    # new_user = form.save(commit=False)
-                    # new_user.password = form.cleaned_data['password1']
-                    new_user.save()
-            
+                if form.cleaned_data:
+                    user = form.save(commit=False)
+                    user.is_active = False
+                    user.save()
+
+                    tasks.send_validation_email.delay(current_site.domain, user.username)
+
             messages.success(
-                request, 'Accounts registered!')
-            return redirect('index')
+                request, 'Accounts registered! Check your email inbox for a verification link')
+            return redirect('register_group')
         
         messages.error(
             request, 'Please correct the error(s) below.', fail_silently=True)
@@ -124,7 +127,7 @@ def account(request):
         formset = UserFormSet()
 
     context['formset'] = formset
-    return render(request, 'register/group_register_form.html', {'formset': formset})'''
+    return render(request, 'register/group_register_form.html', context)
 
 
 @login_required
