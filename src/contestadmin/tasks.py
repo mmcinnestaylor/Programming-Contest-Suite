@@ -411,39 +411,101 @@ def email_faculty(domain):
 def process_contest_results():
     """
     Celery task which processes a DOMjudge results file uploaded to the server.
+    Update 3/8/2026:
+        We are now importing JSON from /api/v4/contests/{cid}/scoreboard
+        Reasoning: this API endpoint shows us problem IDs, which we can use 
+                   to determine which questions a given team is eligible 
+                   for extra credit from.
+        
+        The old logic for processing TSVs is kept in comments for reference and potential future use
     """
     
+#     num_teams = 0
+#     contest = Contest.objects.all().first()
+# 
+#     if not contest:
+#         logger.error("No Contest object exists in database.")
+#     else:
+#         if Team.objects.all().count() > 0:
+#             # Determine width of numerical portion of DOMjudge usernames
+#             fill_width = ceil(log10(Team.objects.all().count()))
+# 
+#             with open(contest.results.path) as resultsfile:
+#                 results = csv.reader(resultsfile, delimiter="\t", quotechar='"')
+#                 
+#                 # islice - Skip header of file
+#                 for row in islice(results, 1, None):
+#                     # [DOMjudge team ID] <id> -> [Registration team ID] acm-(zfill)<id>
+#                     id = f"acm-{row[0].zfill(fill_width)}"
+# 
+#                     try:
+#                         team = Team.objects.get(contest_id=id)
+#                         team.questions_answered = row[3]
+#                         team.score = row[4]
+#                         team.last_submission = row[5]
+#                         team.save()
+#                     except:
+#                         logger.error(
+#                             f"Could not process contest results for team {id}")
+#                     else:
+#                         logger.debug(f"Processed team {id}")
+#                         num_teams += 1
+# 
+#                 logger.info(f"Processed contest results for {num_teams} teams")
+#         else:
+#             logger.error("No Team objects exist in database.")
+
     num_teams = 0
     contest = Contest.objects.all().first()
 
     if not contest:
         logger.error("No Contest object exists in database.")
+
     else:
         if Team.objects.all().count() > 0:
-            # Determine width of numerical portion of DOMjudge usernames
-            fill_width = ceil(log10(Team.objects.all().count()))
 
             with open(contest.results.path) as resultsfile:
-                results = csv.reader(resultsfile, delimiter="\t", quotechar='"')
+                # Load JSON data from file
+                data = json.load(resultsfile)
                 
-                # islice - Skip header of file
-                for row in islice(results, 1, None):
-                    # [DOMjudge team ID] <id> -> [Registration team ID] acm-(zfill)<id>
-                    id = f"acm-{row[0].zfill(fill_width)}"
+            for row in data.get("rows", []): # iterate through "rows" key in JSON data; "rows" is a list of team result objects
 
-                    try:
-                        team = Team.objects.get(contest_id=id)
-                        team.questions_answered = row[3]
-                        team.score = row[4]
-                        team.last_submission = row[5]
-                        team.save()
-                    except:
-                        logger.error(
-                            f"Could not process contest results for team {id}")
+                team_id = row.get("team_id")
+                fill_width = ceil(log10(Team.objects.all().count())) # fill width defined by number of teams
+                id = f"acm-{team_id.zfill(fill_width)}" # set id to match contest_id field of Team model for lookup
+                try:
+                    logger.debug(f"Looking up team with contest_id: {id}")
+                    logger.debug(f"Existing contest IDs: {list(Team.objects.values_list('contest_id', flat=True))}")
+                    team = Team.objects.get(contest_id=id)
+
+                    score = row.get("score", {})
+                    team.questions_answered = score.get("num_solved", 0)
+                    team.score = score.get("num_solved", 0)
+                    team.last_submission = score.get("total_time", 0)
+
+                    solved_problems = [
+                        p for p in row.get("problems", [])
+                        if p.get("solved")
+                    ]
+
+                    if team.division == 2:
+                        team.questions_for_extra_credit = len(solved_problems)
                     else:
-                        logger.debug(f"Processed team {id}")
-                        num_teams += 1
+                        team.questions_for_extra_credit = sum(
+                                1 for p in solved_problems
+                                if int(p.get("label", 0)) > 4
+                        )    
+                    
+                    team.save()
 
-                logger.info(f"Processed contest results for {num_teams} teams")
-        else:
-            logger.error("No Team objects exist in database.")
+                except Team.DoesNotExist:
+                    logger.error(f"Could not find a team with contest_id {id}")
+
+                except Exception as e: 
+                    logger.error(f"Could not process results for team {id}: {e}")
+                    
+                else:
+                    logger.debug(f"Processed team {id}")
+                    num_teams += 1
+                
+            logger.info(f"Processed contest results for {num_teams} teams")
