@@ -273,6 +273,10 @@ def generate_ec_reports():
         format <faculty-email_course-code.csv> will map correctly.
 
         Updating Faculty model to support non-FSU CS addresses will require file naming update.
+        
+    Update 3/8/2026:
+        Refactored questions_solved to new questions_for_extra_credit property
+        and changed variable names to more clearly reflect number of extra credits earned
     """
     
     num_courses = 0
@@ -297,7 +301,7 @@ def generate_ec_reports():
                     
                     # File header
                     writer.writerow(
-                        ['fsu_id', 'last_name', 'first_name', 'questions_answered', 'team_division', 'role'])
+                        ['fsu_id', 'last_name', 'first_name', 'extra_credits', 'team_division', 'role'])
                     
                     for student in students:
                         if student.profile.fsu_id is None:
@@ -306,15 +310,15 @@ def generate_ec_reports():
                             fsu_id = student.profile.fsu_id
 
                         if student.profile.team is None:
-                            questions_answered = 'none'
+                            extra_credits = 'none'
                         else:
-                            questions_answered = student.profile.team.questions_answered        
+                            extra_credits = student.profile.team.questions_for_extra_credit        
 
                         writer.writerow([
                             fsu_id,
                             student.last_name,
                             student.first_name,
-                            questions_answered,
+                            extra_credits,
                             student.profile.team.get_division_code() if student.profile.team else 'none',
                             student.profile.get_role()
                         ])
